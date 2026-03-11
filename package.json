@@ -1,0 +1,62 @@
+{
+  "name": "aiskills",
+  "version": "1.0.0",
+  "description": "AI coding assistant skills for Claude Code, Gemini CLI, and Codex CLI",
+  "main": "lib/index.js",
+  "type": "module",
+  "bin": {
+    "aiskills": "./bin/aiskills.js"
+  },
+  "scripts": {
+    "test": "node --test test/**/*.test.js",
+    "lint": "eslint lib/**/*.js",
+    "format": "prettier --write lib/**/*.js"
+  },
+  "keywords": [
+    "ai",
+    "skills",
+    "claude",
+    "claude-code",
+    "gemini",
+    "codex",
+    "llm",
+    "agents",
+    "refactoring-ui",
+    "design",
+    "ui",
+    "ux"
+  ],
+  "author": "César Estrada <maccesar@gmail.com> (https://github.com/macCesar)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macCesar/aiskills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/macCesar/aiskills/issues"
+  },
+  "homepage": "https://github.com/macCesar/aiskills#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.2.0",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "fs-extra": "^11.3.3",
+    "ora": "^9.1.0",
+    "tar": "^7.5.7"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.1"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "skills/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
