@@ -1,6 +1,3 @@
-.claude/
-docs/
-
 # Node.js
 node_modules/
 *.log
@@ -18,17 +15,9 @@ yarn-error.log*
 ehthumbs.db
 Thumbs.db
 
-# Editor directories and files
+# Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# Screenshots
-*.png
-*.jpg
-*.jpeg
-!assets/**/*.png
-!assets/**/*.jpg
-!assets/**/*.jpeg

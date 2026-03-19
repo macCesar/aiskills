@@ -2,7 +2,6 @@
   "name": "aiskills",
   "version": "1.0.0",
   "description": "AI coding assistant skills for Claude Code, Gemini CLI, and Codex CLI",
-  "main": "lib/index.js",
   "type": "module",
   "bin": {
     "aiskills": "./bin/aiskills.js"
