@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humaniza"
+  short_description: "Humaniza textos en español (es-MX) y elimina tics de IA"
+  default_prompt: "Humaniza este texto en español (es-MX), manteniendo el significado y el tono. Devuelve solo el texto final."
