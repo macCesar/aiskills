@@ -8,6 +8,7 @@
 import { Command } from 'commander';
 import { PACKAGE_VERSION } from '../lib/config.js';
 import { skillsCommand } from '../lib/commands/skills.js';
+import { listCommand } from '../lib/commands/list.js';
 import { updateCommand } from '../lib/commands/update.js';
 import { uninstallCommand } from '../lib/commands/uninstall.js';
 
@@ -17,6 +18,12 @@ program
   .name('aiskills')
   .description('AI Skills CLI - Manage skills for AI coding assistants (Claude Code, Gemini CLI, Codex CLI)')
   .version(PACKAGE_VERSION);
+
+// List command
+program
+  .command('list')
+  .description('List available AI skills')
+  .action(listCommand);
 
 // Install command
 program
