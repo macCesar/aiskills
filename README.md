@@ -59,6 +59,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 8 files         |
 | humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 6 files         |
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 4 files         |
+| stitch-showcase      | Design Tools | Google Stitch export workflow        | 7 files         |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -194,12 +195,88 @@ Example prompts:
 ```
 
 Reference files:
-| File                    | Topics                                                               |
-| ----------------------- | -------------------------------------------------------------------- |
-| package-json-schema.md  | contributes, activationEvents, engines, scripts, devDependencies     |
-| api-patterns.md         | TreeView, Webview, QuickPick, StatusBar, SecretStorage, withProgress |
-| architecture.md         | Project structure, layered architecture, testing strategy            |
-| publishing.md           | vsce, .vscodeignore, CI/CD, Open VSX, versioning                    |
+| File                   | Topics                                                               |
+| ---------------------- | -------------------------------------------------------------------- |
+| package-json-schema.md | contributes, activationEvents, engines, scripts, devDependencies     |
+| api-patterns.md        | TreeView, Webview, QuickPick, StatusBar, SecretStorage, withProgress |
+| architecture.md        | Project structure, layered architecture, testing strategy            |
+| publishing.md          | vsce, .vscodeignore, CI/CD, Open VSX, versioning                     |
+
+---
+
+### stitch-showcase
+
+A workflow skill for processing Google Stitch design exports. Given a folder of Stitch zips (or a single mega-zip), it generates a navigable static showcase with a searchable thumbnail grid, section filter tabs, and a per-screen viewer with prev/next navigation.
+
+When it activates:
+- User has Stitch export zips and wants to browse them as a gallery
+- User asks to "organize", "build the showcase", or "process" Stitch designs
+- User has a folder of `code.html` + `screen.png` pairs from Stitch
+
+Example prompts:
+```
+"Organize my Stitch designs in ~/Downloads/snap-exports"
+"Build the showcase from these Stitch zips"
+"I have the Stitch zips in /Users/me/designs, generate the index"
+"Arma el muestrario con los exports de Stitch"
+```
+
+Output:
+```
+showcase-mobile/          ← or showcase-web/
+├── index.html            ← searchable grid with section tabs + list/grid toggle
+├── viewer.html           ← per-screen viewer with prev/next + fullscreen
+├── DESIGN.md             ← copy
+└── assets/
+    ├── splash_screen.html
+    ├── splash_screen.png
+    └── ...
+```
+
+**Index features:**
+- Searchable thumbnail grid (mobile: 9:19.5, web: 16:10 aspect ratio)
+- Section filter tabs with screen count per section
+- Grid / List view toggle
+- Smart default theme (light/dark) based on app surface color luminance
+- Accent color from DESIGN.md `primary` color token
+- Google Fonts injection from `## Typography` section
+
+**Viewer features:**
+- Prev / Next navigation with `N / total` position badge
+- Keyboard shortcuts: `←` / `→` to navigate, `F` for fullscreen
+- Fullscreen mode hides the header and fills the viewport
+- Phone frame (390px, scaled to fit) for mobile; full-width iframe for web
+- Shared theme preference with the index via `localStorage`
+
+**Build script flags:**
+```bash
+# Standard build
+python build_showcase.py /path/to/zips --type mobile
+
+# Watch mode — auto-rebuilds on file changes
+python build_showcase.py /path/to/zips --watch
+
+# Init mode — generates DESIGN.md skeleton from detected slugs
+python build_showcase.py /path/to/zips --init
+```
+
+**DESIGN.md features parsed:**
+- Project name, type (mobile/web), screen list with titles + descriptions
+- Section groupings (`### Section Name` under `## Screens`)
+- Color tokens: `` `primary-container` (#FDD900) `` format → accent color
+- Surface color → smart showcase theme (dark app = light showcase)
+- Typography font name from `## Typography` → loaded from Google Fonts
+
+Reference files:
+| File                          | Purpose                                                               |
+| ----------------------------- | --------------------------------------------------------------------- |
+| scripts/build_showcase.py     | Main orchestrator — extract → enrich → generate; `--watch`, `--init`  |
+| scripts/extract_zips.py       | Unzips Stitch exports, renames to slug format, incremental builds     |
+| scripts/parse_design_md.py    | Parses DESIGN.md → name, type, color tokens, theme, font, screens     |
+| references/index-mobile.html  | Mobile index: dark/light smart theme, filter tabs, list toggle        |
+| references/index-web.html     | Web index: dark/light smart theme, filter tabs, list toggle           |
+| references/viewer-mobile.html | Viewer with 390px phone frame, prev/next, fullscreen                  |
+| references/viewer-web.html    | Viewer with full-width iframe + browser chrome, prev/next, fullscreen |
 
 ---
 
