@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PROJECT_NAME}} — Showcase</title>
+  {{FONT_LINK}}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { accent: '{{PRIMARY_COLOR}}' }, fontFamily: { sans: ['{{FONT_FAMILY}}', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    /* List mode overrides */
+    .screens-grid.list-mode { display: flex; flex-direction: column; gap: 8px; }
+    .screens-grid.list-mode .screen-card { display: flex; flex-direction: row; }
+    .screens-grid.list-mode .screen-card .card-thumb { width: 80px; flex-shrink: 0; aspect-ratio: auto; height: 80px; }
+    .screens-grid.list-mode .screen-card .card-info { flex: 1; min-width: 0; }
+    .screens-grid.list-mode .screen-card .card-desc { -webkit-line-clamp: unset; overflow: visible; white-space: normal; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gray-100 text-gray-900 transition-colors duration-200 dark:bg-[#0d0d0d] dark:text-gray-100">
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#111]">
+    <div class="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-4 px-6">
+
+      <div class="flex min-w-0 items-baseline gap-3">
+        <h1 class="truncate text-lg font-bold">{{PROJECT_NAME}}</h1>
+        <span class="shrink-0 text-sm text-gray-400 dark:text-gray-500">{{SCREEN_COUNT}} screens</span>
+      </div>
+
+      <div class="flex shrink-0 items-center gap-3">
+        <!-- Mobile badge -->
+        <span class="hidden items-center gap-1.5 rounded-full border border-gray-200 bg-gray-100 px-3 py-1 text-xs font-medium text-gray-400 dark:border-white/10 dark:bg-white/5 dark:text-gray-500 sm:inline-flex">
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" />
+            <line x1="12" y1="18" x2="12.01" y2="18" />
+          </svg>
+          Mobile
+        </span>
+        <!-- View toggle -->
+        <button id="view-toggle" title="Toggle grid/list view" class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+          <svg id="icon-grid" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+          <svg id="icon-list" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+        </button>
+        <!-- Theme toggle -->
+        <button id="theme-toggle" title="Toggle light/dark" class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+          <svg class="block h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="hidden h-4 w-4 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ── Toolbar ─────────────────────────────────────────── -->
+  <div class="mx-auto max-w-[1280px] px-6 pt-5">
+    <div class="relative max-w-xs">
+      <svg class="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input id="search-input" type="text" placeholder="Search screens…" autocomplete="off" class="focus:ring-accent h-9 w-full rounded-lg border border-gray-200 bg-white pl-8 pr-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 dark:border-white/10 dark:bg-white/5 dark:text-gray-100">
+    </div>
+  </div>
+
+  <!-- ── Section filter tabs ────────────────────────────── -->
+  {{SECTION_TABS_HTML}}
+
+  <!-- ── Content ─────────────────────────────────────────── -->
+  <div class="mx-auto max-w-[1280px] px-6 pb-16 pt-6">
+
+    {{SCREENS_HTML}}
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden py-16 text-center text-gray-400">
+      <svg class="mx-auto mb-2 h-8 w-8 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <p class="text-sm">No screens match your search.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Theme: default from DESIGN.md surface color ──────
+    const html = document.documentElement;
+    const defaultTheme = '{{DEFAULT_THEME}}';
+    const saved = localStorage.getItem('showcase-theme');
+    if ((saved ?? defaultTheme) === 'dark') html.classList.add('dark');
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('showcase-theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // ── Section filter tabs ────────────────────────────────
+    const accentColor = '{{PRIMARY_COLOR}}';
+    function accentTextColor(hex) {
+      if (!hex || hex.length < 7) return '#000';
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return (0.299 * r + 0.587 * g + 0.114 * b) > 140 ? '#000' : '#fff';
+    }
+    const accentText = accentTextColor(accentColor);
+
+    function setActiveTab(tab) {
+      document.querySelectorAll('.filter-tab').forEach(t => {
+        t.style.backgroundColor = '';
+        t.style.color = '';
+        t.classList.add('hover:bg-gray-100', 'dark:hover:bg-white/10', 'text-gray-600', 'dark:text-gray-400');
+      });
+      tab.style.backgroundColor = accentColor;
+      tab.style.color = accentText;
+      tab.classList.remove('hover:bg-gray-100', 'dark:hover:bg-white/10', 'text-gray-600', 'dark:text-gray-400');
+    }
+
+    const allTab = document.querySelector('.filter-tab[data-section="all"]');
+    if (allTab) setActiveTab(allTab);
+
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        setActiveTab(tab);
+        const target = tab.dataset.section;
+        document.querySelectorAll('.screen-section').forEach(sec => {
+          sec.style.display = (target === 'all' || sec.dataset.section === target) ? '' : 'none';
+        });
+      });
+    });
+
+    // ── Grid/List toggle ──────────────────────────────────
+    let listMode = false;
+    document.getElementById('view-toggle').addEventListener('click', () => {
+      listMode = !listMode;
+      document.querySelectorAll('.screens-grid').forEach(g => g.classList.toggle('list-mode', listMode));
+      document.getElementById('icon-grid').classList.toggle('hidden', listMode);
+      document.getElementById('icon-list').classList.toggle('hidden', !listMode);
+    });
+
+    // ── Search filter ──────────────────────────────────────
+    const input = document.getElementById('search-input');
+    const empty = document.getElementById('empty-state');
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      const cards = document.querySelectorAll('.screen-card');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const match = !q || card.textContent.toLowerCase().includes(q);
+        card.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+
+      document.querySelectorAll('.screen-section').forEach(section => {
+        const anyVisible = [...section.querySelectorAll('.screen-card')].some(c => !c.classList.contains('hidden'));
+        section.style.display = anyVisible ? '' : 'none';
+      });
+
+      empty.classList.toggle('hidden', visible > 0);
+      empty.classList.toggle('block', visible === 0);
+    });
+  </script>
+
+</body>
+
+</html>

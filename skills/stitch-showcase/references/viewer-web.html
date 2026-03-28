@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viewer — {{PROJECT_NAME}}</title>
+  {{FONT_LINK}}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['{{FONT_FAMILY}}', 'system-ui', 'sans-serif'] } } } }</script>
+</head>
+
+<body class="flex h-screen flex-col overflow-hidden bg-gray-100 text-gray-900 transition-colors duration-200 dark:bg-[#0d0d0d] dark:text-gray-100">
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header id="main-header" class="flex-shrink-0 border-b border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#111]">
+    <div class="mx-auto flex h-[52px] max-w-[1280px] items-center gap-3 px-6">
+
+      <button onclick="window.close()" title="Close viewer" class="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 13L5 8l5-5" />
+        </svg>
+        Back
+      </button>
+
+      <div class="h-5 w-px shrink-0 bg-gray-200 dark:bg-white/10"></div>
+
+      <span id="screen-title" class="shrink-0 truncate text-[14px] font-semibold">—</span>
+
+      <span id="screen-desc" class="ml-auto max-w-[280px] truncate text-right text-[12px] text-gray-400 dark:text-gray-500"></span>
+
+      <!-- Position badge -->
+      <span id="nav-pos" class="shrink-0 text-[11px] text-gray-400 dark:text-gray-500">— / —</span>
+
+      <!-- Prev button -->
+      <button id="btn-prev" title="Previous screen (←)" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+        <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13L5 8l5-5"/></svg>
+      </button>
+
+      <!-- Next button -->
+      <button id="btn-next" title="Next screen (→)" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+        <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+      </button>
+
+      <!-- Theme toggle -->
+      <button id="theme-toggle" title="Toggle light/dark" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <svg class="block h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+        <svg class="hidden h-4 w-4 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      </button>
+
+      <!-- Fullscreen button -->
+      <button id="btn-fullscreen" title="Fullscreen (F)" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ── Browser chrome bar ───────────────────────────────── -->
+  <div id="browser-bar" class="flex-shrink-0 border-b border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-[#1a1a1a]">
+    <div class="mx-auto flex max-w-[1280px] items-center gap-2 px-6 py-2">
+      <div class="h-3 w-3 rounded-full bg-red-400"></div>
+      <div class="h-3 w-3 rounded-full bg-yellow-400"></div>
+      <div class="h-3 w-3 rounded-full bg-green-400"></div>
+      <div class="mx-auto flex h-7 max-w-md flex-1 items-center rounded-md border border-gray-200 bg-white px-3 dark:border-white/10 dark:bg-[#0d0d0d]">
+        <span id="url-display" class="truncate text-[11px] text-gray-400">localhost</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Iframe ────────────────────────────────────────────── -->
+  <main class="flex-1 overflow-hidden">
+    <iframe id="viewer-frame" src="" title="Screen preview" class="block h-full w-full border-none bg-white"></iframe>
+  </main>
+
+  <script>
+    // ── Screens list (injected by build_showcase.py) ──────
+    const SCREENS = {{SCREENS_JSON}};
+
+    // ── Theme: default from DESIGN.md surface color ───────
+    const html = document.documentElement;
+    const defaultTheme = '{{DEFAULT_THEME}}';
+    const saved = localStorage.getItem('showcase-theme');
+    if ((saved ?? defaultTheme) === 'dark') html.classList.add('dark');
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('showcase-theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // ── Load screen from URL params ───────────────────────
+    const params = new URLSearchParams(location.search);
+    const title = params.get('title') || '';
+    const desc = params.get('desc') || '';
+    const src = params.get('screen') || '';
+
+    document.getElementById('screen-title').textContent = title;
+    document.getElementById('screen-desc').textContent = desc;
+    document.title = title ? `${title} — {{PROJECT_NAME}}` : '{{PROJECT_NAME}}';
+
+    if (src) {
+      document.getElementById('viewer-frame').src = src;
+      const slug = src.replace('assets/', '').replace('.html', '').replace(/_/g, '-');
+      document.getElementById('url-display').textContent = `localhost / ${slug}`;
+    }
+
+    // ── Prev/Next navigation ───────────────────────────────
+    const currentFile = params.get('screen') || '';
+    const idx = SCREENS.findIndex(s => s.html_file === currentFile);
+
+    document.getElementById('nav-pos').textContent = idx >= 0 ? `${idx + 1} / ${SCREENS.length}` : '';
+
+    function goTo(i) {
+      if (i < 0 || i >= SCREENS.length) return;
+      const s = SCREENS[i];
+      const p = new URLSearchParams({ screen: s.html_file, title: s.title, desc: s.desc });
+      location.replace('viewer.html?' + p.toString());
+    }
+
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    if (idx > 0) btnPrev.removeAttribute('disabled');
+    if (idx >= 0 && idx < SCREENS.length - 1) btnNext.removeAttribute('disabled');
+
+    btnPrev.addEventListener('click', () => goTo(idx - 1));
+    btnNext.addEventListener('click', () => goTo(idx + 1));
+
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowLeft')  goTo(idx - 1);
+      if (e.key === 'ArrowRight') goTo(idx + 1);
+      if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+    });
+
+    // ── Fullscreen mode ────────────────────────────────────
+    let fullscreen = false;
+    function toggleFullscreen() {
+      fullscreen = !fullscreen;
+      document.getElementById('main-header').classList.toggle('hidden', fullscreen);
+      document.getElementById('browser-bar').classList.toggle('hidden', fullscreen);
+    }
+    document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreen);
+  </script>
+
+</body>
+
+</html>
