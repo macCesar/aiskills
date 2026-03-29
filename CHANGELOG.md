@@ -2,6 +2,96 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2026-03-28
+
+### Changed
+- **stitch-showcase: fast build + optional AI enrichment** — restructured the SKILL workflow into 4 distinct modes instead of a linear pipeline. Mode 1 (Build) runs the Python script instantly (~3 seconds) with zero AI pre-processing — no pre-flight questions, no DESIGN.md enrichment, no `--extract-text`. Mode 2 (Enrich) is on-demand when the user asks to optimize — improves titles, descriptions, and hero text in DESIGN.md without re-grouping sections, then rebuilds. Mode 3 (Update) and Mode 4 (Standardize) remain unchanged.
+
+### Fixed
+- **stitch-showcase: type detection now reads `## Type` section** — `parse_design_md` now checks the explicit `## Type` section first (authoritative) before falling back to keyword scoring. Previously it only used keyword scoring, which could miss or contradict an explicit `## Type\nweb` declaration.
+- **stitch-showcase: screen-based type detection fallback** — when no DESIGN.md type or `showcase.json` type is available, the build script now analyzes all screen HTMLs (viewport meta, fixed widths, media queries, sidebar patterns) and uses majority vote instead of blindly defaulting to "mobile".
+
+### Removed
+- **stitch-showcase: pre-flight questions before build** — the build no longer blocks on Q1/Q2/Q3 (source, type, name). The script handles smart defaults; `--type` and `--name` are only needed if the script fails or the user explicitly overrides.
+- **stitch-showcase: mandatory AI enrichment before build** — Step 2b (Suggest Sections) is no longer required before running the build script. AI enrichment is now opt-in via Mode 2.
+- **stitch-showcase: linear workflow graph** — replaced with a 4-mode branching flow diagram.
+
+## [1.5.0] - 2026-03-28
+
+### Added
+- **stitch-showcase: integrated component catalog** — catalog.html is now generated automatically as part of every build (no `--catalog` or `--components` flags needed). The showcase always produces 3 pages: index.html, viewer.html, and catalog.html.
+- **stitch-showcase: faithful component previews** — catalog previews now render with the original Tailwind CDN + config extracted from screen HTMLs, showing components with their actual colors, fonts, and spacing instead of unstyled HTML.
+- **stitch-showcase: comparison view** — catalog.html displays component variants side-by-side in cluster groups. Each card shows a styled preview, canonical badge (★), similarity score, screen count, and difference description. Structural components (navbars, footers) and atomic components (buttons, inputs) are organized by type with context-aware clustering.
+- **stitch-showcase: "Already Unified" section** — components that have only one variant across all screens are grouped in a collapsible section, showing at a glance which parts of the design are already standardized.
+- **stitch-showcase: similarity clustering for atomics** — atomic components (buttons, headings, inputs, badges, links, icons) are now clustered by structural similarity (85% threshold) within semantic context (form buttons separate from CTA buttons). Each cluster auto-selects a canonical version.
+- **stitch-showcase: `apply_canonical.py`** — new script to replace component variants with a chosen canonical version across screen HTMLs. Supports both structural components (via semantic block replacement) and atomic components (via cluster-based snippet replacement). Usage: `python apply_canonical.py /path/to/assets/ navbar home_screen`.
+- **stitch-showcase: catalog link in index.html** — the gallery navbar now includes a "Catalog" link to catalog.html for easy navigation between pages.
+
+### Removed
+- **stitch-showcase: `--catalog` and `--components` CLI flags** — catalog generation is now automatic. These flags are no longer needed.
+
+### Changed
+- **stitch-showcase: catalog output renamed** — `components-catalog.html` → `catalog.html` for cleaner URLs.
+
+## [1.4.0] - 2026-03-28
+
+### Changed
+- **stitch-showcase: unified mobile/web into single showcase with view toggle** — merged 4 separate templates (`index-mobile.html`, `index-web.html`, `viewer-mobile.html`, `viewer-web.html`) into 2 unified templates (`index.html`, `viewer.html`). A view mode toggle button lets users switch between mobile (portrait phone cards, phone frame viewer) and web (landscape browser cards, browser chrome viewer) at any time. The `--type` flag now sets the **default view**, not the template or output directory.
+- **stitch-showcase: single output directory** — all builds now output to `showcase/` instead of `showcase-mobile/` or `showcase-web/`. View mode is controlled via CSS classes and persisted in localStorage.
+- **stitch-showcase: viewer description placement** — screen description now displays inline after the title instead of right-aligned with `ml-auto`, improving readability.
+- **stitch-showcase: card aspect ratios driven by CSS** — card thumbnails no longer use inline `aspect-ratio` styles. Instead, `.view-mobile` and `.view-web` classes on `<html>` control the aspect ratio via CSS, enabling instant switching without page reload.
+
+## [1.3.1] - 2026-03-28
+
+### Added
+- **stitch-showcase: `showcase.json` support** — optional config file in the project root that tells the build script where to find screens, the project type, and name. Eliminates the need to pass the exact source folder path.
+- **stitch-showcase: source auto-discovery** — when the given path has no screens, the script searches for `showcase.json` (in the path or its parent), then auto-scans subdirectories one level deep. Skips `showcase-*` output dirs. Clear error messages with suggestions when nothing is found.
+- **stitch-showcase: `--init` generates `showcase.json`** — alongside DESIGN.md, `--init` now creates a `showcase.json` in the project root pointing to the detected source folder.
+
+### Fixed
+- **stitch-showcase: search bar moved out of navbar** — search input relocated from the fixed navbar to below the section tabs, giving the navbar a cleaner look and the search more room.
+- **stitch-showcase: list view spacing** — added 16px gap between thumbnail and text, plus top padding on the info block for better vertical alignment.
+- **stitch-showcase: list view square thumbnails** — mobile list view now uses 140px square thumbnails (`aspect-ratio: 1/1`) instead of tall phone-shaped previews, saving vertical space.
+
+## [1.3.0] - 2026-03-28
+
+### Added
+- **stitch-showcase: `--components` flag** — new `detect_components.py` script detects shared components (navbar, footer, tabbar, sidebar, header) across screen HTMLs, groups variants by similarity (DOM structure 50% + CSS classes 30% + text 20%), and recommends a canonical version. Outputs `shared_components.json`.
+- **stitch-showcase: `--catalog` flag** — new `extract_catalog.py` script extracts atomic components (buttons, headings, inputs, badges, links, icons) and composite components (cards, price tables, CTAs, testimonials, heroes) from all screens. Deduplicates by normalized HTML hash. Outputs `component_catalog.json` + visual `components-catalog.html`.
+- **stitch-showcase: `component_utils.py`** — shared HTML parsing utilities using stdlib `html.parser` and `difflib`. Provides DOM tree parsing, semantic block extraction, similarity scoring, and normalization helpers.
+- **stitch-showcase: `catalog-template.html`** — visual component catalog template with tabbed navigation, inline previews, CSS property display, copyable code snippets, dark/light toggle, and search.
+- **stitch-showcase: SKILL.md Step 6** — "Standardize Shared Components" workflow: detect → present variants → user chooses → apply canonical → rebuild.
+- **stitch-showcase: SKILL.md Step 7** — "Generate Component Catalog" workflow: extract → visual muestrario → browse/copy components.
+- **stitch-showcase: reference docs** — `10-component-standardization.md` (detection strategy, similarity scoring, canonical selection) and `11-component-catalog.md` (atomic/composite extraction, deduplication, design tokens).
+- **stitch-showcase: `skill_version` in context JSON** — `showcase_context.json` now includes `skill_version` field to track which version of the skill generated the output.
+
+### Fixed
+- **stitch-showcase: list-mode thumbnails too small** — increased list-mode thumbnails from `120×80px` to `180px` wide with proper aspect ratio (9:19.5 for mobile, 16:10 for web) and rounded corners.
+- **stitch-showcase: `--catalog` now includes shared component detection** — running `--catalog` automatically detects shared components (navbars, footers, tabbars) via `detect_components` and integrates them as a "Shared Components" section in the visual catalog. No need to run `--components` separately.
+- **stitch-showcase: shared components integrated in catalog** — `shared_components.json` data now renders inside `components-catalog.html` with canonical versions highlighted (accent border + "Canonical" badge), variant similarity bars, and difference descriptions.
+- **stitch-showcase: skill version badge in catalog** — `components-catalog.html` header now shows the skill version (`v1.3.0`) via `{{SKILL_VERSION}}` placeholder for traceability.
+
+### Changed
+- **stitch-showcase: architecture — always use templates** — SKILL.md now explicitly instructs the AI to NEVER generate index.html or viewer.html manually. The build script always generates HTMLs from pre-built templates (seconds, not minutes). The AI's role is enriching DESIGN.md before the build, not writing HTML after it. The `--context` flag is marked as debug-only.
+
+## [1.2.0] - 2026-03-28
+
+### Added
+- **stitch-showcase: `--extract-text` flag** — new `extract_text.py` script extracts visible text (headings, paragraphs, buttons, lists, inputs, colors, fonts) from screen HTML files and writes a compact `screen_summaries.txt`. Reduces LLM token consumption by ~96% compared to reading full HTML files (149 lines vs 4000+ for 19 screens).
+- **stitch-showcase: `extract_text.py` script** — standalone module for extracting visible text from Stitch HTML exports. Strips scripts, styles, SVGs, and comments. Outputs structured summaries suitable for LLM consumption.
+
+### Fixed
+- **stitch-showcase: web card backgrounds** — changed thumbnail background from `bg-black` to `bg-white dark:bg-[#1a1a1a]` for web type cards, preventing dark background bleed on light web screenshots
+- **stitch-showcase: viewer-web browser chrome** — wrapped browser chrome bar and iframe in `max-w-[1440px]` container with padding and rounded bottom corners, preventing full-bleed layout
+
+### Changed
+- **stitch-showcase: SKILL.md Step 2b** — updated workflow to use `--extract-text` flag and read `screen_summaries.txt` instead of reading each HTML file individually
+
+## [1.1.1] - 2026-03-27
+
+### Added
+- **stitch-showcase: `--update` flag** — detects screens not yet in any DESIGN.md section and appends them under `### Por Clasificar`; existing sections and descriptions are untouched. Workflow step 0 added to SKILL.md.
+
 ## [1.1.0] - 2026-03-27
 
 ### Added

@@ -59,7 +59,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 8 files         |
 | humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 6 files         |
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 4 files         |
-| stitch-showcase      | Design Tools | Google Stitch export workflow        | 7 files         |
+| stitch-showcase      | Design Tools | Google Stitch export workflow        | 14 files        |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -206,77 +206,83 @@ Reference files:
 
 ### stitch-showcase
 
-A workflow skill for processing Google Stitch design exports. Given a folder of Stitch zips (or a single mega-zip), it generates a navigable static showcase with a searchable thumbnail grid, section filter tabs, and a per-screen viewer with prev/next navigation.
+A workflow skill for processing Google Stitch design exports. It handles the full lifecycle: from raw zips to a navigable showcase, component standardization, and a visual component catalog.
 
 When it activates:
 - User has Stitch export zips and wants to browse them as a gallery
 - User asks to "organize", "build the showcase", or "process" Stitch designs
 - User has a folder of `code.html` + `screen.png` pairs from Stitch
+- User wants to standardize shared components or extract a component catalog
 
-Example prompts:
+#### What you can ask it to do
+
+**Build a showcase** — the core feature (instant, ~3 seconds):
 ```
 "Organize my Stitch designs in ~/Downloads/snap-exports"
 "Build the showcase from these Stitch zips"
 "I have the Stitch zips in /Users/me/designs, generate the index"
-"Arma el muestrario con los exports de Stitch"
+"Process this design folder into a showcase"
 ```
+Runs the Python build script directly — no pre-flight questions, no AI pre-processing. Generates a static site with a searchable thumbnail grid, section filter tabs, grid/list toggle, and a per-screen viewer with prev/next navigation, keyboard shortcuts, and fullscreen mode. Supports mobile (phone frame) and web (browser chrome) layouts.
 
-Output:
+**Enrich titles and descriptions** — optional, on-demand:
 ```
-showcase-mobile/          ← or showcase-web/
-├── index.html            ← searchable grid with section tabs + list/grid toggle
-├── viewer.html           ← per-screen viewer with prev/next + fullscreen
-├── DESIGN.md             ← copy
+"Optimize the showcase titles and descriptions"
+"Enrich the showcase descriptions"
+"Improve the hero section text"
+"Fix the mangled screen names in the showcase"
+```
+After the initial build, you can ask the AI to improve DESIGN.md: de-mangle Stitch slugs into proper titles, write meaningful descriptions from extracted screen text, update the hero section, and verify colors/fonts. Then rebuilds with enriched data.
+
+**Add new screens to an existing showcase:**
+```
+"Add these new zips to the project"
+"I exported 5 more screens from Stitch, add them"
+"The client requested a new screen, include it in the showcase"
+```
+The skill detects which screens are new, adds them to DESIGN.md, and rebuilds the showcase.
+
+**Standardize shared components** — fix Stitch's inconsistencies:
+```
+"Standardize the navbars across all screens"
+"Make all footers the same"
+"The bottom tab bar is different in each screen, fix it"
+"Use the navbar from the home screen everywhere"
+"Unify the navigation across all screens"
+```
+Google Stitch generates slight variations of navbars, footers, and tabbars across screens in the same session. This feature detects all shared components, shows you the variants with their differences, and lets you choose which version to apply everywhere. You can pick the best one, or mix pieces from different variants.
+
+**Generate a component catalog** — extract reusable UI pieces:
+```
+"Extract all the components from the designs"
+"Make a component catalog"
+"Show me all the buttons and cards in the project"
+"Generate a visual component library from the designs"
+"Extract the atomic components (buttons, inputs, badges)"
+"Extract composite components (cards, CTAs, price tables)"
+```
+Scans all screen HTMLs and extracts:
+- **Atomic components**: buttons (with variant detection: primary/secondary/danger), headings, form inputs, badges/pills, standalone links, icons (Material Symbols + SVGs)
+- **Composite components**: cards, price tables, CTAs, testimonials, hero sections
+- **Design tokens**: colors (sorted by frequency), fonts, border-radius values
+
+Generates a visual catalog page (`components-catalog.html`) with tabs per component type, inline previews, CSS properties, copyable code snippets, dark/light toggle, and search. Also outputs `component_catalog.json` for programmatic use.
+
+#### Output structure
+
+```
+showcase/                      ← single output dir with view mode toggle
+├── index.html                 ← searchable grid with section tabs + mobile/web view toggle
+├── viewer.html                ← per-screen viewer with prev/next + fullscreen + view toggle
+├── components-catalog.html    ← visual component catalog (when requested)
+├── shared_components.json     ← component standardization data (when requested)
+├── component_catalog.json     ← machine-readable catalog (when requested)
+├── DESIGN.md
 └── assets/
     ├── splash_screen.html
     ├── splash_screen.png
     └── ...
 ```
-
-**Index features:**
-- Searchable thumbnail grid (mobile: 9:19.5, web: 16:10 aspect ratio)
-- Section filter tabs with screen count per section
-- Grid / List view toggle
-- Smart default theme (light/dark) based on app surface color luminance
-- Accent color from DESIGN.md `primary` color token
-- Google Fonts injection from `## Typography` section
-
-**Viewer features:**
-- Prev / Next navigation with `N / total` position badge
-- Keyboard shortcuts: `←` / `→` to navigate, `F` for fullscreen
-- Fullscreen mode hides the header and fills the viewport
-- Phone frame (390px, scaled to fit) for mobile; full-width iframe for web
-- Shared theme preference with the index via `localStorage`
-
-**Build script flags:**
-```bash
-# Standard build
-python build_showcase.py /path/to/zips --type mobile
-
-# Watch mode — auto-rebuilds on file changes
-python build_showcase.py /path/to/zips --watch
-
-# Init mode — generates DESIGN.md skeleton from detected slugs
-python build_showcase.py /path/to/zips --init
-```
-
-**DESIGN.md features parsed:**
-- Project name, type (mobile/web), screen list with titles + descriptions
-- Section groupings (`### Section Name` under `## Screens`)
-- Color tokens: `` `primary-container` (#FDD900) `` format → accent color
-- Surface color → smart showcase theme (dark app = light showcase)
-- Typography font name from `## Typography` → loaded from Google Fonts
-
-Reference files:
-| File                          | Purpose                                                               |
-| ----------------------------- | --------------------------------------------------------------------- |
-| scripts/build_showcase.py     | Main orchestrator — extract → enrich → generate; `--watch`, `--init`  |
-| scripts/extract_zips.py       | Unzips Stitch exports, renames to slug format, incremental builds     |
-| scripts/parse_design_md.py    | Parses DESIGN.md → name, type, color tokens, theme, font, screens     |
-| references/index-mobile.html  | Mobile index: dark/light smart theme, filter tabs, list toggle        |
-| references/index-web.html     | Web index: dark/light smart theme, filter tabs, list toggle           |
-| references/viewer-mobile.html | Viewer with 390px phone frame, prev/next, fullscreen                  |
-| references/viewer-web.html    | Viewer with full-width iframe + browser chrome, prev/next, fullscreen |
 
 ---
 
