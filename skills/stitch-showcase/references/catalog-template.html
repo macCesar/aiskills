@@ -698,16 +698,21 @@
       if (!iframes.length) return Promise.resolve();
 
       var loaded = 0;
+      var total = iframes.length;
       return new Promise(function(resolve) {
+        var done = false;
+        function finish() { if (!done) { done = true; resolve(); } }
+
         iframes.forEach(function(iframe) {
           iframe.setAttribute('data-loaded', '1');
           iframe.srcdoc = optimizeSrcdoc(iframe.getAttribute('data-srcdoc'));
           iframe.addEventListener('load', function() {
             loaded++;
-            if (loaded >= iframes.length) resolve();
+            if (loaded >= total) finish();
           }, { once: true });
         });
-        setTimeout(resolve, 8000);
+        // Don't block forever — some environments (Live Server) may not fire load for srcdoc iframes
+        setTimeout(finish, 5000);
       });
     }
 
@@ -809,8 +814,18 @@
     });
 
     // ── Init: compile Tailwind once → activate first tab → hide overlay ──
+    function hideOverlay() {
+      if (overlay && overlay.parentNode) {
+        overlay.classList.add('hidden');
+        setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 400);
+      }
+    }
+
     const firstTab = document.querySelector('.tab');
     if (firstTab) {
+      // Safety: never block on loading overlay forever (Live Server / CSP issues)
+      var overlayTimeout = setTimeout(hideOverlay, 15000);
+
       compileTailwindOnce().then(function(result) {
         _compiledHead = result;
 
@@ -829,12 +844,15 @@
           }
         }
         loadIframesInElement(target).then(function() {
-          overlay.classList.add('hidden');
-          setTimeout(function() { overlay.remove(); }, 400);
+          clearTimeout(overlayTimeout);
+          hideOverlay();
         });
+      }).catch(function() {
+        clearTimeout(overlayTimeout);
+        hideOverlay();
       });
     } else {
-      overlay.classList.add('hidden');
+      hideOverlay();
     }
   </script>
 </body>
