@@ -42,27 +42,34 @@ def parse(design_md_path: str) -> dict:
     screens = _extract_screens(text)
     sections = _extract_sections(text)
 
-    # Merge inline descriptions from sections into the screens list.
-    # Sections can contain "- slug: description" entries that _extract_screens
-    # misses when slugs are only listed under ### headers (no flat list).
+    # Merge inline titles and descriptions from sections into the screens list.
+    # Sections can contain "- slug: Title | Description" or "- slug: description"
+    # entries that _extract_screens misses when slugs are only listed under ### headers.
+    section_titles = {}
     section_descs = {}
     for sec in sections:
+        for slug, title in sec.get("titles", {}).items():
+            section_titles[slug] = title
         for slug, desc in sec.get("descriptions", {}).items():
             section_descs[slug] = desc
 
-    if section_descs:
+    if section_titles or section_descs:
         existing_slugs = {s["slug"] for s in screens}
-        # Apply section descriptions to screens already in the list
+        # Apply titles/descriptions to screens already in the list
         for s in screens:
-            if not s.get("description") and s["slug"] in section_descs:
-                s["description"] = section_descs[s["slug"]]
+            slug = s["slug"]
+            if not s.get("title") or s["title"] == _slug_to_title(slug):
+                if slug in section_titles:
+                    s["title"] = section_titles[slug]
+            if not s.get("description") and slug in section_descs:
+                s["description"] = section_descs[slug]
         # Add slugs that only appear inside sections (not in the flat screen list)
         for sec in sections:
             for slug in sec["slugs"]:
                 if slug not in existing_slugs:
                     screens.append({
                         "slug": slug,
-                        "title": _slug_to_title(slug),
+                        "title": section_titles.get(slug) or _slug_to_title(slug),
                         "description": section_descs.get(slug, ""),
                     })
                     existing_slugs.add(slug)
@@ -86,7 +93,20 @@ def _extract_project_name(text: str) -> str:
 
 
 def _detect_type(text: str) -> str:
-    """Returns 'mobile', 'web', or 'unknown' based on keywords."""
+    """Returns 'mobile', 'web', or 'unknown'.
+
+    Priority:
+    1. Explicit ``## Type`` section with 'mobile' or 'web' on the next line
+    2. Keyword scoring across the full document
+    """
+    # 1. Explicit ## Type section — authoritative if present
+    m = re.search(r"^##\s+Type\s*\n\s*(\S+)", text, re.MULTILINE | re.IGNORECASE)
+    if m:
+        val = m.group(1).strip().lower()
+        if val in ("mobile", "web"):
+            return val
+
+    # 2. Keyword scoring fallback
     lower = text.lower()
     mobile_keywords = ["móvil", "movil", "mobile", "ios", "android", "app móvil", "aplicación móvil"]
     web_keywords = ["web", "dashboard", "escritorio", "desktop", "browser", "navegador"]
@@ -266,8 +286,8 @@ def _parse_table(text: str) -> list:
     rows = []
 
     for line in section_text.splitlines():
-        # Table rows: | col1 | col2 | col3 |
-        if "|" not in line or re.match(r"^\s*\|[-\s|]+\|\s*$", line):
+        # Table rows must START with | (not bullet lines with "Title | Desc" format)
+        if not re.match(r"^\s*\|", line) or re.match(r"^\s*\|[-\s|]+\|\s*$", line):
             continue
         cols = [c.strip() for c in line.split("|") if c.strip()]
         if len(cols) >= 2:
@@ -294,16 +314,19 @@ def _parse_screen_list(text: str) -> list:
 
     screens = []
     for line in section.group(1).splitlines():
-        # "1. slug_name - Description" or "- slug_name — Description"
+        # "1. slug_name - Description" or "- slug_name — Description" or "- slug: Title | Description"
         m = re.match(r"^\s*(?:\d+\.|[-*])\s+([a-zA-Z0-9_\-]+)\s*[-—:]\s*(.+)$", line)
         if m:
             slug = _to_slug(m.group(1))
-            desc = m.group(2).strip()
-            screens.append({
-                "slug": slug,
-                "title": _slug_to_title(slug),
-                "description": desc,
-            })
+            raw = m.group(2).strip()
+            if " | " in raw:
+                title_part, desc_part = raw.split(" | ", 1)
+                title = title_part.strip()
+                desc = desc_part.strip()
+            else:
+                title = _slug_to_title(slug)
+                desc = raw
+            screens.append({"slug": slug, "title": title, "description": desc})
 
     return screens
 
@@ -341,7 +364,14 @@ def _extract_sections(text: str) -> list:
                 slug = _to_slug(m.group(1))
                 current_section["slugs"].append(slug)
                 if m.group(2):
-                    current_section.setdefault("descriptions", {})[slug] = m.group(2).strip()
+                    raw = m.group(2).strip()
+                    # Support "Title | Description" format for mangled slugs
+                    if " | " in raw:
+                        title_part, desc_part = raw.split(" | ", 1)
+                        current_section.setdefault("titles", {})[slug] = title_part.strip()
+                        current_section.setdefault("descriptions", {})[slug] = desc_part.strip()
+                    else:
+                        current_section.setdefault("descriptions", {})[slug] = raw
 
     return sections
 
