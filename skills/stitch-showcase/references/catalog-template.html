@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{DEFAULT_THEME}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PROJECT_NAME}} — Component Catalog</title>
+  {{FONT_LINK}}
+  <style>
+    :root {
+      --accent: {{PRIMARY_COLOR}};
+      --accent-10: {{PRIMARY_COLOR}}1a;
+      --font: '{{FONT_FAMILY}}', system-ui, -apple-system, sans-serif;
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --surface-2: #f0f0f0;
+      --text: #111;
+      --text-2: #555;
+      --text-3: #888;
+      --border: #e0e0e0;
+      --code-bg: #f6f6f6;
+    }
+    [data-theme="dark"] {
+      --bg: #0d0d0d;
+      --surface: #1a1a1a;
+      --surface-2: #252525;
+      --text: #f0f0f0;
+      --text-2: #aaa;
+      --text-3: #666;
+      --border: #2a2a2a;
+      --code-bg: #1e1e1e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header (matches index/viewer exactly) ────── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+    [data-theme="dark"] .header {
+      background: rgba(13,13,13,0.8);
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0 1.5rem;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+    .header-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .header-badge {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 0.125rem 0.625rem;
+      color: var(--text-3);
+      white-space: nowrap;
+    }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    /* ── Back button (matches viewer) ──────────────── */
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.625rem;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      color: var(--text-2);
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .back-btn:hover { background: var(--surface-2); color: var(--text); }
+    .back-btn svg { width: 14px; height: 14px; }
+    .header-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    /* ── Theme toggle (SVG moon/sun like index) ───── */
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-2);
+      transition: background 0.15s, color 0.15s;
+    }
+    .theme-btn:hover { background: var(--surface-2); color: var(--text); }
+    .theme-btn svg { width: 16px; height: 16px; }
+    /* Show moon in light mode, sun in dark mode */
+    .theme-btn .icon-moon { display: block; }
+    .theme-btn .icon-sun { display: none; }
+    [data-theme="dark"] .theme-btn .icon-moon { display: none; }
+    [data-theme="dark"] .theme-btn .icon-sun { display: block; }
+
+    /* ── Loading overlay ──────────────────────────── */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: var(--bg);
+      transition: opacity 0.3s;
+    }
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      font-size: 0.8125rem;
+      color: var(--text-3);
+    }
+
+    /* ── Tabs ──────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      padding: 0.375rem 0.875rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-2);
+      transition: all 0.15s;
+    }
+    .tab:hover { background: var(--surface-2); }
+    .tab.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .tab .count { opacity: 0.6; margin-left: 0.25rem; }
+
+    /* ── Main content ──────────────────────────────── */
+    .main { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+    .section { margin-bottom: 2.5rem; }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .section-title .badge {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--text-3);
+      margin-left: 0.5rem;
+    }
+
+    /* ── Component cards ───────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .comp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .comp-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    [data-theme="dark"] .comp-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    /* Preview area — contains raw HTML safely via scale wrapper */
+    .comp-preview {
+      position: relative;
+      height: 120px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    /* Fade-out at the bottom when content is clipped */
+    .comp-preview::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 24px;
+      background: linear-gradient(transparent, var(--surface-2));
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Scale wrapper: renders HTML at 2x width then scales to 50% */
+    .preview-scale {
+      width: 200%;
+      transform: scale(0.5);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+    /* Atomic previews (buttons, icons, badges): center, no scale */
+    .comp-preview.atomic-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+    }
+    .comp-preview.atomic-preview .preview-scale {
+      width: auto;
+      transform: none;
+    }
+
+    /* Info area */
+    .comp-info { padding: 0.875rem 1rem; }
+    .comp-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .comp-meta {
+      font-size: 0.6875rem;
+      color: var(--text-3);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .comp-meta .pill {
+      background: var(--accent-10);
+      color: var(--accent);
+      padding: 0.125rem 0.5rem;
+      border-radius: 99px;
+      font-weight: 500;
+    }
+    .comp-screens {
+      font-size: 0.6875rem;
+      color: var(--text-3);
+    }
+    .comp-screens a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .comp-screens a:hover { text-decoration: underline; }
+
+    /* Code snippet */
+    .comp-code {
+      position: relative;
+      margin-top: 0.5rem;
+    }
+    .comp-code pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.6875rem;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 120px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.375rem;
+      right: 0.375rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+      font-size: 0.625rem;
+      cursor: pointer;
+      color: var(--text-3);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .comp-code:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Design tokens section ─────────────────────── */
+    .tokens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .token-group h3 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .color-swatch {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.375rem;
+    }
+    .swatch-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .swatch-label {
+      font-size: 0.75rem;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      color: var(--text-2);
+    }
+    .token-list {
+      list-style: none;
+      font-size: 0.75rem;
+      color: var(--text-2);
+    }
+    .token-list li {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .token-list li:last-child { border-bottom: none; }
+
+    /* ── Help banner ───────────────────────────────── */
+    .help-banner {
+      padding: 0.625rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .help-banner p {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      line-height: 1.5;
+    }
+    .help-banner .dismiss-btn {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .help-banner .dismiss-btn:hover { color: var(--text); }
+
+    /* ── Empty state ───────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-3);
+      font-size: 0.875rem;
+    }
+
+    /* ── Canonical badge ───────────────────────────── */
+    .comp-card.canonical {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .canonical-badge {
+      display: inline-block;
+      font-size: 0.625rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      margin-left: 0.375rem;
+      vertical-align: middle;
+    }
+    .similarity-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--surface-2);
+      overflow: hidden;
+      margin-top: 0.375rem;
+    }
+    .similarity-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .diff-text {
+      font-size: 0.6875rem;
+      color: var(--text-3);
+      margin-top: 0.25rem;
+    }
+
+    /* ── Style properties ──────────────────────────── */
+    .style-props {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.375rem;
+    }
+    .style-prop {
+      font-size: 0.625rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.125rem 0.375rem;
+      color: var(--text-3);
+      font-family: 'SF Mono', 'Menlo', monospace;
+    }
+
+    /* ── Cluster group ────────────────────────────── */
+    .cluster-group {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .cluster-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .cluster-context {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.125rem 0.5rem;
+      color: var(--text-3);
+    }
+    .cluster-count {
+      font-size: 0.6875rem;
+      color: var(--text-3);
+    }
+    .cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 0.75rem;
+    }
+
+    /* ── Already unified ──────────────────────────── */
+    .unified-section {
+      margin-top: 2rem;
+    }
+    .unified-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      color: var(--text-2);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      width: 100%;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .unified-toggle:hover { background: var(--surface-2); }
+    .unified-toggle .arrow { transition: transform 0.2s; }
+    .unified-toggle.open .arrow { transform: rotate(90deg); }
+    .unified-content { display: none; padding-top: 0.75rem; }
+    .unified-content.open { display: block; }
+    .unified-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0;
+      font-size: 0.75rem;
+      color: var(--text-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .unified-item:last-child { border-bottom: none; }
+    .unified-check {
+      color: #22c55e;
+      font-weight: 600;
+    }
+    .screen-count-badge {
+      font-size: 0.625rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.375rem;
+      color: var(--text-3);
+    }
+
+    /* ── Variant count badge ──────────────────────── */
+    .variant-badge {
+      font-size: 0.625rem;
+      font-weight: 500;
+      background: var(--accent-10);
+      color: var(--accent);
+      padding: 0.125rem 0.5rem;
+      border-radius: 99px;
+      margin-left: 0.375rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- ── Loading overlay ──────────────────────────── -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading component previews…</div>
+  </div>
+
+  <!-- ── Header ──────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="back-btn" title="Back to gallery">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13L5 8l5-5"/></svg>
+          Back
+        </a>
+        <div class="header-divider"></div>
+        <span class="header-title">{{PROJECT_NAME}}</span>
+        <span class="header-badge">Component Catalog</span>
+        <span class="header-badge">v{{SKILL_VERSION}}</span>
+      </div>
+      <div class="header-actions">
+        <button class="theme-btn" id="themeToggle" title="Toggle light/dark">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Tabs ────────────────────────────────────── -->
+  <nav class="tabs" id="tabNav">
+    {{TABS_HTML}}
+  </nav>
+
+  <!-- ── Help banner ──────────────────────────────── -->
+  <div class="help-banner" id="helpBanner">
+    <p>This catalog shows all detected UI components grouped by similarity.
+    Components marked <strong>★ Canonical</strong> are the recommended versions.
+    To standardize: tell your AI agent which variant to keep, and it will apply changes across all screens.</p>
+    <button class="dismiss-btn" id="dismissHelp" title="Dismiss">×</button>
+  </div>
+
+  <!-- ── Main content ────────────────────────────── -->
+  <main class="main" id="mainContent">
+    {{CATALOG_HTML}}
+  </main>
+
+  <script>
+    // ── Theme ──────────────────────────────────────
+    const root = document.documentElement;
+    const stored = localStorage.getItem('catalog-theme');
+    if (stored) root.setAttribute('data-theme', stored);
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('catalog-theme', next);
+    });
+
+    // ── One-time Tailwind compilation ──────────────
+    // Instead of 184 iframes each loading + executing the Tailwind CDN,
+    // we compile ALL component classes in ONE hidden iframe, extract the
+    // generated CSS, and inject it as a <style> in every preview iframe.
+    // Result: 1 CDN request + 1 JIT compilation instead of 184.
+    const overlay = document.getElementById('loadingOverlay');
+    let _compiledHead = null; // { css, fontLinks } after compilation
+
+    function compileTailwindOnce() {
+      const firstIframe = document.querySelector('iframe[data-srcdoc]');
+      if (!firstIframe) return Promise.resolve(null);
+
+      const firstSrc = firstIframe.getAttribute('data-srcdoc');
+      if (!firstSrc.includes('tailwindcss')) return Promise.resolve(null);
+
+      // Extract <head> (CDN + config + fonts) from any iframe — all share the same
+      const headMatch = firstSrc.match(/<head>([\s\S]*?)<\/head>/i);
+      const head = headMatch ? headMatch[1] : '';
+
+      // Keep font <link> tags (tiny, cached) — strip CDN scripts
+      const fontLinks = (head.match(/<link[^>]*(?:fonts\.googleapis|fonts\.gstatic|preconnect)[^>]*>/gi) || []).join('\n');
+
+      // Collect ALL body HTML to ensure Tailwind generates CSS for every utility class
+      const allBodies = [];
+      document.querySelectorAll('iframe[data-srcdoc]').forEach(function(el) {
+        const src = el.getAttribute('data-srcdoc');
+        const bm = src.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+        if (bm) allBodies.push(bm[1]);
+      });
+
+      return new Promise(function(resolve) {
+        var compiler = document.createElement('iframe');
+        compiler.style.cssText = 'position:fixed;width:0;height:0;border:none;opacity:0;pointer-events:none;';
+        document.body.appendChild(compiler);
+
+        // One big document with ALL component HTML — Tailwind scans it once
+        compiler.srcdoc = '<!DOCTYPE html><html><head>' + head +
+          '</head><body style="display:none">' + allBodies.join('\n') + '</body></html>';
+
+        var resolved = false;
+
+        compiler.addEventListener('load', function() {
+          // Poll for Tailwind's generated <style> elements
+          var attempts = 0;
+          var check = setInterval(function() {
+            attempts++;
+            try {
+              var styles = compiler.contentDocument.querySelectorAll('style');
+              if (styles.length > 0 || attempts > 40) {
+                clearInterval(check);
+                var css = '';
+                if (styles.length) styles.forEach(function(s) { css += s.textContent + '\n'; });
+                compiler.remove();
+                if (!resolved) { resolved = true; resolve({ css: css, fontLinks: fontLinks }); }
+              }
+            } catch(e) {
+              clearInterval(check);
+              compiler.remove();
+              if (!resolved) { resolved = true; resolve(null); }
+            }
+          }, 150);
+        }, { once: true });
+
+        // Safety: don't block forever
+        setTimeout(function() {
+          if (!resolved) { resolved = true; try { compiler.remove(); } catch(e) {} resolve(null); }
+        }, 12000);
+      });
+    }
+
+    function optimizeSrcdoc(srcdoc) {
+      if (!_compiledHead || !_compiledHead.css) return srcdoc;
+      // Replace <head> (with CDN scripts) with compiled CSS + font links only
+      return srcdoc.replace(
+        /<head>[\s\S]*?<\/head>/i,
+        '<head>' + _compiledHead.fontLinks + '<style>' + _compiledHead.css + '</style></head>'
+      );
+    }
+
+    // ── Lazy iframe loading ────────────────────────
+    function loadIframesInElement(container) {
+      var iframes = container.querySelectorAll('iframe[data-srcdoc]:not([data-loaded])');
+      if (!iframes.length) return Promise.resolve();
+
+      var loaded = 0;
+      return new Promise(function(resolve) {
+        iframes.forEach(function(iframe) {
+          iframe.setAttribute('data-loaded', '1');
+          iframe.srcdoc = optimizeSrcdoc(iframe.getAttribute('data-srcdoc'));
+          iframe.addEventListener('load', function() {
+            loaded++;
+            if (loaded >= iframes.length) resolve();
+          }, { once: true });
+        });
+        setTimeout(resolve, 8000);
+      });
+    }
+
+    function loadIframesProgressively(container) {
+      var iframes = Array.from(container.querySelectorAll('iframe[data-srcdoc]:not([data-loaded])'));
+      if (!iframes.length) return;
+      var BATCH = 16;
+      var i = 0;
+      function nextBatch() {
+        var batch = iframes.slice(i, i + BATCH);
+        if (!batch.length) return;
+        batch.forEach(function(iframe) {
+          iframe.setAttribute('data-loaded', '1');
+          iframe.srcdoc = optimizeSrcdoc(iframe.getAttribute('data-srcdoc'));
+        });
+        i += BATCH;
+        if (i < iframes.length) setTimeout(nextBatch, 60);
+      }
+      nextBatch();
+    }
+
+    // ── Tabs ───────────────────────────────────────
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section[data-category]');
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var cat = tab.dataset.category;
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+
+        sections.forEach(function(s) {
+          s.style.display = (cat === 'all' || s.dataset.category === cat) ? '' : 'none';
+        });
+
+        // Lazy-load iframes for newly visible sections
+        if (cat === 'all') {
+          loadIframesProgressively(document.getElementById('mainContent'));
+        } else {
+          sections.forEach(function(s) {
+            if (s.dataset.category === cat) loadIframesInElement(s);
+          });
+        }
+      });
+    });
+
+    // ── Search (if search box exists) ────────────────
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        var q = searchInput.value.toLowerCase().trim();
+        document.querySelectorAll('.comp-card').forEach(function(card) {
+          var text = (card.dataset.name || '').toLowerCase() + ' ' + (card.dataset.variant || '').toLowerCase();
+          card.style.display = (!q || text.includes(q)) ? '' : 'none';
+        });
+        if (q) {
+          sections.forEach(function(s) { s.style.display = ''; });
+          sections.forEach(function(s) {
+            var visible = s.querySelectorAll('.comp-card:not([style*="display: none"])');
+            s.style.display = visible.length ? '' : 'none';
+          });
+          loadIframesProgressively(document.getElementById('mainContent'));
+        }
+      });
+    }
+
+    // ── Copy code ──────────────────────────────────
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('copy-btn')) {
+        var pre = e.target.parentElement.querySelector('pre');
+        if (pre) {
+          navigator.clipboard.writeText(pre.textContent).then(function() {
+            var orig = e.target.textContent;
+            e.target.textContent = '✓';
+            setTimeout(function() { e.target.textContent = orig; }, 1500);
+          });
+        }
+      }
+    });
+
+    // ── Unified toggle ──────────────────────────────
+    document.querySelectorAll('.unified-toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        btn.classList.toggle('open');
+        var content = btn.nextElementSibling;
+        if (content) content.classList.toggle('open');
+      });
+    });
+
+    // ── Help banner dismiss ──────────────────────────
+    const helpBanner = document.getElementById('helpBanner');
+    const dismissHelp = document.getElementById('dismissHelp');
+    if (localStorage.getItem('catalog-help-dismissed')) {
+      helpBanner.style.display = 'none';
+    }
+    dismissHelp.addEventListener('click', function() {
+      helpBanner.style.display = 'none';
+      localStorage.setItem('catalog-help-dismissed', '1');
+    });
+
+    // ── Init: compile Tailwind once → activate first tab → hide overlay ──
+    const firstTab = document.querySelector('.tab');
+    if (firstTab) {
+      compileTailwindOnce().then(function(result) {
+        _compiledHead = result;
+
+        // Activate first tab visually
+        var cat = firstTab.dataset.category;
+        firstTab.classList.add('active');
+        sections.forEach(function(s) {
+          s.style.display = (cat === 'all' || s.dataset.category === cat) ? '' : 'none';
+        });
+
+        // Load iframes for first tab, then hide overlay
+        var target = document.getElementById('mainContent');
+        if (cat !== 'all') {
+          for (var i = 0; i < sections.length; i++) {
+            if (sections[i].dataset.category === cat) { target = sections[i]; break; }
+          }
+        }
+        loadIframesInElement(target).then(function() {
+          overlay.classList.add('hidden');
+          setTimeout(function() { overlay.remove(); }, 400);
+        });
+      });
+    } else {
+      overlay.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

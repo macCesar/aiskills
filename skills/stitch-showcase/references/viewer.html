@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viewer — {{PROJECT_NAME}}</title>
+  {{FONT_LINK}}
+  <script>
+    (function () {
+      var s = localStorage.getItem('showcase-theme');
+      var d = '{{DEFAULT_THEME}}';
+      if ((s || d) === 'dark') document.documentElement.classList.add('dark');
+      // Apply view mode before render — URL param > localStorage > default
+      var params = new URLSearchParams(location.search);
+      var view = localStorage.getItem('showcase-view-mode') || params.get('view') || '{{DEFAULT_VIEW}}';
+      document.documentElement.classList.add('view-' + view);
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['{{FONT_FAMILY}}', 'system-ui', 'sans-serif'] } } } }</script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+
+    /* ── Phone frame (mobile view) ── */
+    #phone-wrap {
+      width: 390px;
+      height: 844px;
+      border: 8px solid #2a2a2a;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+      flex-shrink: 0;
+      position: relative;
+      background: #000;
+      box-sizing: content-box;
+    }
+    .dark #phone-wrap { border-color: #2a2a2a; box-shadow: 0 25px 60px rgba(0,0,0,0.4); }
+    html:not(.dark) #phone-wrap { border-color: #d1d5db; box-shadow: 0 25px 60px rgba(0,0,0,0.15); }
+    #phone-container { transform-origin: top center; }
+
+    /* ── Browser chrome (web view) ── */
+    #browser-chrome {
+      height: 36px;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+      background: #e8e8e8;
+    }
+    html.dark #browser-chrome { background: #1a1a1a; }
+
+    .traffic-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+    #url-pill {
+      flex: 1; max-width: 480px; margin: 0 auto; height: 22px;
+      border-radius: 11px; display: flex; align-items: center;
+      justify-content: center; padding: 0 12px;
+      background: rgba(0, 0, 0, 0.06); overflow: hidden;
+    }
+    html.dark #url-pill { background: rgba(255, 255, 255, 0.06); }
+    #url-pill span { font-size: 11px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    html.dark #url-pill span { color: #666; }
+
+    #iframe-wrap-web {
+      border-left: 1px solid #d4d4d4;
+      border-right: 1px solid #d4d4d4;
+      border-bottom: 1px solid #d4d4d4;
+    }
+    html.dark #iframe-wrap-web { border-color: #2a2a2a; }
+
+    /* ── View mode visibility ── */
+    .view-mobile #mobile-frame { display: flex; }
+    .view-mobile #web-frame { display: none; }
+    .view-web #mobile-frame { display: none; }
+    .view-web #web-frame { display: flex; }
+
+    #viewer-frame {
+      display: block; width: 100%; height: 100%; border: none;
+      background: #fff;
+    }
+    html.dark #viewer-frame { background: #111; }
+  </style>
+</head>
+
+<body class="flex h-screen flex-col overflow-hidden text-gray-900 transition-colors duration-200 dark:text-gray-100 bg-[#f0f0f0] dark:bg-[#0a0a0a]">
+
+  <script>
+    var SCREENS = {{SCREENS_JSON}};
+  </script>
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header id="main-header" class="flex-shrink-0 border-b border-gray-200/60 backdrop-blur-xl bg-white/80 dark:border-white/10 dark:bg-[#0a0a0a]/80" style="height:56px">
+    <div class="mx-auto flex h-full max-w-[1440px] items-center gap-3 px-5">
+
+      <!-- Back button -->
+      <a id="btn-back" href="index.html" title="Back to gallery (Esc)" class="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] text-gray-500 no-underline transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 13L5 8l5-5" />
+        </svg>
+        Back
+      </a>
+
+      <div class="h-4 w-px shrink-0 bg-gray-200 dark:bg-white/10"></div>
+
+      <!-- Screen title -->
+      <span id="screen-title" class="shrink-0 text-[13px] font-semibold leading-none">--</span>
+
+      <!-- Screen description (inline after title) -->
+      <span id="screen-desc" class="hidden text-[11px] text-gray-400 dark:text-gray-500 truncate sm:inline"></span>
+
+      <!-- Spacer -->
+      <div class="flex-1"></div>
+
+      <!-- Position counter -->
+      <span id="nav-pos" class="shrink-0 tabular-nums text-[11px] text-gray-400 dark:text-gray-500">-- / --</span>
+
+      <!-- Prev button -->
+      <button id="btn-prev" title="Previous screen (ArrowLeft)" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30" disabled>
+        <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13L5 8l5-5"/></svg>
+      </button>
+
+      <!-- Next button -->
+      <button id="btn-next" title="Next screen (ArrowRight)" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30" disabled>
+        <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+      </button>
+
+      <!-- Theme toggle -->
+      <button id="theme-toggle" title="Toggle light/dark" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <svg class="block h-3.5 w-3.5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+        <svg class="hidden h-3.5 w-3.5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      </button>
+
+      <!-- View mode toggle -->
+      <button id="view-mode-toggle" title="Toggle mobile/web view" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <svg id="icon-phone" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+        </svg>
+        <svg id="icon-monitor" class="hidden h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </button>
+
+      <!-- Fullscreen button -->
+      <button id="btn-fullscreen" title="Fullscreen (F)" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <svg id="icon-expand" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+        <svg id="icon-compress" class="hidden h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 14h6v6m10-10h-6V4M4 10h6V4m10 10h-6v6"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ── Fullscreen container ──────────────────────────────── -->
+  <div id="fs-container" class="flex flex-1 flex-col overflow-hidden">
+
+    <!-- ── Mobile frame (phone) ──────────────────────────── -->
+    <main id="mobile-frame" class="hidden flex-1 items-start justify-center overflow-hidden pt-6">
+      <div id="phone-container">
+        <div id="phone-wrap">
+          <iframe id="viewer-frame-mobile" class="viewer-frame" title="Screen preview" style="width:100%;height:100%;border:none;display:block;background:#000"></iframe>
+        </div>
+      </div>
+    </main>
+
+    <!-- ── Web frame (browser chrome) ────────────────────── -->
+    <div id="web-frame" class="hidden mx-auto w-full max-w-[1440px] flex-1 flex-col overflow-hidden px-5 py-4">
+      <div id="browser-chrome" class="flex-shrink-0">
+        <div class="traffic-dot" style="background:#FF5F57"></div>
+        <div class="traffic-dot" style="background:#FEBC2E"></div>
+        <div class="traffic-dot" style="background:#28C840"></div>
+        <div id="url-pill"><span id="url-display">localhost</span></div>
+        <div style="width:60px;flex-shrink:0"></div>
+      </div>
+      <div id="iframe-wrap-web" class="flex-1 overflow-hidden rounded-b-xl">
+        <iframe id="viewer-frame-web" class="viewer-frame" src="" title="Screen preview" style="width:100%;height:100%;border:none;display:block;background:#fff"></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ── Elements ──
+      var header = document.getElementById('main-header');
+      var titleEl = document.getElementById('screen-title');
+      var descEl = document.getElementById('screen-desc');
+      var navPos = document.getElementById('nav-pos');
+      var btnBack = document.getElementById('btn-back');
+      var btnPrev = document.getElementById('btn-prev');
+      var btnNext = document.getElementById('btn-next');
+      var btnFullscreen = document.getElementById('btn-fullscreen');
+      var iconExpand = document.getElementById('icon-expand');
+      var iconCompress = document.getElementById('icon-compress');
+      var iconPhone = document.getElementById('icon-phone');
+      var iconMonitor = document.getElementById('icon-monitor');
+      var phoneContainer = document.getElementById('phone-container');
+      var urlDisplay = document.getElementById('url-display');
+
+      var frameMobile = document.getElementById('viewer-frame-mobile');
+      var frameWeb = document.getElementById('viewer-frame-web');
+
+      var screens = SCREENS;
+      var currentIndex = 0;
+      var currentView = localStorage.getItem('showcase-view-mode') || '{{DEFAULT_VIEW}}';
+
+      // ── View mode ──
+      function applyViewMode() {
+        var root = document.documentElement;
+        root.classList.remove('view-mobile', 'view-web');
+        root.classList.add('view-' + currentView);
+
+        // Toggle icon shows what you'll switch TO
+        if (currentView === 'mobile') {
+          iconPhone.classList.add('hidden');
+          iconMonitor.classList.remove('hidden');
+        } else {
+          iconPhone.classList.remove('hidden');
+          iconMonitor.classList.add('hidden');
+        }
+
+        // Recalc phone scaling when switching to mobile
+        if (currentView === 'mobile') recalcScale();
+      }
+      applyViewMode();
+
+      document.getElementById('view-mode-toggle').addEventListener('click', function () {
+        currentView = currentView === 'mobile' ? 'web' : 'mobile';
+        localStorage.setItem('showcase-view-mode', currentView);
+        applyViewMode();
+        // Sync iframe src to the active frame
+        syncFrameSrc();
+      });
+
+      // ── Helpers ──
+      function activeFrame() {
+        return currentView === 'mobile' ? frameMobile : frameWeb;
+      }
+
+      function syncFrameSrc() {
+        // Ensure both frames have the same src
+        var src = frameMobile.src || frameWeb.src;
+        if (frameMobile.src !== src) frameMobile.src = src;
+        if (frameWeb.src !== src) frameWeb.src = src;
+      }
+
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name) || '';
+      }
+
+      function findScreenIndex(file) {
+        for (var i = 0; i < screens.length; i++) {
+          if (screens[i].html_file === file) return i;
+        }
+        return 0;
+      }
+
+      // ── Load screen ──
+      function loadScreen(index) {
+        if (screens.length === 0) return;
+        if (index < 0) index = screens.length - 1;
+        if (index >= screens.length) index = 0;
+        currentIndex = index;
+
+        var s = screens[currentIndex];
+        frameMobile.src = s.html_file;
+        frameWeb.src = s.html_file;
+        titleEl.textContent = s.title || '';
+        descEl.textContent = s.desc || '';
+        navPos.textContent = (currentIndex + 1) + ' / ' + screens.length;
+
+        // Update URL
+        var url = new URL(window.location);
+        url.searchParams.set('screen', s.html_file);
+        history.replaceState(null, '', url);
+
+        // Page title
+        document.title = (s.title || 'Screen') + ' — {{PROJECT_NAME}}';
+
+        // URL bar in browser chrome
+        var slug = s.html_file.replace('assets/', '').replace('.html', '').replace(/_/g, '-');
+        urlDisplay.textContent = 'app.{{PROJECT_NAME}} / ' + slug;
+
+        // Enable/disable nav buttons
+        btnPrev.disabled = currentIndex <= 0;
+        btnNext.disabled = currentIndex >= screens.length - 1;
+      }
+
+      // ── Phone scaling ──
+      function recalcScale() {
+        if (currentView !== 'mobile') return;
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        var headerH = header.offsetHeight;
+        var padX = 48;
+        var padY = 48;
+        var phoneW = 390 + 16;
+        var phoneH = 844 + 16;
+
+        var scaleX = (vw - padX) / phoneW;
+        var scaleY = (vh - headerH - padY) / phoneH;
+        var scale = Math.min(1, scaleX, scaleY);
+
+        phoneContainer.style.transform = 'scale(' + scale + ')';
+        phoneContainer.style.width = phoneW + 'px';
+        phoneContainer.style.height = phoneH + 'px';
+      }
+
+      // ── Fullscreen ──
+      function isFullscreen() {
+        return !!(document.fullscreenElement || document.webkitFullscreenElement);
+      }
+
+      function toggleFullscreen() {
+        var el = document.getElementById('fs-container');
+        if (isFullscreen()) {
+          (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        } else {
+          (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+        }
+      }
+
+      function updateFullscreenIcon() {
+        var fs = isFullscreen();
+        iconExpand.style.display = fs ? 'none' : 'block';
+        iconCompress.style.display = fs ? 'block' : 'none';
+      }
+
+      // Back button is now an <a href="index.html"> — no JS needed
+
+      // ── Navigation ──
+      btnPrev.addEventListener('click', function () { loadScreen(currentIndex - 1); });
+      btnNext.addEventListener('click', function () { loadScreen(currentIndex + 1); });
+      btnFullscreen.addEventListener('click', toggleFullscreen);
+
+      // ── Keyboard shortcuts ──
+      document.addEventListener('keydown', function (e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        switch (e.key) {
+          case 'ArrowLeft':
+            e.preventDefault();
+            loadScreen(currentIndex - 1);
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            loadScreen(currentIndex + 1);
+            break;
+          case 'Escape':
+            if (isFullscreen()) {
+              document.exitFullscreen();
+            } else {
+              btnBack.click();
+            }
+            break;
+          case 'f':
+          case 'F':
+            if (!e.ctrlKey && !e.metaKey) {
+              e.preventDefault();
+              toggleFullscreen();
+            }
+            break;
+        }
+      });
+
+      // ── Fullscreen change ──
+      document.addEventListener('fullscreenchange', updateFullscreenIcon);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+
+      // ── Theme toggle ──
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('showcase-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      });
+
+      // ── Resize ──
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(recalcScale, 50);
+      });
+
+      // ── Init ──
+      var initialScreen = getParam('screen');
+      currentIndex = initialScreen ? findScreenIndex(initialScreen) : 0;
+      loadScreen(currentIndex);
+      recalcScale();
+    })();
+  </script>
+
+</body>
+
+</html>
