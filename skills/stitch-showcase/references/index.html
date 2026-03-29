@@ -13,8 +13,9 @@
       const saved = localStorage.getItem('showcase-theme');
       const fallback = '{{DEFAULT_THEME}}';
       if ((saved ?? fallback) === 'dark') document.documentElement.classList.add('dark');
-      // Apply view mode before render
-      const view = localStorage.getItem('showcase-view-mode') || '{{DEFAULT_VIEW}}';
+      // Apply view mode before render (scoped per project so different showcases don't conflict)
+      const viewKey = 'showcase-view-mode-' + '{{PROJECT_SLUG}}';
+      const view = localStorage.getItem(viewKey) || '{{DEFAULT_VIEW}}';
       document.documentElement.classList.add('view-' + view);
     })();
     tailwind.config = {
@@ -170,7 +171,8 @@
   <script>
     // ── View mode (mobile/web) ──────────────────────────────
     const DEFAULT_VIEW = '{{DEFAULT_VIEW}}';
-    let currentView = localStorage.getItem('showcase-view-mode') || DEFAULT_VIEW;
+    const VIEW_KEY = 'showcase-view-mode-' + '{{PROJECT_SLUG}}';
+    let currentView = localStorage.getItem(VIEW_KEY) || DEFAULT_VIEW;
 
     const viewBadge = document.getElementById('view-badge');
     const iconPhone = document.getElementById('icon-phone');
@@ -197,7 +199,7 @@
 
     document.getElementById('view-mode-toggle').addEventListener('click', () => {
       currentView = currentView === 'mobile' ? 'web' : 'mobile';
-      localStorage.setItem('showcase-view-mode', currentView);
+      localStorage.setItem(VIEW_KEY, currentView);
       applyViewMode();
     });
 

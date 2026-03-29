@@ -13,7 +13,8 @@
       if ((s || d) === 'dark') document.documentElement.classList.add('dark');
       // Apply view mode before render — URL param > localStorage > default
       var params = new URLSearchParams(location.search);
-      var view = localStorage.getItem('showcase-view-mode') || params.get('view') || '{{DEFAULT_VIEW}}';
+      var viewKey = 'showcase-view-mode-' + '{{PROJECT_SLUG}}';
+      var view = localStorage.getItem(viewKey) || params.get('view') || '{{DEFAULT_VIEW}}';
       document.documentElement.classList.add('view-' + view);
     })();
   </script>
@@ -220,7 +221,8 @@
 
       var screens = SCREENS;
       var currentIndex = 0;
-      var currentView = localStorage.getItem('showcase-view-mode') || '{{DEFAULT_VIEW}}';
+      var VIEW_KEY = 'showcase-view-mode-' + '{{PROJECT_SLUG}}';
+      var currentView = localStorage.getItem(VIEW_KEY) || '{{DEFAULT_VIEW}}';
 
       // ── View mode ──
       function applyViewMode() {
@@ -244,7 +246,7 @@
 
       document.getElementById('view-mode-toggle').addEventListener('click', function () {
         currentView = currentView === 'mobile' ? 'web' : 'mobile';
-        localStorage.setItem('showcase-view-mode', currentView);
+        localStorage.setItem(VIEW_KEY, currentView);
         applyViewMode();
         // Sync iframe src to the active frame
         syncFrameSrc();

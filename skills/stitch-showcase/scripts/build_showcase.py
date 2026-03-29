@@ -718,6 +718,7 @@ def _generate_viewer(output_dir: Path, ptype: str, metadata: dict, screens: list
     html = html.replace("{{SCREENS_JSON}}", json.dumps(screens_data, ensure_ascii=False))
     html = html.replace("{{DEFAULT_THEME}}", metadata.get("default_theme", "light"))
     html = html.replace("{{DEFAULT_VIEW}}", ptype)
+    html = html.replace("{{PROJECT_SLUG}}", _project_slug(metadata["project_name"]))
     html = html.replace("{{FONT_LINK}}", font_link)
     html = html.replace("{{FONT_FAMILY}}", font_family)
 
@@ -788,6 +789,7 @@ def _generate_index(output_dir: Path, ptype: str, metadata: dict, screens: list)
     html = html.replace("{{PROJECT_TYPE_LABEL}}", escape(type_label))
     html = html.replace("{{PROJECT_DESCRIPTION}}", project_desc)
     html = html.replace("{{DEFAULT_VIEW}}", ptype)
+    html = html.replace("{{PROJECT_SLUG}}", _project_slug(metadata["project_name"]))
     html = html.replace("{{DESIGN_SYSTEM_HTML}}", ds_html)
     html = html.replace("{{SCREENS_INTRO}}", escape(screens_intro))
 
@@ -1270,6 +1272,11 @@ def _slug_to_title(slug: str) -> str:
     """01_splash_screen → 'Splash Screen' (strips numeric prefix)."""
     s = re.sub(r"^[\d_]+", "", slug)
     return s.replace("_", " ").replace("-", " ").title().strip() or slug.title()
+
+
+def _project_slug(name: str) -> str:
+    """'SNAP Gym Web' → 'snap-gym-web' — for scoping localStorage keys per project."""
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "showcase"
 
 
 # ─── Watch mode ───────────────────────────────────────────────────────────────
