@@ -8,132 +8,214 @@ description: >
   "generate the index for my Stitch screens", "tengo los zips de Stitch", "quiero ver mis pantallas",
   or any mention of Stitch exports, screen.png + code.html pairs, or design zip files.
   Even if the user just says "I have a zip from Stitch" or "mis exports de Stitch" — use this skill.
+  Also triggers on: "optimiza el showcase", "mejora las descripciones", "enrich the showcase",
+  "optimize titles", "optimiza", or any request to improve an existing showcase's content.
 ---
 
 # stitch-showcase
 
-Converts Google Stitch exports (zips with `code.html` + `screen.png`) into a navigable showcase with `index.html` + `viewer.html`.
+Converts Google Stitch exports (zips with `code.html` + `screen.png`) into a navigable showcase with `index.html` + `viewer.html` + `catalog.html`.
+
+**Architecture**: Python script generates all HTML from pre-built templates in ~3 seconds. AI enrichment (descriptions, sections, hero text) is **optional and on-demand** — only when the user asks to optimize. The AI NEVER writes index.html or viewer.html from scratch.
 
 ## Prerequisites
 
 Scripts require Python 3.8+. No external dependencies (stdlib only).
 
-## Workflow
+## Workflow: Four Modes
 
 ```dot
 digraph showcase {
-    "User trigger" -> "Pre-flight check";
-    "Pre-flight check" -> "Has all info?" [label="ask up to 3 questions"];
-    "Has all info?" -> "Run build_showcase.py" [label="yes"];
-    "Has all info?" -> "Collect missing info" [label="no"];
-    "Collect missing info" -> "Run build_showcase.py";
-    "Run build_showcase.py" -> "Detected type?" [label="done"];
-    "Detected type?" -> "Open output/index.html" [label="mobile/web"];
-    "Detected type?" -> "Ask mobile or web?" [label="ambiguous"];
-    "Ask mobile or web?" -> "Run with --type flag";
-    "Run with --type flag" -> "Open output/index.html";
+    "User trigger" -> "What mode?";
+    "What mode?" -> "Mode 1: Build" [label="new showcase"];
+    "What mode?" -> "Mode 2: Enrich" [label="optimize/improve"];
+    "What mode?" -> "Mode 3: Update" [label="add screens"];
+    "What mode?" -> "Mode 4: Standardize" [label="unify components"];
+
+    "Mode 1: Build" -> "Run build_showcase.py";
+    "Run build_showcase.py" -> "Showcase ready (~3s)";
+    "Showcase ready (~3s)" -> "Offer: optimize titles?";
+
+    "Mode 2: Enrich" -> "Extract text → improve DESIGN.md → rebuild";
+
+    "Mode 3: Update" -> "Copy new zips → --update → classify → rebuild";
+
+    "Mode 4: Standardize" -> "Review catalog → apply_canonical → rebuild";
 }
 ```
 
-## Steps
+**CRITICAL**: Always run `build_showcase.py` WITHOUT `--context` to generate HTMLs from templates. The `--context` flag is ONLY for debugging/inspecting the data JSON. NEVER have the AI write index.html or viewer.html manually — the templates handle layout, grid, viewer, theme, tabs, search, and all interactive features.
 
-### 1. Pre-flight Check (ask BEFORE running anything)
+## Mode 1: Build (default — instant)
 
-Ask only what's missing — skip questions already answered in the user's message:
+**Triggers**: "arma el muestrario", "build the showcase", user gives a zip/folder path, or any request to create a new showcase.
 
-**Q1 — Source folder** (if not provided):
-```
-Where are the Stitch zips? (full or relative path)
-```
-
-**Q2 — Mobile or web?** (if DESIGN.md is absent or ambiguous):
-```
-Is this a mobile app or a web dashboard?
-```
-
-**Q3 — Project name** (only if no DESIGN.md and no `--name` passed):
-```
-What's the project name for the showcase header?
-```
-
-### 2. Check for DESIGN.md
-
-Look for `DESIGN.md` in the source folder. If present, it provides:
-- Project name
-- Type detection (mobile/web)
-- Screen list with descriptions
-- Color palette (accent color)
-
-### 2b. Suggest Sections (almost always required)
-
-**Always check** whether DESIGN.md has a usable `## Screens` section with `### Group` H3 headers.
-A DESIGN.md that only contains typography, color tokens, or design system notes does NOT count — that's a design doc, not a screen inventory.
-
-Run `--init` + improve sections whenever:
-- No DESIGN.md exists
-- DESIGN.md exists but has no `## Screens` section
-- DESIGN.md has a `## Screens` section but no H3 groups (`###`) inside it
-- DESIGN.md is a design system / brand doc (contains "Typography", "Color Palette", "Design System" headings but no slug list)
+This is the default mode. No AI analysis needed — the script handles everything with smart defaults.
 
 Steps:
-1. Run `build_showcase.py /path --init` to generate a skeleton with all detected slugs
-2. Read the generated DESIGN.md — review every slug
-3. Using domain knowledge about the app, reorganize slugs into 5–10 logical sections (not just keyword overlap)
-   - Group by user journey: Onboarding → Home → Core feature → Secondary features → Settings/Profile
-   - Variants (dark/light) of the same screen go in the same section
-   - Aim for 2–5 screens per section; avoid "Other" with more than 3 screens
-4. Write the improved DESIGN.md — **ask the user to confirm before overwriting if they already have content**
-5. Run the full build
+1. Identify the source path from the user's message
+2. Run the build script — **nothing else**:
+   ```bash
+   python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source
+   ```
+3. Parse the script output to get the `showcase/` path
+4. Tell the user: "Showcase listo en `showcase/index.html`" + offer: *"¿Quieres que optimice títulos y descripciones?"*
 
-### 3. Run the build script
+**That's it.** No pre-flight questions, no DESIGN.md enrichment, no `--extract-text`, no `--init`.
 
-The script accepts either a **folder** or a **zip file** directly:
+Only ask `--type` or `--name` if the **script fails** or the **user explicitly wants to override**:
+```bash
+# Only if script fails to detect type or user requests it
+python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source --type mobile
+python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source --name "My App" --type mobile
+```
+
+## Mode 2: Enrich (on-demand — user asks)
+
+**Triggers**: "optimiza", "optimiza el showcase", "mejora las descripciones", "enrich", "optimize titles", "mejora el DESIGN.md", or any request to improve an existing showcase's content quality.
+
+This mode improves the AI-generated content in DESIGN.md and rebuilds the showcase with enriched data.
+
+Steps:
+1. Find the source folder (from the user's message or the project's `showcase.json`)
+2. Run `--extract-text` to get screen summaries:
+   ```bash
+   python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source --extract-text
+   ```
+   This generates `screen_summaries.txt` — a compact text file with visible text from all screen HTMLs.
+3. Read the existing `DESIGN.md` (in the source folder) + `screen_summaries.txt`
+4. **Keep existing sections as-is** — do NOT re-group screens. Only improve content within each section:
+   - **De-mangle titles**: `configuraci_n` → "Configuración", `membres_as_y_pagos` → "Membresías y Pagos"
+   - **Write real descriptions**: From the extracted text, write a 1-sentence Spanish description for each screen explaining what it does for the user (NOT just a UI label). Example: "Panel principal del miembro con estado de membresía, próximas clases y accesos rápidos."
+   - **Fix the `Title | Description` format** for mangled slugs (see format below)
+5. **Update the project description** at the top of DESIGN.md — this feeds the hero section. It should describe the full scope of the project based on the screens' content.
+6. **Verify colors/fonts**: Scan the screen HTMLs for hex colors in CSS variables and font families. Update `## Colors` and `## Typography` sections if they're missing or incomplete.
+7. Re-run the build to regenerate HTMLs with enriched data:
+   ```bash
+   python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source
+   ```
+8. Done — tell the user the showcase has been updated with improved descriptions
+
+**Mangled slugs (Stitch replaces accented characters with `_`):**
+
+Google Stitch strips accent characters from filenames, replacing each with `_`. When you see slugs like `confirmaci_n_de_reserva` or `men_m_s`, reconstruct the correct display title and write it explicitly using the `Title | Description` format:
+
+```markdown
+### Cuenta
+- configuraci_n_oscuro: Configuración | Ajustes de cuenta, notificaciones y preferencias del usuario.
+- notificaci_n_oscuro: Notificación | Centro de alertas y mensajes recibidos.
+- esc_ner_oscuro: Escáner | Lector de código QR para acceso o verificación.
+```
+
+The parser splits on ` | ` — everything before is the display title, everything after is the description. For slugs without mangled characters, the plain `- slug: description` format is fine (title is inferred from the slug automatically).
+
+## Mode 3: Update (add new screens to an existing showcase)
+
+**Triggers**: "add these new screens", "el cliente pidió una pantalla más", "coloca este zip en el proyecto", "agrégalos al muestrario", or any similar update request.
+
+Steps:
+1. Copy the new zip(s) into the same source folder as the existing screens
+2. Run `build_showcase.py /path/to/source --update`
+   - Extracts new zips (existing screens skipped via mtime)
+   - Detects slugs not yet in any DESIGN.md section
+   - Appends them under `### Por Clasificar` in DESIGN.md
+3. Run `build_showcase.py /path/to/source --extract-text` to generate `screen_summaries.txt` with text from ALL screens (existing + new)
+4. Read `screen_summaries.txt` and the current DESIGN.md
+5. For each new slug in `### Por Clasificar`:
+   - Move it to the correct existing section based on its content
+   - If the slug is a variant of an existing screen (e.g. login_v2), put it in the same section
+   - If it's a genuinely new section topic, create a new `### Section` header
+   - Add `Title | Description` using the extracted text (especially if slug has mangled chars)
+6. **Update the project description** at the top of DESIGN.md to reflect the new screens. The hero section uses this text — it should describe the full scope of the project including the additions.
+7. Run the full build: `build_showcase.py /path/to/source`
+8. Confirm with the user that the new screens appear correctly in the showcase
+
+## Mode 4: Standardize Components
+
+**Triggers**: "standardize the navbars", "make all footers the same", "usa el navbar del home", "estandariza los botones", or similar.
+
+Steps:
+1. Open `catalog.html` in the browser — review the comparison view
+2. User decides which variant to use as canonical (e.g., "use the navbar from home")
+3. Run `apply_canonical.py` to replace variants in screen HTMLs:
 
 ```bash
-# Folder of individual zips or pre-extracted screen folders
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/folder
+# Structural components (navbar, footer, sidebar, tabbar)
+python ~/.claude/skills/stitch-showcase/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen
+
+# Atomic components (button, input, heading, etc.)
+python ~/.claude/skills/stitch-showcase/scripts/apply_canonical.py /path/to/showcase/assets/ button home_screen
+
+# Target specific screens only
+python ~/.claude/skills/stitch-showcase/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen --targets login settings profile
+```
+
+4. Rebuild the showcase: `build_showcase.py /path/to/source`
+5. Verify the catalog shows fewer variants / more items in "Already Unified"
+6. Repeat until all components are standardized
+
+## Verification
+
+Confirm with the user:
+- Open `index.html` — thumbnails visible and correct
+- Design system section shows color relationships and type specimen (not just swatches)
+- Click a screen → viewer opens with correct default frame (phone for mobile, browser chrome for web)
+- View mode toggle switches between mobile/web display in both index and viewer
+- Prev/next and keyboard shortcuts work in viewer
+- Light/dark mode toggles and persists
+- Section tabs filter correctly
+- Search filters cards
+- "← Back" button closes the viewer tab
+
+## Component Catalog & Comparison (automatic)
+
+The catalog is generated automatically as part of every build. Open `catalog.html` to:
+
+- **Browse all components** organized by type: Structural (navbars, footers, sidebars), Atomic (buttons, headings, inputs, badges, links, icons), Composite (cards, CTAs, heroes, testimonials)
+- **Compare variants** side-by-side with styled previews (original Tailwind CSS), canonical badges, similarity scores, and screen counts
+- **See what's unified** — components with only one variant appear in a collapsed "Already Unified" section
+- **Copy component HTML** for use in other projects
+
+## Build Script Reference
+
+### Running the build
+
+```bash
+# Point to the project root — the script discovers the source automatically
+python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/project
+
+# Or point directly to the folder with zips/screens
+python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/project/stitch
 
 # Single mega-zip (zip containing all screens as subfolders)
 python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/export.zip
 ```
 
-With explicit type if ambiguous:
-```bash
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/folder --type mobile
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/folder --type web
+### Flags
+
+| Flag | Description |
+|------|-------------|
+| `--type mobile\|web` | Set default view mode instead of auto-detecting |
+| `--name "Title"` | Set project name when no DESIGN.md is present |
+| `--init` | Generate a DESIGN.md skeleton from detected screen slugs |
+| `--update` | Detect new screens not yet in DESIGN.md and append under `### Por Clasificar` |
+| `--extract-text` | Extract visible text from screen HTMLs → `screen_summaries.txt` (for LLM consumption) |
+| `--context` | (Debug only) Generate showcase_context.json without building HTML — do NOT use for normal builds |
+| `--watch` | Auto-rebuild on file changes (Ctrl+C to stop) |
+
+**Note**: Component detection and catalog generation are now automatic — no `--catalog` or `--components` flags needed. Every build produces `catalog.html` alongside `index.html` and `viewer.html`.
+
+### Output structure
+
+The script creates a single `showcase/` directory next to the source folder:
 ```
-
-With project name if no DESIGN.md:
-```bash
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/folder --name "My App" --type mobile
-```
-
-With watch mode (auto-rebuild on changes):
-```bash
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/folder --watch
-```
-
-Generate DESIGN.md skeleton:
-```bash
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/folder --init
-```
-
-**Supported input structures (all handled automatically):**
-| Structure | Example |
-|-----------|---------|
-| Folder of individual zips | `folder/login.zip`, `folder/home.zip` |
-| Folder of pre-extracted screen folders | `folder/login/code.html`, `folder/home/code.html` |
-| Single mega-zip (Stitch "Export all") | `export.zip → stitch/screen1/code.html, stitch/screen2/code.html` |
-| Single screen zip | `screen.zip → code.html + screen.png` |
-
-### 4. Output structure
-
-The script creates next to the source folder:
-```
-showcase-mobile/          ← or showcase-web/
-├── index.html            ← open this in browser
-├── viewer.html
-├── DESIGN.md             ← copy
+showcase/                         ← single output dir (view mode toggle inside)
+├── index.html                    ← open this in browser (gallery + design system)
+├── viewer.html                   ← individual screen viewer
+├── catalog.html                  ← component catalog with comparison view
+├── component_catalog.json        ← atomic + composite + cluster data
+├── shared_components.json        ← structural component variants
+├── DESIGN.md                     ← copy from source
 └── assets/
     ├── splash_screen.html
     ├── splash_screen.png
@@ -144,22 +226,23 @@ showcase-mobile/          ← or showcase-web/
 
 Source folder with original zips is **never touched**.
 
-### 5. Verification
+### Source discovery
 
-Confirm with the user:
-- ✅ Open `index.html` — thumbnails visible and correct
-- ✅ Click a screen → viewer opens with title/description in header
-- ✅ "← Back" button closes the viewer tab (`window.close()`)
-- ✅ Mobile: phone frame visible (390px centered); Web: iframe fills viewport
+The script accepts **any folder in the project** — it doesn't need to be the exact folder with screens. Discovery order:
+1. If the given path has screens (zips or `code.html` folders) → use it directly
+2. If `showcase.json` exists in the given path or its parent → follow its `source` field
+3. Auto-discover: scan one level of subdirectories for screens (skips `showcase`, `showcase-mobile`, `showcase-web` output dirs)
+4. Clear error with a suggestion to create `showcase.json`
 
-### 5b. Enrich Descriptions (required when descriptions are poor)
+### Supported input structures
 
-After build, open `index.html` mentally and scan the card descriptions:
-- If any card shows **no description**, or shows a description that is **just a UI label** (e.g. "SpinningIntermedio", "Mi Membresía", "Home", "Login") — those are not useful descriptions.
-- For each poor/missing description: read the corresponding `assets/{slug}.png` screenshot and write a 1-sentence description that explains what the screen is for and what the user can do there.
-- Offer to persist them to DESIGN.md under `## Screens` for future rebuilds (write the improved DESIGN.md and rebuild if the user agrees).
-
-A good description answers: *what does this screen do for the user?* Not just what's on it.
+| Structure | Example |
+|-----------|---------|
+| Project root with `showcase.json` | `project/showcase.json` → `{"source": "stitch"}` |
+| Folder of individual zips | `folder/login.zip`, `folder/home.zip` |
+| Folder of pre-extracted screen folders | `folder/login/code.html`, `folder/home/code.html` |
+| Single mega-zip (Stitch "Export all") | `export.zip → stitch/screen1/code.html, stitch/screen2/code.html` |
+| Single screen zip | `screen.zip → code.html + screen.png` |
 
 ## Screen Grouping
 
@@ -205,6 +288,26 @@ The script merges DESIGN.md sections with slug auto-detection — slugs not list
 
 Stitch-exported HTML rarely has `<title>` or meta descriptions — steps 4 and 6 are the most useful for those files.
 
+## showcase.json
+
+Optional config file in the project root. Tells the script where to find screens, the project type, and name — so you can point the script at any folder in the project.
+
+```json
+{
+  "source": "stitch",
+  "type": "mobile",
+  "name": "SNAP Gym"
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `source` | yes | Relative path from the JSON file to the folder with screens |
+| `type` | no | `"mobile"` or `"web"` (overridden by `--type` CLI flag) |
+| `name` | no | Project name (overridden by `--name` CLI flag or DESIGN.md) |
+
+The `--init` flag generates this file automatically alongside DESIGN.md.
+
 ## DESIGN.md Format
 
 ```markdown
@@ -246,49 +349,59 @@ The `--init` flag auto-generates a skeleton DESIGN.md from detected slugs.
 |---------|-------|
 | Page background | Smart: dark (`#0d0d0d`) if app surface is light, light (`#f5f5f5`) if app surface is dark |
 | Card background | `#1a1a1a` (dark mode) / `#ffffff` (light mode) |
-| Accent (tabs, hover, borders) | From DESIGN.md color token `primary-*` or `colors.primary` → fallback `#6366f1` |
+| Accent (tabs, hover, borders) | From context `color_tokens.accent` or `colors.primary` → fallback `#6366f1` |
 | Large surfaces | Always neutral — never brand color |
 
 The smart default theme is computed from the `surface` color token luminance: dark surface (luminance < 100) → showcase opens in light mode for contrast, and vice versa. The user's preference is saved in `localStorage` and overrides the default on subsequent visits.
 
 ## Mobile vs Web Detection
 
-- Keywords in DESIGN.md: "mobile", "iOS", "Android", "app"
-- Viewport meta tag: `width=device-width` + `user-scalable=no` in HTML files
-- If ambiguous → ask user (pre-flight Q2)
+### Project-level (from DESIGN.md):
+- Keywords: "mobile", "iOS", "Android", "app"
+- If ambiguous → pass `--type` flag
+
+### Per-screen (from HTML analysis):
+- Viewport meta `user-scalable=no`, `maximum-scale=1` → mobile
+- Fixed widths 375-430px → mobile
+- Desktop breakpoints, sidebars → web
+- Stored as `detected_type` per screen in context JSON
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/build_showcase.py` | Main orchestrator — run this |
+| `scripts/build_showcase.py` | Main orchestrator — generates index.html + viewer.html |
 | `scripts/extract_zips.py` | Extracts and renames zips → assets/ |
+| `scripts/extract_text.py` | Extracts visible text from HTML files → compact summaries for LLM |
+| `scripts/detect_components.py` | Detects shared components (nav, footer, tabbar) across screens |
+| `scripts/extract_catalog.py` | Extracts atomic + composite components for visual catalog |
+| `scripts/component_utils.py` | Shared HTML parsing helpers (stdlib html.parser) |
 | `scripts/parse_design_md.py` | Parses DESIGN.md → metadata dict |
-
-**Flags for `build_showcase.py`:**
-
-| Flag | Description |
-|------|-------------|
-| `--type mobile\|web` | Force type detection instead of auto-detecting |
-| `--name "Title"` | Set project name when no DESIGN.md is present |
-| `--watch` | Auto-rebuild on file changes (Ctrl+C to stop) |
-| `--init` | Generate a DESIGN.md skeleton from detected screen slugs |
 
 ## Reference Templates
 
-| Template | Used when |
-|----------|-----------|
-| `references/index-mobile.html` | Mobile showcase — smart theme, section tabs, grid/list toggle |
-| `references/index-web.html` | Web showcase — smart theme, section tabs, grid/list toggle |
-| `references/viewer-mobile.html` | Viewer with 390px phone frame, prev/next, fullscreen |
-| `references/viewer-web.html` | Viewer with full-width iframe + browser chrome, prev/next, fullscreen |
+| Template | Purpose |
+|----------|---------|
+| `references/index.html` | Unified showcase — hero, design system, section tabs, grid/list toggle, mobile/web view mode toggle |
+| `references/viewer.html` | Unified viewer — phone frame + browser chrome toggled by view mode, prev/next, fullscreen |
+| `references/catalog-template.html` | Visual component catalog with tabs, previews, code snippets |
+
+## Reference Guides (design documentation)
+
+| Guide | Purpose |
+|-------|---------|
+| `references/01-navbar.md` through `references/09-quality-standards.md` | Design decisions documentation for each section |
+| `references/10-component-standardization.md` | Component standardization design doc |
+| `references/11-component-catalog.md` | Component catalog design doc |
 
 ## Common Errors
 
 | Problem | Solution |
 |---------|----------|
-| No zips found | Verify zips are in the root folder, not subfolders |
+| No zips found | Point to project root (with `showcase.json`) or directly to the screens folder |
 | Broken thumbnails | `screen.png` must be inside the zip alongside `code.html` |
 | Ambiguous type | Pass `--type mobile` or `--type web` explicitly |
 | Empty DESIGN.md | Pass `--name` and `--type` via CLI; descriptions inferred from HTML |
 | Encoding errors | Stitch HTML files use UTF-8; verify terminal encoding matches |
+| Web screens in phone frame | Use `--type web` to force web viewer |
+| Poor/missing descriptions | Use Mode 2 (Enrich): extract text → improve DESIGN.md → rebuild |
