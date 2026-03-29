@@ -59,7 +59,11 @@ Steps:
    python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source
    ```
 3. Parse the script output to get the `showcase/` path
-4. Tell the user: "Showcase listo en `showcase/index.html`" + offer: *"¿Quieres que optimice títulos y descripciones?"*
+4. Open the showcase in the default browser:
+   ```bash
+   open /path/to/showcase/index.html
+   ```
+5. Tell the user the showcase is ready and offer to optimize titles and descriptions
 
 **That's it.** No pre-flight questions, no DESIGN.md enrichment, no `--extract-text`, no `--init`.
 
