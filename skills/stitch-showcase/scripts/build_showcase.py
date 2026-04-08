@@ -1748,7 +1748,7 @@ def _catalog_sections_html(catalog: dict, dark_mode: bool = False, tailwind_head
             c_variant = escape(canonical.get("variant", ""))
             c_name = f"{c_variant}: {c_text}" if c_variant and c_text else c_variant or c_text
             c_screens = canonical.get("found_in", [])
-            c_screen_links = ", ".join(f'<a href="viewer.html?screen=assets/{escape(s)}.html&title={escape(s)}">{escape(s)}</a>' for s in c_screens[:5])
+            c_screen_links = ", ".join(f'<a href="viewer.html?screen=assets/{escape(s)}.html&title={escape(s)}" target="_blank">{escape(s)}</a>' for s in c_screens[:5])
 
             if not variants:
                 # Single-variant (standalone) — render as a simple card, no cluster wrapper
@@ -1791,7 +1791,7 @@ def _catalog_sections_html(catalog: dict, dark_mode: bool = False, tailwind_head
                 v_sim = v.get("similarity", 0)
                 v_pct = int(v_sim * 100)
                 v_screens = v.get("found_in", [])
-                v_screen_links = ", ".join(f'<a href="viewer.html?screen=assets/{escape(s)}.html&title={escape(s)}">{escape(s)}</a>' for s in v_screens[:5])
+                v_screen_links = ", ".join(f'<a href="viewer.html?screen=assets/{escape(s)}.html&title={escape(s)}" target="_blank">{escape(s)}</a>' for s in v_screens[:5])
 
                 v_srcdoc = _iframe_srcdoc(v_html, tailwind_head)
                 cards.append(
@@ -1898,7 +1898,7 @@ def _catalog_card_html(comp: dict, comp_type: str, dark_mode: bool = False, tail
 
     # Screen links
     screen_links = ", ".join(
-        f'<a href="viewer.html?screen=assets/{escape(s)}.html&title={escape(s)}">{escape(s)}</a>'
+        f'<a href="viewer.html?screen=assets/{escape(s)}.html&title={escape(s)}" target="_blank">{escape(s)}</a>'
         for s in found_in[:5]
     )
     if len(found_in) > 5:

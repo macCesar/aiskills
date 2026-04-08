@@ -163,6 +163,9 @@
 
     /* ── Tabs ──────────────────────────────────────── */
     .tabs {
+      position: sticky;
+      top: 56px;
+      z-index: 40;
       display: flex;
       flex-wrap: wrap;
       gap: 0.375rem;
@@ -294,9 +297,11 @@
     }
     .comp-screens a {
       color: var(--accent);
-      text-decoration: none;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      font-weight: 500;
     }
-    .comp-screens a:hover { text-decoration: underline; }
+    .comp-screens a:hover { opacity: 0.8; }
 
     /* Code snippet */
     .comp-code {
@@ -375,32 +380,21 @@
     }
     .token-list li:last-child { border-bottom: none; }
 
-    /* ── Help banner ───────────────────────────────── */
-    .help-banner {
-      padding: 0.625rem 1.5rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
+    /* ── Catalog intro ─────────────────────────────── */
+    .catalog-intro {
+      margin-bottom: 2rem;
     }
-    .help-banner p {
-      font-size: 0.75rem;
+    .catalog-intro h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.375rem;
+    }
+    .catalog-intro p {
+      font-size: 0.8125rem;
       color: var(--text-3);
-      line-height: 1.5;
+      line-height: 1.6;
     }
-    .help-banner .dismiss-btn {
-      background: none;
-      border: none;
-      color: var(--text-3);
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0.25rem;
-      flex-shrink: 0;
-      line-height: 1;
-    }
-    .help-banner .dismiss-btn:hover { color: var(--text); }
 
     /* ── Empty state ───────────────────────────────── */
     .empty {
@@ -552,6 +546,7 @@
       border-radius: 99px;
       margin-left: 0.375rem;
     }
+
   </style>
 </head>
 <body>
@@ -588,16 +583,14 @@
     {{TABS_HTML}}
   </nav>
 
-  <!-- ── Help banner ──────────────────────────────── -->
-  <div class="help-banner" id="helpBanner">
-    <p>This catalog shows all detected UI components grouped by similarity.
-    Components marked <strong>★ Canonical</strong> are the recommended versions.
-    To standardize: tell your AI agent which variant to keep, and it will apply changes across all screens.</p>
-    <button class="dismiss-btn" id="dismissHelp" title="Dismiss">×</button>
-  </div>
-
   <!-- ── Main content ────────────────────────────── -->
   <main class="main" id="mainContent">
+    <div class="catalog-intro">
+      <h2>Component Catalog</h2>
+      <p>Components marked <strong>★ Canonical</strong> are the recommended versions.
+      Use the <strong>Copy</strong> button on any component's code to grab its HTML,
+      then edit your screen files and rebuild the showcase to update this catalog.</p>
+    </div>
     {{CATALOG_HTML}}
   </main>
 
@@ -800,17 +793,6 @@
         var content = btn.nextElementSibling;
         if (content) content.classList.toggle('open');
       });
-    });
-
-    // ── Help banner dismiss ──────────────────────────
-    const helpBanner = document.getElementById('helpBanner');
-    const dismissHelp = document.getElementById('dismissHelp');
-    if (localStorage.getItem('catalog-help-dismissed')) {
-      helpBanner.style.display = 'none';
-    }
-    dismissHelp.addEventListener('click', function() {
-      helpBanner.style.display = 'none';
-      localStorage.setItem('catalog-help-dismissed', '1');
     });
 
     // ── Init: compile Tailwind once → activate first tab → hide overlay ──

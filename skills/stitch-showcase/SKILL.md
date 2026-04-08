@@ -140,8 +140,8 @@ Steps:
 
 Steps:
 1. Open `catalog.html` in the browser — review the comparison view
-2. User decides which variant to use as canonical (e.g., "use the navbar from home")
-3. Run `apply_canonical.py` to replace variants in screen HTMLs:
+2. User decides which variant to use as canonical
+3. Run `apply_canonical.py` to apply the chosen canonical:
 
 ```bash
 # Structural components (navbar, footer, sidebar, tabbar)
