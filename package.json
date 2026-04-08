@@ -1,5 +1,5 @@
 {
-  "name": "aiskills",
+  "name": "@maccesar/aiskills",
   "version": "1.7.0",
   "description": "AI coding assistant skills for Claude Code, Gemini CLI, and Codex CLI",
   "type": "module",

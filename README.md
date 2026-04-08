@@ -18,7 +18,7 @@ Each skill is a small knowledge package: a `SKILL.md` file with YAML frontmatter
 
 ```bash
 # 1) Install the CLI
-npm install -g aiskills
+npm install -g @maccesar/aiskills
 
 # 2) Install skills globally
 aiskills install
@@ -347,7 +347,7 @@ Options:
 What it does:
 1. Checks a local cache (`~/.aiskills/last-check.json`) — if already checked today, exits immediately
 2. Queries npm for the latest version
-3. If a new version is available, runs `npm update -g aiskills`
+3. If a new version is available, runs `npm update -g @maccesar/aiskills`
 4. Syncs skills and refreshes platform symlinks
 5. Writes the cache so it won't check again for 24 hours
 
@@ -394,12 +394,12 @@ Options:
 
 What it does:
 1. Checks npm for the latest CLI version
-2. If a newer version exists, shows the update command: `npm update -g aiskills`
+2. If a newer version exists, shows the update command: `npm update -g @maccesar/aiskills`
 3. Exits without changing skills until the CLI is updated
 4. If the CLI is current, syncs skills from the installed package (no download needed)
 5. Updates platform symlinks only for platforms that already have them
 
-Note: `aiskills update` only syncs the skill files from your installed CLI. To get newer skills, first run `npm update -g aiskills`, then run `aiskills update` again.
+Note: `aiskills update` only syncs the skill files from your installed CLI. To get newer skills, first run `npm update -g @maccesar/aiskills`, then run `aiskills update` again.
 
 ### aiskills remove
 
@@ -458,10 +458,10 @@ If the assistant does not seem to use skill knowledge:
 
 ```bash
 # Verify installation
-npm list -g aiskills
+npm list -g @maccesar/aiskills
 
 # Re-install
-npm install -g aiskills
+npm install -g @maccesar/aiskills
 ```
 
 ### Skill gives wrong or generic advice?
@@ -477,7 +477,7 @@ Each skill only covers what is in its source material. If the topic is missing f
 aiskills remove
 
 # Remove the CLI
-npm uninstall -g aiskills
+npm uninstall -g @maccesar/aiskills
 ```
 
 ---
