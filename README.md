@@ -330,6 +330,55 @@ What it does:
 - Creates symlinks from each platform's skills directory to the central install
 - Removes legacy artifacts from older versions
 
+### aiskills auto-update
+
+Checks for updates and applies them silently. Designed to run from the Claude Code SessionStart hook, but can also be used manually.
+
+```bash
+aiskills auto-update            # Show progress
+aiskills auto-update --silent   # No output (for hooks)
+```
+
+Options:
+| Option        | Description                          |
+| ------------- | ------------------------------------ |
+| `-s, --silent` | Suppress all output except errors   |
+
+What it does:
+1. Checks a local cache (`~/.aiskills/last-check.json`) — if already checked today, exits immediately
+2. Queries npm for the latest version
+3. If a new version is available, runs `npm update -g aiskills`
+4. Syncs skills and refreshes platform symlinks
+5. Writes the cache so it won't check again for 24 hours
+
+The hook is installed automatically by `aiskills install` when Claude Code is selected. It runs `aiskills auto-update --silent` at the start of every Claude Code session.
+
+---
+
+### aiskills status
+
+Shows a quick overview of your installation.
+
+```bash
+aiskills status
+```
+
+Displays: version, skills count, hook status, last update check, and platform symlink status.
+
+---
+
+### aiskills doctor
+
+Diagnoses installation health.
+
+```bash
+aiskills doctor
+```
+
+Checks: skill directories exist, symlinks are valid (not broken), hook is configured, cache is readable. Reports issues with fix suggestions.
+
+---
+
 ### aiskills update
 
 Checks npm for a newer `aiskills` CLI version, then syncs skills from the package you already have installed.
@@ -373,21 +422,10 @@ What it does:
 
 ### Verify installation
 
-Check CLI version:
 ```bash
-aiskills --version
-```
-
-Check central skills directory (global install):
-```bash
-ls ~/.agents/skills/
-# Should show: refactoring-ui
-```
-
-Check Claude Code symlinks:
-```bash
-ls -la ~/.claude/skills/
-# Should show symlinks pointing to ~/.agents/skills/
+aiskills status    # Quick overview of everything
+aiskills doctor    # Diagnose any issues
+aiskills --version # CLI version only
 ```
 
 ---
