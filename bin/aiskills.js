@@ -11,6 +11,7 @@ import { skillsCommand } from '../lib/commands/skills.js';
 import { listCommand } from '../lib/commands/list.js';
 import { updateCommand } from '../lib/commands/update.js';
 import { uninstallCommand } from '../lib/commands/uninstall.js';
+import { autoUpdateCommand } from '../lib/commands/auto-update.js';
 
 const program = new Command();
 
@@ -47,6 +48,13 @@ program
   .description('Remove installed AI skills and symlinks')
   .option('-l, --local', 'Remove local skills from the current project')
   .action(uninstallCommand);
+
+// Auto-update command (used by SessionStart hook)
+program
+  .command('auto-update')
+  .description('Check for updates and sync skills (runs from SessionStart hook)')
+  .option('-s, --silent', 'Run silently without output')
+  .action(autoUpdateCommand);
 
 // Parse arguments
 program.parse();
