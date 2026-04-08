@@ -12,6 +12,7 @@ import { listCommand } from '../lib/commands/list.js';
 import { updateCommand } from '../lib/commands/update.js';
 import { uninstallCommand } from '../lib/commands/uninstall.js';
 import { autoUpdateCommand } from '../lib/commands/auto-update.js';
+import { statusCommand } from '../lib/commands/status.js';
 
 const program = new Command();
 
@@ -55,6 +56,12 @@ program
   .description('Check for updates and sync skills (runs from SessionStart hook)')
   .option('-s, --silent', 'Run silently without output')
   .action(autoUpdateCommand);
+
+// Status command
+program
+  .command('status')
+  .description('Show installation status overview')
+  .action(statusCommand);
 
 // Parse arguments
 program.parse();
