@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-04-08
+
+### Added
+- **`aiskills auto-update`** — Full update pipeline: checks npm once per day, updates CLI, syncs skills, refreshes symlinks. Supports `--silent` flag for hook usage.
+- **Claude Code SessionStart hook** — Installed by `aiskills install`, runs `aiskills auto-update --silent` at session start. Removed by `aiskills remove`.
+- **Update cache** (`~/.aiskills/last-check.json`) — Prevents hitting npm registry on every invocation. Checks at most once every 24 hours.
+- **Dev mode detection** — Skips npm update when running from source (`npm link`).
+- **`aiskills status`** — Quick overview of installation: version, skills count, hook, last update check, and platform symlinks.
+- **`aiskills doctor`** — Diagnoses installation health: verifies each skill directory, validates symlinks (detects broken ones), reports issues with fix suggestions.
+
 ## [1.6.0] - 2026-03-28
 
 ### Changed
