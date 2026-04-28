@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.3] - 2026-04-28
+
+### Changed
+- **`refactoring-ui` skill restructured** — consolidated from 8 chapter-mirror reference files (one per book chapter) to 4 thematic files (`foundations`, `page-mechanics`, `visual-treatment`, `polish`). All 69 sections preserved; section titles that paralleled the book's table of contents reworded to reduce structural similarity with the source material.
+- **`refactoring-ui` attribution strengthened** — `SKILL.md` and each reference file now explicitly note the principles are paraphrased from *Refactoring UI* by Adam Wathan & Steve Schoger, with a pointer to refactoringui.com to buy the original book.
+
 ## [1.9.2] - 2026-04-28
 
 ### Changed
