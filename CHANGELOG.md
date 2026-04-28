@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2026-04-28
+
+### Added
+- **Slash commands sync** — `aiskills install/update` now copies `commands/*.md` to `~/.claude/commands/` (or `<project>/.claude/commands/` in local mode). `aiskills uninstall` removes them. New `COMMANDS` array in `lib/config.js` controls what gets synced.
+- **`/release` slash command** — project-agnostic release workflow: detects project type (npm, Titanium, Composer, Cargo, CocoaPods, versionless), infers semver bump from Conventional Commits, updates CHANGELOG and README, commits, pushes, tags, and creates the GitHub release via `gh`.
+- **Scope selection in `aiskills update`** — when both global and local skills exist, prompts the user to choose Global / Local / Both.
+- **`downloader.js` helpers** — `fetchLatestRelease()`, `fetchLatestVersion()`, `downloadRawFile()`, plus `AISKILLS_TEST_NPM_LATEST_VERSION` env override for tests.
+- **Plugin Marketplace integration** — `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` for Claude Code plugin distribution.
+- **`docs/MAINTAINER-GUIDE.md`** and **`hooks/`** directory.
+
+### Changed
+- **`aiskills list`** — reads each skill's `SKILL.md` directly from the installed location (`~/.agents/skills/`), shows ✓/✗ install status per skill, and prints footer pointers to `aiskills status` and `aiskills doctor`.
+- **SKILL.md descriptions normalized** — `refactoring-ui`, `stitch-showcase`, and `vscode-extension-dev` converted from YAML folded scalar (`description: >`) to single-line format, matching `humaniza` and Anthropic's canonical skill style.
+
+### Fixed
+- **`aiskills update` false-positive on home directory** — when run from `~/`, the command no longer asks "Both local and global skills detected" because both paths resolve to the same `.agents/skills/` directory. Now skips local detection when `cwd === os.homedir()`.
+
 ## [1.7.0] - 2026-04-08
 
 ### Added

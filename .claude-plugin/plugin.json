@@ -1,0 +1,12 @@
+{
+  "name": "aiskills",
+  "description": "General-purpose skills for AI coding assistants: UI/UX design advice, text humanization, VS Code extension development, and design showcase tools.",
+  "version": "2.0.0",
+  "author": {
+    "name": "César Estrada",
+    "email": "maccesar@gmail.com"
+  },
+  "homepage": "https://github.com/macCesar/aiskills",
+  "repository": "https://github.com/macCesar/aiskills",
+  "license": "MIT"
+}

@@ -8,13 +8,22 @@
 
 </div>
 
-`aiskills` is a CLI for installing curated skills for AI coding assistants. It installs the skill files and links them to Claude Code, Gemini CLI, or Codex CLI.
+`aiskills` is a toolkit of curated skills for AI coding assistants. It provides skill files for Claude Code, Gemini CLI, or Codex CLI.
 
 Each skill is a small knowledge package: a `SKILL.md` file with YAML frontmatter plus a set of reference files. When a prompt matches the skill, the assistant reads those files and answers from the source material.
 
 ---
 
-## Quick setup
+## Installation
+
+### Option A: Plugin Marketplace (Claude Code only)
+
+```bash
+/plugin marketplace add macCesar/aiskills
+/plugin install aiskills@maccesar-aiskills
+```
+
+### Option B: CLI (Claude Code, Gemini CLI, Codex CLI)
 
 ```bash
 # 1) Install the CLI
@@ -33,10 +42,14 @@ Installed files:
 - All skills to `~/.agents/skills/`
 - Platform symlinks in `~/.claude/skills/`, `~/.gemini/skills/`, or `~/.codex/skills/`
 
-Why install with npm?
-- Cross-platform (macOS, Linux, Windows)
-- No sudo required
-- Simple updates with `aiskills update`
+### Which option should I use?
+
+| | Plugin (Option A) | CLI (Option B) |
+|---|---|---|
+| **Claude Code** | Recommended | Supported |
+| **Gemini CLI** | Not available | Supported |
+| **Codex CLI** | Not available | Supported |
+| **Auto-updates** | Via marketplace | `aiskills update` |
 
 ---
 
@@ -62,6 +75,52 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 14 files        |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
+
+---
+
+## Available commands
+
+Slash commands are Claude Code-only. They ship with the plugin (Option A). The CLI distribution (Option B) installs skills only.
+
+| Command    | Purpose                                                                        |
+| ---------- | ------------------------------------------------------------------------------ |
+| `/release` | Full release workflow: detect project, bump semver, update CHANGELOG + README, commit, push, tag, GitHub release |
+
+### /release
+
+End-to-end release flow that works across project types: npm, Titanium (`tiapp.xml`), Composer, Cargo, CocoaPods, or versionless (git-tag-only) repos.
+
+When to use it:
+- You have a batch of commits ready to ship and want one command to handle the bump, changelog, push, tag, and GitHub release in the right order.
+- You maintain `CHANGELOG.md` in Keep-a-Changelog format and want the `[Unreleased]` section promoted automatically.
+- You want the bump level inferred from Conventional Commits, with the option to override.
+
+Example prompts:
+```
+/release
+/release minor
+/release major
+```
+
+How it works:
+1. **Detect** — reads git status, last tag, commits since the tag, version file (`package.json`, `tiapp.xml`, `composer.json`, `Cargo.toml`, `*.podspec`), `CHANGELOG.md`, `README.md`, and `gh` availability.
+2. **Infer bump** — from Conventional Commits: `BREAKING CHANGE` / `!:` → major, `feat:` → minor, anything else → patch. An argument (`patch`/`minor`/`major`) overrides.
+3. **Compose CHANGELOG** — promotes the `[Unreleased]` section if present, otherwise generates a Keep-a-Changelog entry grouped by commit type.
+4. **Show plan and stop** — files to modify, commit message, tag name, release notes preview, push targets. **Waits for explicit confirmation.** No commits, no pushes, no edits until you say `yes` / `sí` / `commitea` / `adelante` / `proceed`.
+5. **Execute** — bumps the version file, updates `CHANGELOG.md` and `README.md` (when needed), `git add -A`, commits, pushes the branch, tags, and creates the GitHub release via `gh` (if available).
+
+Language policy (two independent axes):
+- **Axis 1 — Interaction with you** — always in your language. The command detects the language from your messages and locks it before printing anything; if you switch, it switches with you.
+- **Axis 2 — Project artifacts** (CHANGELOG entry, README edits, commit message, tag annotation, GitHub release title **and** body) — all share **one** language, detected from `README.md`. A Spanish README means everything in Spanish (typical for private / local projects); an English README means everything in English (typical for open source). No mixed-language releases. Tie-breaks fall back to `CHANGELOG.md` then `git log`; you can override before confirming.
+
+Hard restrictions:
+- Never `--force-push`, `--amend` published commits, or `--no-verify`.
+- Aborts on merge conflicts or rebase-in-progress.
+- Asks before creating the **first** tag on `main` / `master`.
+- Skips push / tag / release gracefully when the repo has no remote or `gh` is not installed.
+
+Distribution note:
+- Available via the plugin install (Option A above). Slash commands are not distributed by the npm CLI (Option B) because they are a Claude Code feature.
 
 ---
 

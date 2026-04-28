@@ -1,10 +1,6 @@
 ---
 name: vscode-extension-dev
-description: >
-  Guide for building VS Code extensions from scratch. Use when the user is creating,
-  scaffolding, designing, debugging, testing, bundling, or publishing a VS Code extension.
-  Covers all major API patterns: TreeView, QuickPick, Webview, StatusBar, commands,
-  configuration, SecretStorage, progress indicators, and esbuild bundling.
+description: Guide for building VS Code extensions from scratch. Use when the user is creating, scaffolding, designing, debugging, testing, bundling, or publishing a VS Code extension. Covers all major API patterns — TreeView, QuickPick, Webview, StatusBar, commands, configuration, SecretStorage, progress indicators, and esbuild bundling.
 when_to_use: >
   - User wants to create a new VS Code extension
   - User asks about VS Code extension APIs (TreeView, Webview, QuickPick, etc.)

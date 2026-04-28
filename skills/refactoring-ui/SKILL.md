@@ -1,10 +1,6 @@
 ---
 name: refactoring-ui
-description: >
-  Design advisor based exclusively on "Refactoring UI" by Adam Wathan & Steve Schoger.
-  Use when the user asks for UI/UX design advice, design reviews, visual hierarchy
-  improvements, color system help, typography guidance, spacing decisions, depth/shadow
-  usage, image handling, or finishing touches on any interface.
+description: Design advisor based exclusively on "Refactoring UI" by Adam Wathan & Steve Schoger. Use when the user asks for UI/UX design advice, design reviews, visual hierarchy improvements, color system help, typography guidance, spacing decisions, depth/shadow usage, image handling, or finishing touches on any interface.
 when_to_use: >
   - User asks "how do I make this look better?"
   - User asks about color palettes, type scales, or spacing systems

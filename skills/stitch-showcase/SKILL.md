@@ -1,15 +1,6 @@
 ---
 name: stitch-showcase
-description: >
-  Use this skill whenever the user has Google Stitch design exports and wants to do anything with them —
-  build a gallery, organize screens, generate a navigable showcase, process zip files, or browse designs.
-  Triggers on: "organiza mis diseños de Stitch", "arma el muestrario", "organize my Stitch designs",
-  "build the showcase", "I have the Stitch zips in X", "process this design folder",
-  "generate the index for my Stitch screens", "tengo los zips de Stitch", "quiero ver mis pantallas",
-  or any mention of Stitch exports, screen.png + code.html pairs, or design zip files.
-  Even if the user just says "I have a zip from Stitch" or "mis exports de Stitch" — use this skill.
-  Also triggers on: "optimiza el showcase", "mejora las descripciones", "enrich the showcase",
-  "optimize titles", "optimiza", or any request to improve an existing showcase's content.
+description: Use this skill whenever the user has Google Stitch design exports and wants to do anything with them — build a gallery, organize screens, generate a navigable showcase, process zip files, or browse designs. Triggers on "organiza mis diseños de Stitch", "arma el muestrario", "organize my Stitch designs", "build the showcase", "I have the Stitch zips in X", "process this design folder", "generate the index for my Stitch screens", "tengo los zips de Stitch", "quiero ver mis pantallas", or any mention of Stitch exports, screen.png + code.html pairs, or design zip files. Even if the user just says "I have a zip from Stitch" or "mis exports de Stitch" — use this skill. Also triggers on "optimiza el showcase", "mejora las descripciones", "enrich the showcase", "optimize titles", "optimiza", or any request to improve an existing showcase's content.
 ---
 
 # stitch-showcase

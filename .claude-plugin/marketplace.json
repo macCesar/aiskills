@@ -1,0 +1,19 @@
+{
+  "name": "maccesar-aiskills",
+  "owner": {
+    "name": "César Estrada"
+  },
+  "metadata": {
+    "description": "General-purpose AI coding assistant skills — UI/UX design advice, text humanization, VS Code extension development, and design showcase tools."
+  },
+  "plugins": [
+    {
+      "name": "aiskills",
+      "source": {
+        "source": "github",
+        "repo": "macCesar/aiskills"
+      },
+      "description": "General-purpose skills for AI coding assistants: Refactoring UI design advice, Spanish text humanizer, VS Code extension development guide, and Google Stitch design showcase builder."
+    }
+  ]
+}
