@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.1] - 2026-04-28
+
+### Fixed
+- **`/release` no longer silently switches back to the feature branch after `mode=merge`.** Phase 4 step 6 used to run `git checkout <feature-branch>` after the fast-forward merge to "return the user to where they started" — but if you confirmed `merge`, you signaled that the feature branch is done, so landing back on it created a confusing post-state. Now stays on `main`. PR mode is unchanged (the branch is still live, so staying on it is correct). Final report note updated to `merged to main; now on <main-branch>`.
+
 ## [1.9.0] - 2026-04-28
 
 ### Changed
