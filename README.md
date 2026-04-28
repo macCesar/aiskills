@@ -19,7 +19,7 @@ Each skill is a small knowledge package: a `SKILL.md` file with YAML frontmatter
 ### Option A: Plugin Marketplace (Claude Code only)
 
 ```bash
-/plugin marketplace add macCesar/aiskills
+/plugin marketplace add maccesar/aiskills
 /plugin install aiskills@maccesar-aiskills
 ```
 
