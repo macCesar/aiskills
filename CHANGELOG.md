@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - 2026-04-28
+
+### Changed
+- **`/release` rewritten as full janitor** — handles the common case where the working tree has uncommitted work plus a release intent. Reads each modified/untracked file's diff, infers intent, and groups files into N proposed semantic commits before the release commit. Plan preview shows N+1 commits in one compact block; the user can ask to merge, split, or skip any of the N before confirming.
+- **`/release` — optional main alignment** — when run from a feature branch, the plan now offers fast-forward merge to main or PR creation via `gh`. Confirmation tokens: `proceed` (release only), `merge` (release + ff-merge), `PR` (release + pull request).
+- **`/release` — README gap detection** — Step 1 scans for new user-visible surface (commands, flags, APIs) and updates the README as part of the release commit when documentation is missing.
+- **`/release` — verbosity discipline** — Steps 1–3 silent (no per-step headers), Step 4 prints one compact plan block, Step 5 executes silently with a single-line final report.
+
 ## [1.8.0] - 2026-04-28
 
 ### Added
