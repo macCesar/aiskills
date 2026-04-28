@@ -346,7 +346,7 @@ For `mode=merge` (fast-forward only):
 3. `git pull --ff-only origin <main-branch>` — bring local main up to date.
 4. `git merge --ff-only <feature-branch>` — must be fast-forward. If main has diverged (someone else merged in the meantime), this fails cleanly. **Do not** retry with `--no-ff` or any other strategy: abort, leave the user on `<main-branch>`, and tell them to resolve manually. The release on the feature branch is intact regardless.
 5. `git push origin <main-branch>`.
-6. `git checkout <feature-branch>` to return the user to where they started.
+6. **Stay on `<main-branch>`.** Do NOT `git checkout` back to the feature branch. Confirming `merge` is the user's signal that the feature branch is done — landing them on main matches that intent and avoids a silent branch-switch after a "ship it" action. The feature branch still exists locally; the user can `git branch -d <feature-branch>` when ready. (PR mode is different — see below — because the branch is still live.)
 
 For `mode=pr` (open a PR via `gh`):
 
@@ -367,7 +367,7 @@ If a Phase 4 step fails, the release itself is already shipped (Phases 1–3 suc
 ```
 
 The "optional note" only appears if something was non-routine — examples:
-- `merged to main` (when Phase 4 ran successfully with mode=merge; include the new main HEAD short hash)
+- `merged to main; now on <main-branch>` (when Phase 4 ran successfully with mode=merge; include the new main HEAD short hash)
 - `PR opened: <pr-url>` (when Phase 4 ran with mode=pr)
 - `merge to main aborted: main has diverged — resolve manually`
 - `tag is on feature branch; main not aligned`

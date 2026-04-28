@@ -112,7 +112,7 @@ How it works:
 
 Confirmations:
 - `proceed` / `sí` / `commitea` → release on current branch only.
-- `merge` → release + fast-forward merge to main + push main. Aborts cleanly if main has diverged.
+- `merge` → release + fast-forward merge to main + push main, and leaves you on `main`. Aborts cleanly if main has diverged.
 - `PR` → release + open pull request to main via `gh`.
 
 Language policy (two independent axes):
