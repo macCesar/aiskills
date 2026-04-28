@@ -88,12 +88,12 @@ Slash commands are Claude Code-only. They ship with the plugin (Option A). The C
 
 ### /release
 
-End-to-end release flow that works across project types: npm, Titanium (`tiapp.xml`), Composer, Cargo, CocoaPods, or versionless (git-tag-only) repos.
+End-to-end release janitor that works across project types: npm, Titanium (`tiapp.xml`), Composer, Cargo, CocoaPods, or versionless (git-tag-only) repos. **Designed for a dirty working tree** — it groups your uncommitted work into semantic commits, then ships the release on top.
 
 When to use it:
-- You have a batch of commits ready to ship and want one command to handle the bump, changelog, push, tag, and GitHub release in the right order.
+- You have weeks of work in the working tree (with maybe a few interim commits you made along the way) and want one command to clean everything into proper semantic commits and ship a release.
 - You maintain `CHANGELOG.md` in Keep-a-Changelog format and want the `[Unreleased]` section promoted automatically.
-- You want the bump level inferred from Conventional Commits, with the option to override.
+- You want the bump level inferred from Conventional Commits across both your existing commits and the proposed new ones, with the option to override.
 
 Example prompts:
 ```
@@ -103,11 +103,17 @@ Example prompts:
 ```
 
 How it works:
-1. **Detect** — reads git status, last tag, commits since the tag, version file (`package.json`, `tiapp.xml`, `composer.json`, `Cargo.toml`, `*.podspec`), `CHANGELOG.md`, `README.md`, and `gh` availability.
-2. **Infer bump** — from Conventional Commits: `BREAKING CHANGE` / `!:` → major, `feat:` → minor, anything else → patch. An argument (`patch`/`minor`/`major`) overrides.
-3. **Compose CHANGELOG** — promotes the `[Unreleased]` section if present, otherwise generates a Keep-a-Changelog entry grouped by commit type.
-4. **Show plan and stop** — files to modify, commit message, tag name, release notes preview, push targets. **Waits for explicit confirmation.** No commits, no pushes, no edits until you say `yes` / `sí` / `commitea` / `adelante` / `proceed`.
-5. **Execute** — bumps the version file, updates `CHANGELOG.md` and `README.md` (when needed), `git add -A`, commits, pushes the branch, tags, and creates the GitHub release via `gh` (if available).
+1. **Detect** — reads git status, last tag, existing commits since the tag, version file, `CHANGELOG.md`, `README.md`, and `gh` availability.
+2. **Group the working tree** — reads each modified/untracked file's diff, infers intent, and groups files into N proposed semantic commits (`feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `build`, `ci`). Excludes screenshots in repo root, scratch files, suspicious binaries — and lists them so you can override.
+3. **Infer bump** — across the union of (existing commits since tag) + (proposed semantic commits): `BREAKING CHANGE` / `!:` → major, any `feat:` → minor, otherwise patch. An argument overrides.
+4. **Compose CHANGELOG** — promotes `[Unreleased]` if present, or generates a Keep-a-Changelog entry from the union of all commits being shipped.
+5. **Show one compact plan and stop** — header line, optional warnings, the N proposed commits with their files, the CHANGELOG entry, the release commit summary, the push/tag/release lines. If the current branch is not main/master, also offers to fast-forward merge or open a PR. **Waits for explicit confirmation.** You can ask it to merge, split, or skip any of the N commits before confirming.
+6. **Execute** — lands each semantic commit (one at a time, with explicit `git add <files>` per commit, never `git add -A`), then the release commit (bump + CHANGELOG + README), pushes the branch, tags, and creates the GitHub release via `gh`. Optionally fast-forward merges to main or opens a PR if you confirmed that mode.
+
+Confirmations:
+- `proceed` / `sí` / `commitea` → release on current branch only.
+- `merge` → release + fast-forward merge to main + push main. Aborts cleanly if main has diverged.
+- `PR` → release + open pull request to main via `gh`.
 
 Language policy (two independent axes):
 - **Axis 1 — Interaction with you** — always in your language. The command detects the language from your messages and locks it before printing anything; if you switch, it switches with you.
