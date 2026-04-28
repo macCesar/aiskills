@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.2] - 2026-04-28
+
+### Changed
+- **README install snippet uses lowercase marketplace slug** — `/plugin marketplace add maccesar/aiskills` instead of `macCesar/aiskills`, to avoid Claude Code's `ENOENT` rename bug on macOS APFS case-insensitive filesystems when the GitHub URL has uppercase characters.
+- **`aiskills status` clarifies "Last check" label** — renamed to `Last npm check` so users don't confuse it with marketplace or other update sources.
+
 ## [1.9.1] - 2026-04-28
 
 ### Fixed
