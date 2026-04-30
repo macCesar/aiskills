@@ -114,6 +114,10 @@ Confirmations:
 - `proceed` / `sí` / `commitea` → release on current branch only.
 - `merge` → release + fast-forward merge to main + push main, and leaves you on `main`. Aborts cleanly if main has diverged.
 - `PR` → release + open pull request to main via `gh`.
+- `con tag` / `with tag` (modifier, combinable with any of the above) → on a private repo, force-create the git tag (the GitHub release stays skipped). No effect on public/internal repos.
+
+Private-repo behavior:
+- When `gh repo view` reports the repo as `PRIVATE`, the workflow skips both the git tag and the GitHub release by default — tags/releases are distribution artifacts that aren't usually needed for private projects. The version bump in `package.json` / `tiapp.xml` / etc. plus the `CHANGELOG.md` entry remain. Add `con tag` / `with tag` to your confirmation if you want the tag anyway.
 
 Language policy (two independent axes):
 - **Axis 1 — Interaction with you** — always in your language. The command detects the language from your messages and locks it before printing anything; if you switch, it switches with you.

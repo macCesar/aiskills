@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+## [1.10.0] - 2026-04-30
+
+### Added
+- **`/release` — private-repo handling** — when the GitHub repo is private, the workflow now skips both the git tag and the GitHub release by default (tags/releases are distribution artifacts the maintainer typically doesn't need on a private repo). Public/internal repos behave as before. Append `con tag` / `with tag` to the confirmation to force-create the tag on a private repo (the GitHub release stays skipped). Detection uses `gh repo view --json visibility`; falls back to public-mode behavior if `gh` is unavailable or the remote isn't GitHub.
+
+### Fixed
+- **stitch-showcase: hardcoded script paths broke plugin installs** — `SKILL.md` instructed the AI to run `python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py`, but plugin installs live at `~/.claude/plugins/cache/<plugin>/<version>/skills/stitch-showcase/`, so the first run failed with `[Errno 2] No such file or directory`. All 9 invocations of `build_showcase.py` and `apply_canonical.py` now use a `<SKILL_DIR>/scripts/...` placeholder, and a new "Script paths" section at the top of `SKILL.md` instructs the AI to substitute the absolute path provided in the "Base directory for this skill" system message — which works for both plugin and standalone installs.
+
 ## [1.9.3] - 2026-04-28
 
 ### Changed
