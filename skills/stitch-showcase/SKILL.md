@@ -13,6 +13,10 @@ Converts Google Stitch exports (zips with `code.html` + `screen.png`) into a nav
 
 Scripts require Python 3.8+. No external dependencies (stdlib only).
 
+## Script paths
+
+All commands below use `<SKILL_DIR>/scripts/...` as a placeholder. Replace `<SKILL_DIR>` with the absolute "Base directory for this skill" shown in the system message when this skill loads (e.g. `~/.claude/plugins/cache/<plugin>/<version>/skills/stitch-showcase` for plugin installs, or `~/.claude/skills/stitch-showcase` for standalone installs). Do not assume `~/.claude/skills/...` — the path differs by install type.
+
 ## Workflow: Four Modes
 
 ```dot
@@ -47,7 +51,7 @@ Steps:
 1. Identify the source path from the user's message
 2. Run the build script — **nothing else**:
    ```bash
-   python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source
+   python <SKILL_DIR>/scripts/build_showcase.py /path/to/source
    ```
 3. Parse the script output to get the `showcase/` path
 4. Open the showcase in the default browser:
@@ -61,8 +65,8 @@ Steps:
 Only ask `--type` or `--name` if the **script fails** or the **user explicitly wants to override**:
 ```bash
 # Only if script fails to detect type or user requests it
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source --type mobile
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source --name "My App" --type mobile
+python <SKILL_DIR>/scripts/build_showcase.py /path/to/source --type mobile
+python <SKILL_DIR>/scripts/build_showcase.py /path/to/source --name "My App" --type mobile
 ```
 
 ## Mode 2: Enrich (on-demand — user asks)
@@ -75,7 +79,7 @@ Steps:
 1. Find the source folder (from the user's message or the project's `showcase.json`)
 2. Run `--extract-text` to get screen summaries:
    ```bash
-   python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source --extract-text
+   python <SKILL_DIR>/scripts/build_showcase.py /path/to/source --extract-text
    ```
    This generates `screen_summaries.txt` — a compact text file with visible text from all screen HTMLs.
 3. Read the existing `DESIGN.md` (in the source folder) + `screen_summaries.txt`
@@ -87,7 +91,7 @@ Steps:
 6. **Verify colors/fonts**: Scan the screen HTMLs for hex colors in CSS variables and font families. Update `## Colors` and `## Typography` sections if they're missing or incomplete.
 7. Re-run the build to regenerate HTMLs with enriched data:
    ```bash
-   python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/source
+   python <SKILL_DIR>/scripts/build_showcase.py /path/to/source
    ```
 8. Done — tell the user the showcase has been updated with improved descriptions
 
@@ -136,13 +140,13 @@ Steps:
 
 ```bash
 # Structural components (navbar, footer, sidebar, tabbar)
-python ~/.claude/skills/stitch-showcase/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen
+python <SKILL_DIR>/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen
 
 # Atomic components (button, input, heading, etc.)
-python ~/.claude/skills/stitch-showcase/scripts/apply_canonical.py /path/to/showcase/assets/ button home_screen
+python <SKILL_DIR>/scripts/apply_canonical.py /path/to/showcase/assets/ button home_screen
 
 # Target specific screens only
-python ~/.claude/skills/stitch-showcase/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen --targets login settings profile
+python <SKILL_DIR>/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen --targets login settings profile
 ```
 
 4. Rebuild the showcase: `build_showcase.py /path/to/source`
@@ -177,13 +181,13 @@ The catalog is generated automatically as part of every build. Open `catalog.htm
 
 ```bash
 # Point to the project root — the script discovers the source automatically
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/project
+python <SKILL_DIR>/scripts/build_showcase.py /path/to/project
 
 # Or point directly to the folder with zips/screens
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/project/stitch
+python <SKILL_DIR>/scripts/build_showcase.py /path/to/project/stitch
 
 # Single mega-zip (zip containing all screens as subfolders)
-python ~/.claude/skills/stitch-showcase/scripts/build_showcase.py /path/to/export.zip
+python <SKILL_DIR>/scripts/build_showcase.py /path/to/export.zip
 ```
 
 ### Flags
