@@ -13,6 +13,7 @@ argument-hint: [patch|minor|major] (optional; inferred from semantic commits if 
 - Remote URL: !`git remote get-url origin 2>/dev/null || echo "<no remote>"`
 - Recent commit style: !`git log --pretty=format:"%s" -20`
 - Has gh CLI: !`command -v gh >/dev/null 2>&1 && echo "yes" || echo "no"`
+- Repo visibility (GitHub only): !`gh repo view --json visibility -q .visibility 2>/dev/null || echo "<unknown>"`
 - Versioned files present:
   - package.json: !`test -f package.json && echo "yes" || echo "no"`
   - tiapp.xml: !`test -f tiapp.xml && echo "yes" || echo "no"`
@@ -129,7 +130,15 @@ Do all of this **internally**. Do not print a status summary or any "Step 1" hea
 
 7. **Detect main-alignment state.** Capture: the name of the project's primary branch (`main` or `master` — check `git symbolic-ref refs/remotes/origin/HEAD` or fall back to `main` then `master`), whether the current branch matches it, and whether `main` (locally and on origin) is reachable. This drives the optional merge prompt in Step 4.
 
-8. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below.
+8. **Detect repo visibility (drives tag + GitHub-release behavior).** Run `gh repo view --json visibility -q .visibility` if `gh` is available and the remote is GitHub.
+
+   - `PRIVATE` → **private mode**. **Skip both the git tag and the GitHub release by default.** For a private repo, tags and releases are distribution/marketing artifacts the maintainer typically doesn't need — version bumps live in `package.json`/`tiapp.xml`/etc. and the CHANGELOG. The user can opt back into a tag (still no GitHub release) by appending `con tag` / `with tag` to their Step 4 confirmation.
+   - `PUBLIC` or `INTERNAL` → **public mode**. Tag + GitHub release as usual.
+   - `gh` unavailable, command fails, or remote isn't GitHub → **unknown**. Behave as public mode for the tag, and skip the GitHub release if `gh` isn't there (existing fallback in Phase 3).
+
+   Hold the resolved mode (`private` / `public` / `unknown`) internally for Step 4 and Phase 3.
+
+9. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below. **Do not** flag "no prior tags" as an anomaly on a private repo — in private mode we're not creating a tag anyway, so it's not a question.
 
 ---
 
@@ -264,8 +273,11 @@ CHANGELOG entry:
 
 README updates (gaps found): <one-line per gap, e.g. "add /release row to Available commands table + new section">  ← omit this line if no gaps
 Release commit: bumps <version-file> A.B.C→X.Y.Z, inserts CHANGELOG section, applies README updates. Subject: `<exact line>`.
-Tag + push: vX.Y.Z to <branch> + tag.
-GitHub release: notes = CHANGELOG section above.
+Push: release commit to <branch>.
+<one of the three rendering modes below — pick by visibility>
+   • Public / internal repo: `Tag + GitHub release: vX.Y.Z to <branch> + release with CHANGELOG notes.`
+   • Private repo (default): `Repo privado → omitiendo tag y GitHub release. (responde "con tag" si quieres crear el tag de todos modos)` — localize to user's language.
+   • Unknown (no gh / non-GitHub remote): `Tag + push: vX.Y.Z to <branch>. GitHub release: skipped (no gh / non-GitHub remote).`
 
 Branch <branch> → <main-branch>? (default: no; responde "merge" para fast-forward, "PR" para pull request)   ← include ONLY when current branch ≠ main/master; localize to user's language
 
@@ -288,6 +300,7 @@ Acceptable confirmations:
 - **Without merge** (default): `yes`, `sí`, `commitea`, `adelante`, `proceed`, `go`, `ship it`. → execute Phases 1–3 of Step 5 only.
 - **With fast-forward merge** to main/master: `merge`, `sí merge`, `proceed and merge`, `merge yes`, `ship and merge`. → execute Phases 1–3, then Phase 4 with `mode=merge`.
 - **With PR**: `pr`, `PR`, `abrir PR`, `proceed PR`, `release and PR`. → execute Phases 1–3, then Phase 4 with `mode=pr`. Requires `gh` available.
+- **Force tag on a private repo** (modifier, combinable with any of the above): append `con tag` / `with tag` / `tag yes`. → flips the resolved mode for this run from `private` to `public` for tag-creation purposes only (still no GitHub release on a private repo). Example: `sí con tag`, `proceed with tag`, `merge con tag`.
 
 Anything else (silence, partial yes, "let me check", questions) means **do not proceed**. If the user proposes changes (e.g. "merge commits 2 and 3", "split commit 5", "skip commit 7", "different subject for #4"), apply them and re-present a refreshed Step 4 block before executing. The merge-mode confirmation can also be revised — e.g. user says "yes but no merge" → mode=none; "merge actually" after an initial plain yes → re-confirm before doing it.
 
@@ -331,11 +344,13 @@ After Phase 1, the working tree should be clean except for files explicitly list
 
 **Phase 3 — Push, tag, GitHub release.**
 
-1. `git push origin <current-branch>`.
-2. Tag (only if remote exists and a version was bumped, or user opted into a versionless tag):
+The behavior of steps 2 and 3 depends on the visibility resolved in Step 1.8:
+
+1. `git push origin <current-branch>` — always (regardless of visibility).
+2. Tag — **skip on private repos** unless the user appended `con tag` / `with tag` to their confirmation. Otherwise (public / internal / unknown / forced): only if a remote exists and a version was bumped (or user opted into a versionless tag):
    - `git tag -a vX.Y.Z -m "Release vX.Y.Z"`  ← annotation in project language
    - `git push origin vX.Y.Z`
-3. If `gh` is available and remote is GitHub: `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<CHANGELOG section>"` (HEREDOC for notes).
+3. GitHub release — **skip on private repos**, period (no override). For private repos, tags and releases aren't required and the user typically doesn't want them; the `con tag` modifier creates the tag only, never the GitHub release. Otherwise, if `gh` is available and remote is GitHub: `gh release create vX.Y.Z --title "vX.Y.Z" --notes "<CHANGELOG section>"` (HEREDOC for notes).
 
 **Phase 4 — Optional main alignment** (only if user confirmed `merge` or `PR`).
 
@@ -387,6 +402,7 @@ If everything was routine and no merge was requested, the second line is just th
 - **Never** merge to main with anything other than `--ff-only`. If fast-forward is not possible, abort and let the user resolve. Do not fall back to `--no-ff`, `-X theirs`, `-X ours`, or any rebase strategy.
 - **Never** proceed past Step 4 without explicit confirmation. The slash command itself is consent to **invoke**, not consent to commit and push.
 - If the working tree has merge conflicts or rebase-in-progress markers → **abort** with a diagnosis and let the user resolve manually.
-- If currently on `main` / `master` and the repo has **no prior tag**, ask the user explicitly before creating the first tag (this is a meaningful one-way action).
+- If currently on `main` / `master`, the repo is **public/internal**, and it has **no prior tag**, ask the user explicitly before creating the first tag (this is a meaningful one-way action). On a **private repo** this confirmation is unnecessary and must NOT be raised — private mode skips the tag entirely by default, so there's nothing to confirm. The user already opted in/out via the `con tag` modifier in Step 4.
 - If the repo has no remote → run Steps 5.1–5.5 only; skip push, tag, and release. Tell the user.
 - If the repo has a remote but `gh` is not available → run through 5.7's tag step but skip the GitHub release; tell the user how to create the release manually if they want to.
+- **Never** create a GitHub release on a private repo, even if the user added `con tag` to the confirmation. The `con tag` modifier only re-enables the git tag; the GitHub release stays skipped.
