@@ -219,6 +219,21 @@
       var frameMobile = document.getElementById('viewer-frame-mobile');
       var frameWeb = document.getElementById('viewer-frame-web');
 
+      // Inject scrollbar-hiding CSS into iframes after load (cosmetic, viewer-level only).
+      // Keeps source HTMLs untouched so they're clean for downstream handoff.
+      function injectScrollbarCSS(frame) {
+        try {
+          var doc = frame.contentDocument || frame.contentWindow.document;
+          if (!doc || doc.getElementById('__no-scrollbar-style')) return;
+          var style = doc.createElement('style');
+          style.id = '__no-scrollbar-style';
+          style.textContent = '*::-webkit-scrollbar{display:none!important}*{scrollbar-width:none!important;-ms-overflow-style:none!important}';
+          doc.head.appendChild(style);
+        } catch (e) { /* cross-origin or not yet ready */ }
+      }
+      frameMobile.addEventListener('load', function () { injectScrollbarCSS(frameMobile); });
+      frameWeb.addEventListener('load', function () { injectScrollbarCSS(frameWeb); });
+
       var screens = SCREENS;
       var currentIndex = 0;
       var VIEW_KEY = 'showcase-view-mode-' + '{{PROJECT_SLUG}}';
@@ -230,13 +245,13 @@
         root.classList.remove('view-mobile', 'view-web');
         root.classList.add('view-' + currentView);
 
-        // Toggle icon shows what you'll switch TO
+        // Toggle icon shows the CURRENT mode (matches the badge)
         if (currentView === 'mobile') {
-          iconPhone.classList.add('hidden');
-          iconMonitor.classList.remove('hidden');
-        } else {
           iconPhone.classList.remove('hidden');
           iconMonitor.classList.add('hidden');
+        } else {
+          iconPhone.classList.add('hidden');
+          iconMonitor.classList.remove('hidden');
         }
 
         // Recalc phone scaling when switching to mobile

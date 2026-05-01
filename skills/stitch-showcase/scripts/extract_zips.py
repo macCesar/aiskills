@@ -136,16 +136,11 @@ def _process_dir(dir_path: Path, slug: str, assets: Path) -> dict | None:
     }
 
 
-_NO_SCROLLBAR_CSS = '<style>*::-webkit-scrollbar{display:none!important}*{scrollbar-width:none!important;-ms-overflow-style:none!important}</style>'
-
 def _copy_html(src: Path, dst: Path) -> None:
-    """Copy HTML injecting scrollbar-hiding CSS into <head>."""
-    text = src.read_text(encoding="utf-8", errors="ignore")
-    if "</head>" in text:
-        text = text.replace("</head>", f"{_NO_SCROLLBAR_CSS}</head>", 1)
-    elif "<body" in text:
-        text = text.replace("<body", f"{_NO_SCROLLBAR_CSS}<body", 1)
-    dst.write_text(text, encoding="utf-8")
+    """Copy HTML verbatim. Scrollbar-hiding CSS is now injected at viewer level
+    (see references/viewer.html), keeping the source HTML untouched so it can be
+    handed off cleanly to downstream tools (e.g., Laravel Blade conversion)."""
+    shutil.copy2(src, dst)
 
 
 def _find_file(root: Path, filename: str) -> Path | None:

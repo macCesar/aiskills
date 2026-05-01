@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-05-01
+
+### Stitch Showcase
+
+#### Added
+- **Auto-copy of shared asset folders** in `build_showcase.py` — after extracting screens, the script now detects `images/`, `fonts/`, `css/`, `js/` folders in the source dir or its parent (project root) and copies them to `showcase/assets/`. Eliminates the manual `cp images/ showcase/assets/images/` step needed every rebuild for projects whose HTMLs reference shared assets via relative paths (e.g., a logo at `images/logo.png`).
+
+#### Changed
+- **Scrollbar-hiding CSS moved from per-HTML injection to viewer level** — `extract_zips.py:_copy_html()` previously mutated each copied HTML by inserting `<style>*::-webkit-scrollbar{display:none}...</style>` before `</head>`. Now `_copy_html()` is a thin wrapper around `shutil.copy2()` and the CSS is injected dynamically into the iframe by `viewer.html` after `load`. Result: HTMLs in `showcase/assets/` are byte-identical to their source in `{source}/{slug}/code.html`, so the templates stay clean for downstream handoff (e.g., Laravel Blade conversion). Detect divergence between source and output via `md5`/`diff` if either is ever modified out of band.
+- **View-mode toggle icon now reflects the current state** instead of the destination — previously the icon swapped to show "where clicking takes you" (Mobile mode → monitor icon, Web mode → phone icon), which conflicted with the badge text and confused users familiar with language switchers / segmented controls. Now the icon matches the badge: Mobile mode shows the phone icon, Web mode shows the monitor icon. Applied to both `references/index.html` and `references/viewer.html`.
+
+#### Internal
+- `extract_zips.py`: removed the `_NO_SCROLLBAR_CSS` constant and the in-place HTML mutation. `_copy_html()` is now a 3-line `shutil.copy2()` wrapper kept for symmetry with the `_process_zip` / `_process_dir` paths.
+
 ## [1.10.0] - 2026-04-30
 
 ### Added

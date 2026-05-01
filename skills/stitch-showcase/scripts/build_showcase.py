@@ -106,6 +106,18 @@ def build(source_dir: str, project_type: str = None, project_name: str = None) -
         print("Error: no screens found (no zips or folders with code.html).", file=sys.stderr)
         sys.exit(1)
 
+    # Copy shared asset folders (images, fonts, css, js) referenced by relative paths in HTMLs.
+    # Searches in source/, then source.parent/ (project root). Skips if already copied.
+    for asset_name in ('images', 'fonts', 'css', 'js'):
+        for candidate_root in (source, source.parent):
+            candidate = candidate_root / asset_name
+            if candidate.is_dir():
+                dest = assets_dir / asset_name
+                if not dest.exists():
+                    shutil.copytree(candidate, dest)
+                    print(f"  ✓ Copied shared {asset_name}/ from {candidate_root.name}/")
+                break
+
     # Enrich with DESIGN.md metadata
     screens = _enrich_screens(screens_raw, metadata, source)
 
@@ -159,6 +171,18 @@ def build_context(source_dir: str, project_type: str = None, project_name: str =
     if not screens_raw:
         print("Error: no screens found (no zips or folders with code.html).", file=sys.stderr)
         sys.exit(1)
+
+    # Copy shared asset folders (images, fonts, css, js) referenced by relative paths in HTMLs.
+    # Searches in source/, then source.parent/ (project root). Skips if already copied.
+    for asset_name in ('images', 'fonts', 'css', 'js'):
+        for candidate_root in (source, source.parent):
+            candidate = candidate_root / asset_name
+            if candidate.is_dir():
+                dest = assets_dir / asset_name
+                if not dest.exists():
+                    shutil.copytree(candidate, dest)
+                    print(f"  ✓ Copied shared {asset_name}/ from {candidate_root.name}/")
+                break
 
     # Enrich with DESIGN.md metadata
     screens = _enrich_screens(screens_raw, metadata, source)

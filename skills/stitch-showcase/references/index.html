@@ -186,13 +186,13 @@
       // Update badge text
       viewBadge.textContent = currentView === 'mobile' ? 'Mobile' : 'WEB';
 
-      // Update toggle icon: show the icon of the OTHER mode (what you'll switch to)
+      // Update toggle icon: show the icon of the CURRENT mode (matches the badge)
       if (currentView === 'mobile') {
-        iconPhone.classList.add('hidden');
-        iconMonitor.classList.remove('hidden');
-      } else {
         iconPhone.classList.remove('hidden');
         iconMonitor.classList.add('hidden');
+      } else {
+        iconPhone.classList.add('hidden');
+        iconMonitor.classList.remove('hidden');
       }
     }
     applyViewMode();
