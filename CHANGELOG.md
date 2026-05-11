@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-05-11
+
+### Changed — Codex CLI no longer gets a redundant platform symlink
+
+Codex CLI auto-discovers skills from the canonical `~/.agents/skills/` per the
+agentskills.io standard, so the symlinks aiskills was creating at
+`~/.codex/skills/<skill>` were redundant — Codex never actually read from
+there. Verified against the [official Codex CLI skills
+documentation](https://developers.openai.com/codex/skills/), which lists
+`$HOME/.agents/skills` (not `~/.codex/skills/`) as the user-scope location.
+
+Codex remains fully supported by aiskills; users simply don't need a
+platform-specific symlink.
+
+### Removed
+
+- Codex entry in `getPlatforms()` (`lib/config.js`). The platform detector
+  and install/sync flow no longer treat Codex as a symlink target.
+- README references implying Codex needs `~/.codex/skills/` symlinks.
+
+### Migration for existing users
+
+`aiskills update` now removes any stale `~/.codex/skills/<skill>` symlinks
+that aiskills created in earlier versions (active and legacy skill names
+alike). The cleanup is scoped to aiskills-managed skill names, so symlinks
+placed there by other tools (for example `npx skills add`) are left alone.
+
+No action is required from users — the next `aiskills update` cleans up
+automatically.
+
 ## [1.11.0] - 2026-05-01
 
 ### Stitch Showcase
