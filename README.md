@@ -40,7 +40,7 @@ claude   # or gemini, or codex
 
 Installed files:
 - All skills to `~/.agents/skills/`
-- Platform symlinks in `~/.claude/skills/`, `~/.gemini/skills/`, or `~/.codex/skills/`
+- Platform symlinks in `~/.claude/skills/` and `~/.gemini/skills/` (Codex CLI auto-discovers from `~/.agents/skills/` — no symlink needed)
 
 ### Which option should I use?
 
@@ -59,7 +59,7 @@ Installed files:
 | --------------------------------------------------------- | --------- | ------------------- |
 | [Claude Code](https://claude.ai/claude-code)              | Supported | `~/.claude/skills/` |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Supported | `~/.gemini/skills/` |
-| [Codex CLI](https://developers.openai.com/codex/cli/)     | Supported | `~/.codex/skills/`  |
+| [Codex CLI](https://developers.openai.com/codex/cli/)     | Supported | `~/.agents/skills/` (auto-discovered) |
 
 All three platforms use the same Agent Skills format: a `SKILL.md` file with YAML frontmatter that tells the assistant when to use the skill and what to do.
 
