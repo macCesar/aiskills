@@ -1,7 +1,7 @@
 ---
 name: humaniza
-description: Humaniza textos en español (especialmente es-MX) eliminando patrones típicos de IA y devolviendo una versión natural y clara. Úsalo al editar emails, documentación,  marketing, soporte o textos técnicos en español cuando el usuario pida "humanizar", "hacerlo más natural", "quitar tono IA" o "hacerlo sonar humano".
-allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion
+description: 'Úsalo cuando humanices textos en español (especialmente es-MX) — editando emails, documentación, marketing, soporte o textos técnicos, eliminando patrones típicos de IA y devolviendo una versión natural y clara. Triggers: "humanizar", "hacerlo más natural", "quitar tono IA", "hacerlo sonar humano".'
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash, AskUserQuestion
 ---
 
 # Humaniza
@@ -24,7 +24,25 @@ Editor de estilo para español de México. El objetivo es quitar tics de IA sin 
 4. Reescribir: cortar relleno, concretar, variar ritmo, usar "ser/estar" cuando sea más claro.
 5. Ajustar el tono según `references/modes-es-mx.md` si aplica.
 6. Añadir voz humana cuando aplique con `references/voice-es-mx.md`.
-7. Pasar QA final con `references/checklist.md`.
+7. Verificar el resultado con el escáner determinístico — ver "Verificación con script" abajo — y después pasar el QA visual con `references/checklist.md`.
+
+## Verificación con script
+
+Antes de entregar el texto, ejecuta el escáner para detectar tics que se hayan colado en la reescritura:
+
+```bash
+python <SKILL_DIR>/scripts/check_ai_patterns.py texto_editado.txt
+# o vía stdin:
+echo "$texto" | python <SKILL_DIR>/scripts/check_ai_patterns.py
+```
+
+Reemplaza `<SKILL_DIR>` por la "Base directory for this skill" que aparece en el system message al cargar el skill (la ruta cambia entre instalación plugin y standalone).
+
+El script lee `references/lexicon-es-mx.md` y reporta cada hit con línea, columna, categoría y sugerencia cuando existe. Para cada hit:
+
+- Si es un tic real → corrige el texto y vuelve a ejecutar el escáner
+- Si es una cita, marca o ejemplo legítimo → déjalo y anótalo en la entrega
+- El script NO sustituye al checklist visual — solo elimina la fase mecánica de búsqueda léxica
 
 ## Modos (si el usuario lo pide)
 
