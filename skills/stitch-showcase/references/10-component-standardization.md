@@ -38,3 +38,28 @@ Priority for choosing the canonical (best) version:
 - `total_screens`: total screens analyzed
 - `canonical`: the recommended version with slug and HTML snippet
 - `variants`: list of other versions with similarity scores and difference descriptions
+
+## Workflow (Mode 4: Standardize Components)
+
+**Triggers**: "standardize the navbars", "make all footers the same", "usa el navbar del home", "estandariza los botones", or similar.
+
+Steps:
+
+1. Open `catalog.html` in the browser — review the comparison view
+2. User decides which variant to use as canonical
+3. Run `apply_canonical.py` to apply the chosen canonical:
+
+```bash
+# Structural components (navbar, footer, sidebar, tabbar)
+python <SKILL_DIR>/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen
+
+# Atomic components (button, input, heading, etc.)
+python <SKILL_DIR>/scripts/apply_canonical.py /path/to/showcase/assets/ button home_screen
+
+# Target specific screens only
+python <SKILL_DIR>/scripts/apply_canonical.py /path/to/showcase/assets/ navbar home_screen --targets login settings profile
+```
+
+4. Rebuild the showcase: `build_showcase.py /path/to/source`
+5. Verify the catalog shows fewer variants / more items in "Already Unified"
+6. Repeat until all components are standardized

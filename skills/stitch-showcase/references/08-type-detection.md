@@ -9,7 +9,15 @@ Intelligent per-screen type detection that ensures web designs open in the web v
 - `type` — project-level type ("mobile" or "web")
 - Each screen's `detected_type` — per-screen type ("mobile", "web", or "unknown")
 
-## How Detection Works (in build_showcase.py)
+## Project-Level Detection (from DESIGN.md)
+
+Before per-screen detection, the script reads `DESIGN.md` for hints about the whole project:
+
+- Keywords in the project description: `"mobile"`, `"iOS"`, `"Android"`, `"app"` → likely a mobile project
+- Explicit `## Type` section (`mobile` or `web`) wins over keywords
+- If ambiguous or absent → fall back to per-screen detection (next section) and use `--type` CLI flag to force
+
+## Per-Screen Detection (in build_showcase.py)
 
 Each screen's HTML is analyzed for these signals:
 

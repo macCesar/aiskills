@@ -70,8 +70,20 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 - Tailwind config should extend colors with the project's accent: `colors: { accent: '{{PRIMARY_COLOR}}' }`
 - The theme initialization script MUST be in `<head>`, not at end of body, to prevent flash
 
+## Showcase Color Strategy
+
+**Do NOT use brand colors for showcase backgrounds** — if the app's background matches the showcase background, thumbnails disappear.
+
+| Element | Value |
+|---------|-------|
+| Page background | Smart default (see above): dark (`#0d0d0d`) if app surface is light; light (`#f5f5f5`) if app surface is dark |
+| Card background | `#1a1a1a` (dark mode) / `#ffffff` (light mode) |
+| Accent (tabs, hover, borders) | From context `color_tokens.accent` or `colors.primary` → fallback `#6366f1` |
+| Large surfaces | Always neutral — never brand color |
+
 ## Anti-Patterns
 
+- Do NOT use brand colors as large showcase surfaces — thumbnails disappear against matching backgrounds
 - Do NOT use `prefers-color-scheme` as the only source — the smart default from surface luminance is more important for showcase contrast
 - Do NOT animate the initial theme application (only transitions after user interaction)
 - Do NOT forget to sync theme between index and viewer pages
