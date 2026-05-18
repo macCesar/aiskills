@@ -26,3 +26,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Local maintainer tools (not distributed)
+.claude/
+docs/
