@@ -69,10 +69,10 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 
 | Skill                | Domain       | Source                               | Reference Files |
 | -------------------- | ------------ | ------------------------------------ | --------------- |
-| refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 4 files         |
+| refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 7 files         |
 | humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 6 files         |
-| vscode-extension-dev | VS Code      | VS Code Extension API docs           | 4 files         |
-| stitch-showcase      | Design Tools | Google Stitch export workflow        | 14 files        |
+| vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
+| stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
