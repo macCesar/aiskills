@@ -285,3 +285,70 @@ export function deactivate(): void {
   // Disposables in context.subscriptions are auto-disposed
 }
 ```
+
+## Extension Host Runtime
+
+The extension host is a **single Node.js process shared by every extension** in the window. Two consequences shape the code you write:
+
+- **Synchronous file I/O blocks the UI.** Calls like `fs.readFileSync` or `fs.writeFileSync` stall the host event loop, which freezes responses from every extension AND the editor's command handling. Always prefer async APIs:
+  - Node: `import { readFile } from 'node:fs/promises'` — `await readFile(path, 'utf8')`
+  - VS Code abstraction: `await vscode.workspace.fs.readFile(uri)` — works across remote, virtual, and local file systems
+- **CPU-heavy work in the host blocks too.** For long parsing/analysis, move work to a worker thread (`node:worker_threads`) or a language server (LSP), not a tight loop on the host.
+- The Webview runs in a separate process; messaging is async by construction. Don't try to "call" the host synchronously from the webview.
+
+```typescript
+// BAD — blocks the extension host
+import * as fs from 'node:fs';
+const text = fs.readFileSync('/tmp/big-file.txt', 'utf8');
+
+// GOOD — async, yields back to the event loop
+import { readFile } from 'node:fs/promises';
+const text = await readFile('/tmp/big-file.txt', 'utf8');
+
+// GOOD — workspace-aware (preferred when reading user files)
+const uri = vscode.Uri.file('/tmp/big-file.txt');
+const bytes = await vscode.workspace.fs.readFile(uri);
+const text2 = new TextDecoder('utf-8').decode(bytes);
+```
+
+## Workspace Folders (`rootPath` is deprecated)
+
+`vscode.workspace.rootPath` is **deprecated** and returns only the *first* folder in multi-root workspaces, silently dropping the rest. Use `vscode.workspace.workspaceFolders` instead — it returns `readonly WorkspaceFolder[] | undefined`.
+
+```typescript
+// BAD — deprecated, fails silently in multi-root workspaces
+const root = vscode.workspace.rootPath;
+
+// GOOD — iterate all workspace folders
+const folders = vscode.workspace.workspaceFolders;
+if (!folders || folders.length === 0) {
+  vscode.window.showWarningMessage('Open a folder first.');
+  return;
+}
+for (const folder of folders) {
+  // folder.uri.fsPath is the absolute path
+  // folder.name is the display name
+  // folder.index is its position in the list
+}
+
+// GOOD — find the folder that owns a given file
+const fileUri = vscode.window.activeTextEditor?.document.uri;
+if (fileUri) {
+  const owner = vscode.workspace.getWorkspaceFolder(fileUri);
+  // owner is the WorkspaceFolder containing the file, or undefined
+}
+
+// GOOD — react to folders being added or removed
+context.subscriptions.push(
+  vscode.workspace.onDidChangeWorkspaceFolders((event) => {
+    for (const added of event.added) {
+      // ...
+    }
+    for (const removed of event.removed) {
+      // ...
+    }
+  }),
+);
+```
+
+Relative paths in extension code should resolve against a specific `WorkspaceFolder`, never against `process.cwd()` (which is unrelated to the user's workspace).
