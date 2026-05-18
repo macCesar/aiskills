@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{HTML_LANG}}">
 
 <head>
   <meta charset="UTF-8">
@@ -37,13 +37,23 @@
 
     /* List mode overrides — thumbnail always horizontal rectangle, regardless of view mode */
     .screens-grid.list-mode { display: flex; flex-direction: column; gap: 8px; }
-    .screens-grid.list-mode .screen-card { display: flex; flex-direction: row; gap: 16px; }
-    .screens-grid.list-mode .screen-card .card-thumb { width: 240px; flex-shrink: 0; aspect-ratio: 16/10 !important; border-radius: 12px; }
+    .screens-grid.list-mode .screen-card { display: flex; flex-direction: row; gap: 12px; }
+    .screens-grid.list-mode .screen-card .card-thumb { width: 140px; flex-shrink: 0; aspect-ratio: 16/10 !important; border-radius: 12px; }
     .screens-grid.list-mode .screen-card .card-info { flex: 1; min-width: 0; padding-top: 4px; }
     .screens-grid.list-mode .screen-card .card-desc { -webkit-line-clamp: unset; overflow: visible; white-space: normal; }
+    @media (min-width: 640px) {
+      .screens-grid.list-mode .screen-card { gap: 16px; }
+      .screens-grid.list-mode .screen-card .card-thumb { width: 240px; }
+    }
 
-    /* Grid columns per view mode */
-    .view-mobile .screens-grid:not(.list-mode) { grid-template-columns: repeat(4, 1fr) !important; }
+    /* Grid columns per view mode — responsive, mobile-first */
+    .view-mobile .screens-grid:not(.list-mode) { grid-template-columns: repeat(2, 1fr) !important; }
+    @media (min-width: 640px) {
+      .view-mobile .screens-grid:not(.list-mode) { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (min-width: 768px) {
+      .view-mobile .screens-grid:not(.list-mode) { grid-template-columns: repeat(4, 1fr) !important; }
+    }
     .view-web .screens-grid:not(.list-mode) { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; }
 
     /* Hide scrollbar on tabs */
@@ -56,22 +66,18 @@
 
   <!-- ── Header ─────────────────────────────────────────── -->
   <header class="sticky top-0 z-50 border-b border-gray-200/60 backdrop-blur-xl bg-white/80 dark:border-white/10 dark:bg-[#0d0d0d]/80">
-    <div class="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-4 px-6">
+    <div class="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6">
 
-      <div class="flex min-w-0 items-center gap-3">
+      <div class="flex min-w-0 items-center gap-2 sm:gap-3">
         <span class="truncate text-sm font-semibold">{{PROJECT_NAME}}</span>
-        <span id="view-badge" class="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-gray-400">
+        <span id="view-badge" class="hidden sm:inline-flex shrink-0 items-center gap-1.5 rounded-full border border-gray-200 bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-gray-400">
         </span>
-        <span class="shrink-0 text-xs text-gray-400 dark:text-gray-500">{{SCREEN_COUNT}} screens</span>
-        <a href="catalog.html" class="shrink-0 inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-[11px] font-medium text-gray-500 transition-colors hover:border-accent hover:text-accent dark:border-white/10 dark:bg-white/5 dark:text-gray-400 dark:hover:border-accent dark:hover:text-accent">
-          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          Catalog
-        </a>
+        <span class="hidden sm:inline shrink-0 text-xs text-gray-400 dark:text-gray-500">{{SCREEN_COUNT}} pantallas</span>
       </div>
 
       <div class="flex shrink-0 items-center gap-2">
         <!-- View mode toggle (mobile/web) -->
-        <button id="view-mode-toggle" title="Toggle mobile/web view" class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <button id="view-mode-toggle" title="Cambiar vista móvil/web" class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
           <svg id="icon-phone" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
           </svg>
@@ -89,7 +95,7 @@
           </svg>
         </button>
         <!-- Theme toggle -->
-        <button id="theme-toggle" title="Toggle light/dark" class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
+        <button id="theme-toggle" title="Cambiar claro/oscuro" class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10">
           <svg class="block h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
@@ -117,7 +123,7 @@
     <div class="mt-8 flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
       <div class="flex items-center gap-2">
         <span class="font-semibold text-gray-900 dark:text-white">{{SCREEN_COUNT}}</span>
-        <span>Screens</span>
+        <span>Pantallas</span>
       </div>
       <div class="h-4 w-px bg-gray-200 dark:bg-white/10"></div>
       <div class="flex items-center gap-2">
@@ -150,7 +156,7 @@
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" />
         </svg>
-        <input id="search-input" type="text" placeholder="Search screens..." autocomplete="off" class="h-8 w-48 rounded-lg border border-gray-200 bg-gray-50 pl-8 pr-3 text-xs text-gray-900 placeholder-gray-400 transition-all focus:w-64 focus:outline-none focus:ring-2 focus:ring-accent/40 dark:border-white/10 dark:bg-white/5 dark:text-gray-100">
+        <input id="search-input" type="text" placeholder="Buscar pantallas..." autocomplete="off" class="h-8 w-48 rounded-lg border border-gray-200 bg-gray-50 pl-8 pr-3 text-xs text-gray-900 placeholder-gray-400 transition-all focus:w-64 focus:outline-none focus:ring-2 focus:ring-accent/40 dark:border-white/10 dark:bg-white/5 dark:text-gray-100">
       </div>
     </div>
 
@@ -163,7 +169,7 @@
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.35-4.35" />
       </svg>
-      <p class="text-sm">No screens match your search.</p>
+      <p class="text-sm">Ninguna pantalla coincide con tu búsqueda.</p>
     </div>
 
   </section>
@@ -184,7 +190,7 @@
       root.classList.add('view-' + currentView);
 
       // Update badge text
-      viewBadge.textContent = currentView === 'mobile' ? 'Mobile' : 'WEB';
+      viewBadge.textContent = currentView === 'mobile' ? 'Móvil' : 'Web';
 
       // Update toggle icon: show the icon of the CURRENT mode (matches the badge)
       if (currentView === 'mobile') {
