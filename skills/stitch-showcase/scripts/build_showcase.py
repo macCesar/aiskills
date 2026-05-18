@@ -40,6 +40,7 @@ import parse_design_md
 import extract_text
 import detect_components
 import extract_catalog
+from slug_demangle import slug_to_title
 
 
 def _extract_source_zip(zip_path: Path) -> Path:
@@ -149,6 +150,9 @@ def build(source_dir: str, project_type: str = None, project_name: str = None) -
 
     # Generate catalog.html (always included)
     _generate_catalog(output_dir, assets_dir, metadata)
+
+    # Sanity-check the generated output — warnings only, never aborts.
+    _validate_showcase(output_dir, screens)
 
     print(f"\n🎉 Showcase ready: {output_dir}/index.html\n")
     return output_dir
@@ -344,6 +348,11 @@ def _prepare_source(source_dir: str, project_type: str, project_name: str) -> tu
         # Defer type detection — will resolve after screen extraction via _detect_type_from_screens()
         metadata["_type_pending"] = True
 
+    # Language: showcase.json wins over DESIGN.md if both present, else fall through.
+    if config.get("lang"):
+        metadata["lang"] = str(config["lang"])
+    metadata.setdefault("lang", "en")
+
     ptype = metadata.get("type", "unknown")
     if ptype != "unknown":
         print(f"📱 Type: {ptype} | Project: {metadata['project_name']}")
@@ -518,16 +527,21 @@ def _enrich_screens(screens_raw: list, metadata: dict, source: Path) -> list:
     for raw in screens_raw:
         slug = raw["slug"]
         design = design_screens.get(slug, {})
+        html_path = raw.get("html_path", "")
 
-        # Title
-        title = design.get("title") or _slug_to_title(slug)
+        # Title resolution order: explicit DESIGN.md → <title> HTML → demangled slug
+        title = (
+            design.get("title")
+            or _read_html_title_tag(html_path)
+            or slug_to_title(slug)
+        )
 
         # Description priority: DESIGN.md → individual .md → meta/h1/title/visible body text → ""
         desc = design.get("description") or ""
         if not desc:
             desc = _read_md_desc(slug, source)
         if not desc:
-            desc = _read_html_title(raw.get("html_path", ""))
+            desc = _read_html_title(html_path)
 
         enriched.append({
             "slug": slug,
@@ -538,6 +552,50 @@ def _enrich_screens(screens_raw: list, metadata: dict, source: Path) -> list:
         })
 
     return enriched
+
+
+def _read_html_title_tag(html_path: str) -> str:
+    """
+    Read the <title> tag of an HTML file and return a usable screen title.
+
+    Skips generic placeholders (Untitled, index, etc.). Strips a leading
+    "Brand - " or "Brand | " prefix when the title contains a separator,
+    so "Lumiere Dining - Rústico & Artesanal" becomes "Rústico & Artesanal".
+    Decodes basic HTML entities (&amp;, &nbsp;…).
+    """
+    if not html_path:
+        return ""
+    try:
+        text = Path(html_path).read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return ""
+
+    m = re.search(r"<title[^>]*>(.+?)</title>", text, re.IGNORECASE | re.DOTALL)
+    if not m:
+        return ""
+
+    val = re.sub(r"<[^>]+>", "", m.group(1)).strip()
+    for entity, char in [
+        ("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"),
+        ("&nbsp;", " "), ("&#39;", "'"), ("&quot;", '"'),
+    ]:
+        val = val.replace(entity, char)
+    val = re.sub(r"\s+", " ", val).strip()
+
+    if not val:
+        return ""
+    if re.match(r"^(untitled|index|screen|page|document|\d+)$", val, re.IGNORECASE):
+        return ""
+
+    # Strip a "Brand - " / "Brand | " / "Brand: " prefix and return the last segment.
+    for sep in (" - ", " — ", " | ", ": "):
+        if sep in val:
+            tail = val.split(sep)[-1].strip()
+            if tail:
+                val = tail
+                break
+
+    return val
 
 
 def _read_md_desc(slug: str, source: Path) -> str:
@@ -718,6 +776,23 @@ def _generate_viewer(output_dir: Path, ptype: str, metadata: dict, screens: list
 
     template = template_path.read_text(encoding="utf-8")
 
+    # Reorder screens to follow DESIGN.md section order (mirrors _build_sections_html)
+    # so prev/next navigation matches the visual order in index.html.
+    sections = metadata.get("sections", [])
+    if sections:
+        slug_to_screen = {s["slug"]: s for s in screens}
+        ordered = []
+        seen = set()
+        for section in sections:
+            for slug in section.get("slugs", []):
+                if slug in slug_to_screen and slug not in seen:
+                    ordered.append(slug_to_screen[slug])
+                    seen.add(slug)
+        for s in screens:
+            if s["slug"] not in seen:
+                ordered.append(s)
+        screens = ordered
+
     # Build screens JSON for prev/next navigation
     screens_data = [
         {"title": s["title"], "desc": s["description"], "html_file": s["html_file"]}
@@ -738,6 +813,7 @@ def _generate_viewer(output_dir: Path, ptype: str, metadata: dict, screens: list
     font_family = font or "system-ui"
 
     html = template
+    html = html.replace("{{HTML_LANG}}", metadata.get("lang", "en"))
     html = html.replace("{{PROJECT_NAME}}", escape(metadata["project_name"]))
     html = html.replace("{{SCREENS_JSON}}", json.dumps(screens_data, ensure_ascii=False))
     html = html.replace("{{DEFAULT_THEME}}", metadata.get("default_theme", "light"))
@@ -796,12 +872,13 @@ def _generate_index(output_dir: Path, ptype: str, metadata: dict, screens: list)
     )
 
     # New template variables
-    type_labels = {"mobile": "Mobile App", "web": "Web App"}
+    type_labels = {"mobile": "App Móvil", "web": "App Web"}
     type_label = type_labels.get(metadata.get("type", ""), "Showcase")
     project_desc = _project_description_html(metadata, filtered_screens)
     screens_intro = _screens_intro_text(metadata)
 
     html = template
+    html = html.replace("{{HTML_LANG}}", metadata.get("lang", "en"))
     html = html.replace("{{PROJECT_NAME}}", escape(metadata["project_name"]))
     html = html.replace("{{SCREEN_COUNT}}", str(len(filtered_screens)))
     html = html.replace("{{SCREENS_HTML}}", sections_html)
@@ -925,7 +1002,7 @@ def _design_system_html(ds_screen: dict | None, metadata: dict) -> str:
             f'style="font-family:\'{escape(font)}\',sans-serif">Aa</span>'
             f'<div>'
             f'<span class="text-sm font-medium text-gray-700 dark:text-gray-200">{escape(font)}</span>'
-            f'<span class="text-xs text-gray-400 dark:text-gray-500 ml-2">Primary typeface</span>'
+            f'<span class="text-xs text-gray-400 dark:text-gray-500 ml-2">Tipografía principal</span>'
             f'</div>'
             f'</div>'
         )
@@ -1292,10 +1369,73 @@ def _card_html(screen: dict, ptype: str) -> str:
         </a>"""
 
 
-def _slug_to_title(slug: str) -> str:
-    """01_splash_screen → 'Splash Screen' (strips numeric prefix)."""
-    s = re.sub(r"^[\d_]+", "", slug)
-    return s.replace("_", " ").replace("-", " ").title().strip() or slug.title()
+# ─── Post-build validation ───────────────────────────────────────────────────
+
+def _validate_showcase(output_dir: Path, screens: list) -> None:
+    """
+    Sanity-check the generated showcase. Prints warnings only — never aborts.
+
+    Checks:
+      1. JSON embedded in viewer.html (`var SCREENS = [...]`) parses.
+      2. Each screen has both `assets/<slug>.html` and `assets/<slug>.png`.
+      3. Local `src=` references (img / video / source) inside each screen
+         resolve on disk (URLs starting with http/https/data: are skipped).
+    """
+    assets_dir = output_dir / "assets"
+    issues: list[str] = []
+
+    # 1) Embedded SCREENS JSON in viewer.html
+    viewer_path = output_dir / "viewer.html"
+    if viewer_path.exists():
+        viewer_text = viewer_path.read_text(encoding="utf-8")
+        m = re.search(r"var\s+SCREENS\s*=\s*(\[.*?\]);", viewer_text, re.DOTALL)
+        if not m:
+            issues.append("viewer.html: no encontré `var SCREENS = [...]`")
+        else:
+            try:
+                json.loads(m.group(1))
+            except json.JSONDecodeError as e:
+                issues.append(f"viewer.html: SCREENS JSON inválido — {e}")
+
+    # 2) Per-screen assets
+    for s in screens:
+        slug = s["slug"]
+        if not (assets_dir / f"{slug}.html").exists():
+            issues.append(f"{slug}: falta assets/{slug}.html")
+        if not (assets_dir / f"{slug}.png").exists():
+            issues.append(f"{slug}: falta assets/{slug}.png")
+
+    # 3) Local img / video / source references inside each screen HTML
+    src_re = re.compile(
+        r"""<(?:img|video|source)\s[^>]*src=["']([^"']+)["']""",
+        re.IGNORECASE,
+    )
+    for s in screens:
+        slug = s["slug"]
+        html_path = assets_dir / f"{slug}.html"
+        if not html_path.exists():
+            continue
+        try:
+            text = html_path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for src in src_re.findall(text):
+            if src.startswith(("http://", "https://", "data:", "//")):
+                continue
+            ref = (html_path.parent / src).resolve()
+            if not ref.exists():
+                issues.append(f"{slug}: src inexistente '{src}'")
+
+    # 4) Report
+    print()
+    if not issues:
+        print(f"✅ {len(screens)}/{len(screens)} screens válidos")
+    else:
+        print(f"⚠ {len(issues)} problema(s) detectado(s):")
+        for issue in issues[:20]:
+            print(f"   - {issue}")
+        if len(issues) > 20:
+            print(f"   ...({len(issues) - 20} más)")
 
 
 def _project_slug(name: str) -> str:
@@ -1422,7 +1562,7 @@ def _init(source_dir: str, project_type: str, project_name: str) -> None:
         sys.exit(1)
 
     # Auto-group slugs for skeleton
-    fake_screens = [{"slug": s, "title": _slug_to_title(s), "description": ""} for s in slugs]
+    fake_screens = [{"slug": s, "title": slug_to_title(s), "description": ""} for s in slugs]
     groups = _auto_group_screens(fake_screens)
 
     pname = project_name or source.name.replace("_", " ").replace("-", " ").title()

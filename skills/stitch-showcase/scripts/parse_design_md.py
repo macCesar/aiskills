@@ -3,12 +3,25 @@ parse_design_md.py — Extracts metadata from DESIGN.md for stitch-showcase.
 
 Usage:
     python parse_design_md.py /path/to/DESIGN.md
-    → prints JSON with project_name, type, colors, color_tokens, default_theme, font_family, screens, sections
+    → prints JSON with project_name, type, lang, colors, color_tokens, default_theme, font_family, screens, sections
 """
 import re
 import sys
 import json
 from pathlib import Path
+
+# Ensure sibling modules resolve when this file is invoked directly.
+sys.path.insert(0, str(Path(__file__).parent))
+from slug_demangle import slug_to_title
+
+
+SPANISH_STOPWORDS = {
+    "de", "el", "la", "los", "las", "para", "con", "por", "una", "uno",
+    "del", "que", "es", "se", "su", "sus", "como", "más", "muy", "este",
+    "esta", "estos", "estas", "pantalla", "pantallas", "aplicación",
+    "aplicacion", "usuario", "usuarios", "diseño", "diseno", "móvil",
+    "movil", "perfil", "configuración", "configuracion",
+}
 
 
 def parse(design_md_path: str) -> dict:
@@ -17,6 +30,7 @@ def parse(design_md_path: str) -> dict:
         return {
             "project_name": "",
             "type": "unknown",
+            "lang": "en",
             "colors": {},
             "color_tokens": {},
             "default_theme": "light",
@@ -26,8 +40,16 @@ def parse(design_md_path: str) -> dict:
         }
 
     text = path.read_text(encoding="utf-8")
+    frontmatter = _parse_yaml_frontmatter(text)
+    lang = _extract_lang_override(text) or _detect_lang(text)
     colors = _extract_colors(text)
     color_tokens = _extract_color_tokens(text)
+
+    # Frontmatter fills in fields the Markdown body doesn't define.
+    if not colors and frontmatter.get("colors"):
+        colors = dict(frontmatter["colors"])
+    if not color_tokens and frontmatter.get("colors"):
+        color_tokens = _semantic_tokens_from_dict(frontmatter["colors"])
 
     # Determine default_theme from surface token
     surface_hex = color_tokens.get("surface") or color_tokens.get("background")
@@ -58,7 +80,7 @@ def parse(design_md_path: str) -> dict:
         # Apply titles/descriptions to screens already in the list
         for s in screens:
             slug = s["slug"]
-            if not s.get("title") or s["title"] == _slug_to_title(slug):
+            if not s.get("title") or s["title"] == slug_to_title(slug):
                 if slug in section_titles:
                     s["title"] = section_titles[slug]
             if not s.get("description") and slug in section_descs:
@@ -69,27 +91,143 @@ def parse(design_md_path: str) -> dict:
                 if slug not in existing_slugs:
                     screens.append({
                         "slug": slug,
-                        "title": section_titles.get(slug) or _slug_to_title(slug),
+                        "title": section_titles.get(slug) or slug_to_title(slug),
                         "description": section_descs.get(slug, ""),
                     })
                     existing_slugs.add(slug)
 
+    project_name = _extract_project_name(text) or frontmatter.get("name", "")
+    font_family = _extract_typography(text) or frontmatter.get("font_family")
+
     return {
-        "project_name": _extract_project_name(text),
+        "project_name": project_name,
         "type": _detect_type(text),
+        "lang": lang,
         "colors": colors,
         "color_tokens": color_tokens,
         "default_theme": default_theme,
-        "font_family": _extract_typography(text),
+        "font_family": font_family,
         "screens": screens,
         "sections": sections,
     }
+
+
+def _parse_yaml_frontmatter(text: str) -> dict:
+    """
+    Parse a Stitch-style YAML frontmatter at the top of DESIGN.md.
+
+    Recognizes (everything else is ignored):
+      - top-level ``name:`` → ``"name"``
+      - ``colors:`` block with hex values → ``"colors"`` dict
+      - ``typography:`` block — returns the first ``fontFamily`` → ``"font_family"``
+
+    Returns an empty dict if no frontmatter delimiter is present.
+    """
+    m = re.match(r"^---\s*\n(.*?)\n---\s*\n", text, re.DOTALL)
+    if not m:
+        return {}
+    fm = m.group(1)
+    result: dict = {}
+
+    # name: <value>
+    name_m = re.search(r"^name:\s*(.+?)\s*$", fm, re.MULTILINE)
+    if name_m:
+        val = name_m.group(1).strip().strip("'\"")
+        if val:
+            result["name"] = val
+
+    # colors: block — collect indented "key: '#hex'" pairs until indentation drops.
+    colors_m = re.search(r"^colors:\s*\n((?:[ \t]+\S.*\n?)+)", fm, re.MULTILINE)
+    if colors_m:
+        colors: dict = {}
+        for line in colors_m.group(1).splitlines():
+            cm = re.match(
+                r"^\s+([a-z][a-z0-9\-]*):\s*['\"]?(#[0-9A-Fa-f]{3,8})['\"]?\s*$",
+                line,
+            )
+            if cm:
+                colors[cm.group(1).lower()] = "#" + cm.group(2).lstrip("#").upper()
+        if colors:
+            result["colors"] = colors
+
+    # typography: pick the first fontFamily declared anywhere in the block.
+    typo_m = re.search(r"fontFamily:\s*['\"]?([^'\"\n,]+)['\"]?", fm)
+    if typo_m:
+        font = typo_m.group(1).strip().rstrip(",;")
+        if font:
+            result["font_family"] = font
+
+    return result
+
+
+def _semantic_tokens_from_dict(colors: dict) -> dict:
+    """
+    Compute `accent` / `surface` semantic tokens from a flat color dict.
+
+    Mirrors the rules used by :func:`_extract_color_tokens`:
+      - ``accent``  → first key containing ``primary`` (not ``on-primary``)
+      - ``surface`` → first key named ``surface`` or containing ``background``/``bg``
+    """
+    tokens = dict(colors)
+    for name, val in colors.items():
+        if "primary" in name and not name.startswith("on-"):
+            tokens["accent"] = val
+            break
+    for name, val in colors.items():
+        if name == "surface" or "background" in name or name == "bg":
+            tokens["surface"] = val
+            break
+    return tokens
 
 
 def _extract_project_name(text: str) -> str:
     """First H1 heading in the document."""
     m = re.search(r"^#\s+(.+)$", text, re.MULTILINE)
     return m.group(1).strip() if m else ""
+
+
+def _extract_lang_override(text: str) -> str | None:
+    """
+    Explicit override via ``## Lang`` (or ``## Language``) section in DESIGN.md.
+
+    Expected format:
+        ## Lang
+        es
+
+    Returns a BCP-47-ish code (``es``, ``en``, ``pt-BR``…) or None if absent.
+    """
+    m = re.search(
+        r"^##\s+Lang(?:uage)?\s*\n\s*([A-Za-z]{2}(?:-[A-Za-z]{2,4})?)\s*$",
+        text, re.IGNORECASE | re.MULTILINE
+    )
+    if not m:
+        return None
+    raw = m.group(1)
+    # Normalize: language subtag lowercase, region subtag uppercase (BCP-47).
+    if "-" in raw:
+        lang, region = raw.split("-", 1)
+        return f"{lang.lower()}-{region.upper()}"
+    return raw.lower()
+
+
+def _detect_lang(text: str) -> str:
+    """
+    Heuristic language detection. Distinguishes Spanish from everything else.
+
+    Signals:
+      - Spanish-only accented characters (á é í ó ú ñ ü).
+      - Common Spanish stop words from SPANISH_STOPWORDS.
+
+    Returns 'es' when either signal is present, else 'en'.
+    """
+    if not text:
+        return "en"
+    lower = text.lower()
+    if re.search(r"[áéíóúñü]", lower):
+        return "es"
+    words = re.findall(r"[a-záéíóúñü]+", lower)
+    stop_hits = sum(1 for w in words if w in SPANISH_STOPWORDS)
+    return "es" if stop_hits >= 3 else "en"
 
 
 def _detect_type(text: str) -> str:
@@ -292,7 +430,7 @@ def _parse_table(text: str) -> list:
         cols = [c.strip() for c in line.split("|") if c.strip()]
         if len(cols) >= 2:
             slug = _to_slug(cols[0])
-            title = cols[1] if len(cols) > 1 else _slug_to_title(slug)
+            title = cols[1] if len(cols) > 1 else slug_to_title(slug)
             desc = cols[2] if len(cols) > 2 else ""
             rows.append({"slug": slug, "title": title, "description": desc})
 
@@ -324,7 +462,7 @@ def _parse_screen_list(text: str) -> list:
                 title = title_part.strip()
                 desc = desc_part.strip()
             else:
-                title = _slug_to_title(slug)
+                title = slug_to_title(slug)
                 desc = raw
             screens.append({"slug": slug, "title": title, "description": desc})
 
@@ -382,11 +520,6 @@ def _to_slug(s: str) -> str:
     s = re.sub(r"[\s\-]+", "_", s)
     s = re.sub(r"[^a-z0-9_]", "", s)
     return s
-
-
-def _slug_to_title(slug: str) -> str:
-    """splash_screen → 'Splash Screen'"""
-    return slug.replace("_", " ").replace("-", " ").title()
 
 
 if __name__ == "__main__":
