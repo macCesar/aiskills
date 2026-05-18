@@ -1,6 +1,6 @@
 ---
 allowed-tools: Bash(git:*), Bash(gh:*), Bash(npm version:*), Bash(npm pkg:*), Bash(cat:*), Bash(grep:*), Bash(test:*), Read, Edit, Write, Glob, Grep
-description: Full release workflow — detect project, infer semver bump, update CHANGELOG+README, commit, push, tag, GitHub release
+description: Full release workflow — detect project, infer semver bump, update CHANGELOG+README, commit, push. Public repos get a tag + GitHub release (asks before the first ever tag or release); private repos skip both by default.
 argument-hint: [patch|minor|major] (optional; inferred from semantic commits if omitted)
 ---
 
@@ -138,7 +138,13 @@ Do all of this **internally**. Do not print a status summary or any "Step 1" hea
 
    Hold the resolved mode (`private` / `public` / `unknown`) internally for Step 4 and Phase 3.
 
-9. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below. **Do not** flag "no prior tags" as an anomaly on a private repo — in private mode we're not creating a tag anyway, so it's not a question.
+   **Additionally, when the resolved mode is `public` (or `unknown` with `gh` available), detect first-time milestones** — they will surface as ⚠️ lines in Step 4 so the user can opt out before they're created:
+   - **First tag ever:** `git tag --list | head -1` → empty result sets the `first-tag` flag.
+   - **First GitHub release ever:** `gh release list --limit 1` → empty stdout sets the `first-release` flag. Only check when `gh` is available and the remote is GitHub.
+
+   In `private` mode these flags are **not** raised — tag and GitHub release are skipped by default anyway, so there is nothing to confirm.
+
+9. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below. **Do not** flag "no prior tags" or "no prior releases" as an anomaly on a private repo — in private mode we're not creating either anyway, so it's not a question. On public mode the `first-tag` / `first-release` flags from Step 1.8 are surfaced as their own ⚠️ lines (see Step 4 Part C), not in the generic anomalies list.
 
 ---
 
@@ -279,6 +285,9 @@ Push: release commit to <branch>.
    • Private repo (default): `Repo privado → omitiendo tag y GitHub release. (responde "con tag" si quieres crear el tag de todos modos)` — localize to user's language.
    • Unknown (no gh / non-GitHub remote): `Tag + push: vX.Y.Z to <branch>. GitHub release: skipped (no gh / non-GitHub remote).`
 
+⚠️ First tag for this repo (no prior tags found). Confirming creates `vX.Y.Z` as the first ever tag.   ← include ONLY when the `first-tag` flag from Step 1.8 is set (public mode); localize to user's language
+⚠️ First GitHub release for this repo (no prior releases found). Confirming creates the first ever release.   ← include ONLY when the `first-release` flag from Step 1.8 is set (public mode, `gh` available); localize to user's language
+
 Branch <branch> → <main-branch>? (default: no; responde "merge" para fast-forward, "PR" para pull request)   ← include ONLY when current branch ≠ main/master; localize to user's language
 
 ¿Procedo?  ← in the user's language
@@ -402,7 +411,7 @@ If everything was routine and no merge was requested, the second line is just th
 - **Never** merge to main with anything other than `--ff-only`. If fast-forward is not possible, abort and let the user resolve. Do not fall back to `--no-ff`, `-X theirs`, `-X ours`, or any rebase strategy.
 - **Never** proceed past Step 4 without explicit confirmation. The slash command itself is consent to **invoke**, not consent to commit and push.
 - If the working tree has merge conflicts or rebase-in-progress markers → **abort** with a diagnosis and let the user resolve manually.
-- If currently on `main` / `master`, the repo is **public/internal**, and it has **no prior tag**, ask the user explicitly before creating the first tag (this is a meaningful one-way action). On a **private repo** this confirmation is unnecessary and must NOT be raised — private mode skips the tag entirely by default, so there's nothing to confirm. The user already opted in/out via the `con tag` modifier in Step 4.
+- If the repo is **public/internal** and has **no prior tag** and/or **no prior GitHub release**, surface a ⚠️ line in the Step 4 plan (one per missing milestone) before creating the first ever tag or release — these are meaningful one-way actions. The user's plain confirmation in Step 4 (`yes` / `sí` / `proceed` / …) covers both ⚠️s in that single round-trip; do not require a separate confirmation prompt. On a **private repo** these confirmations are unnecessary and must NOT be raised — private mode skips both the tag and the GitHub release by default, so there's nothing to confirm. The user already opted in/out via the `con tag` modifier in Step 4 (and even then, the GitHub release stays skipped on private repos).
 - If the repo has no remote → run Steps 5.1–5.5 only; skip push, tag, and release. Tell the user.
 - If the repo has a remote but `gh` is not available → run through 5.7's tag step but skip the GitHub release; tell the user how to create the release manually if they want to.
 - **Never** create a GitHub release on a private repo, even if the user added `con tag` to the confirmation. The `con tag` modifier only re-enables the git tag; the GitHub release stays skipped.
