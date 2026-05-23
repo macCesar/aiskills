@@ -16,15 +16,48 @@ Editor de estilo para español de México. El objetivo es quitar tics de IA sin 
 - Preferir es-MX: evitar "vosotros", "ordenador", "móvil", "coche" cuando el texto sea neutro.
 - No inventar fuentes ni datos.
 
+## Reglas clave (adaptadas de Stop Slop)
+
+1. **Corta los abridores.** Elimina frases que anuncian lo que sigue. "La verdad es que", "Déjame ser claro", "Aquí está la cosa". Di el contenido directo.
+
+2. **Rompe estructuras formulaicas.** Evita contrastes binarios ("No porque X, sino porque Y"), listados negativos ("No es X, no es Y, es Z"), fragmentación dramática ("[Sustantivo]. Eso es todo."), setups retóricos ("¿Qué tal si...?"), agencia falsa ("la decisión emerge").
+
+3. **Usa voz activa.** Cada oración necesita un sujeto humano haciendo algo. No le hables a objetos inanimados como si actuaran solos. Los datos no "dicen" nada; alguien los lee.
+
+4. **Sé concreto.** Sin vaguedades. "Las implicaciones son significativas" → nombra la implicación específica. "Las razones son estructurales" → di cuál es la razón.
+
+5. **Pon al lector en la escena.** "Tú" gana a "la gente". Lo específico gana a lo abstracto. Sin narrador desde la distancia ("La gente tiende a...", "Esto pasa porque...").
+
+6. **Varía el ritmo.** Mezcla largos y cortos. Dos elementos ganan a tres. No termines todos los párrafos igual. Elimina las rayas (—) en prosa narrativa.
+
+7. **Confía en el lector.** Afirma los hechos directo. Sin suavizar, justificar, ni dar permiso ("y eso está bien").
+
+8. **Corta lo citable.** Si suena a frase de caja de motivación, reescríbela.
+
 ## Flujo
 
 1. Detectar tono y audiencia a partir del texto.
 2. Si el usuario pide un modo (marketing, técnico, soporte, etc.), priorizarlo.
-3. Identificar tics de IA con `references/ai-patterns-es.md` y `references/lexicon-es-mx.md`.
+3. Identificar tics de IA con `references/ai-patterns-es.md`, `references/lexicon-es-mx.md`, y `references/structures-es.md`.
 4. Reescribir: cortar relleno, concretar, variar ritmo, usar "ser/estar" cuando sea más claro.
 5. Ajustar el tono según `references/modes-es-mx.md` si aplica.
 6. Añadir voz humana cuando aplique con `references/voice-es-mx.md`.
 7. Verificar el resultado con el escáner determinístico — ver "Verificación con script" abajo — y después pasar el QA visual con `references/checklist.md`.
+
+## Verificación rápida (antes de entregar)
+
+- ¿Hay adverbios -mente? Redúcelos o elimínalos.
+- ¿Voz pasiva sin sujeto visible? Encuentra al actor, ponlo de sujeto.
+- ¿Objeto inanimado haciendo algo humano ("la decisión emerge")? Nombra a la persona.
+- ¿Oración empieza con pronombre o adverbio interrogativo (qué, cuándo, dónde, cómo)? Reestructura.
+- ¿Abre con "he aquí", "la verdad es", "déjame"? Corta al punto.
+- ¿Tres oraciones consecutivas del mismo largo? Rompe una.
+- ¿Párrafo termina con frase corta de impacto? Varía.
+- ¿Raya (—) en prosa narrativa? Elimínala o usa coma.
+- ¿Declaración vaga ("las implicaciones son graves")? Nombra la implicación concreta.
+- ¿Comentario meta ("el resto de este artículo...")? Bórralo.
+- ¿Falso contraste ("no es X, es Y")? Afirma Y directo.
+- ¿Son a cita de LinkedIn? Reescribe sonando a humano.
 
 ## Verificación con script
 
