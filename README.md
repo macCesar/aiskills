@@ -40,7 +40,7 @@ claude   # or gemini, or codex
 
 Installed files:
 - All skills to `~/.agents/skills/`
-- Platform symlinks in `~/.claude/skills/` and `~/.gemini/skills/` (Codex CLI auto-discovers from `~/.agents/skills/` — no symlink needed)
+- Platform symlinks in `~/.claude/skills/` (Gemini CLI and Codex CLI auto-discover from `~/.agents/skills/` — no platform-specific symlink needed)
 
 ### Which option should I use?
 
@@ -58,7 +58,7 @@ Installed files:
 | Platform                                                  | Status    | Installation Path   |
 | --------------------------------------------------------- | --------- | ------------------- |
 | [Claude Code](https://claude.ai/claude-code)              | Supported | `~/.claude/skills/` |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Supported | `~/.gemini/skills/` |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Supported | `~/.agents/skills/` (auto-discovered) |
 | [Codex CLI](https://developers.openai.com/codex/cli/)     | Supported | `~/.agents/skills/` (auto-discovered) |
 
 All three platforms use the same Agent Skills format: a `SKILL.md` file with YAML frontmatter that tells the assistant when to use the skill and what to do.
@@ -70,7 +70,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | Skill                | Domain       | Source                               | Reference Files |
 | -------------------- | ------------ | ------------------------------------ | --------------- |
 | refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 7 files         |
-| humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 6 files         |
+| humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 7 files         |
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 
@@ -192,7 +192,7 @@ Reference files:
 
 ### humaniza
 
-An editor for Spanish text (es-MX). It removes common AI writing patterns and rewrites the text so it sounds natural without changing the meaning.
+An editor for Spanish text (es-MX). Based on curated es-MX style rules and adapted techniques from Hardik Pandya's Stop Slop skill (cut filler, break formulaic structures, active voice, specificity, varied rhythm). It removes common AI writing patterns and rewrites the text so it sounds natural without changing the meaning.
 
 When it activates:
 - User asks to "humanize" a text in Spanish
@@ -224,6 +224,7 @@ Reference files:
 | ----------------- | --------------------------------------------------------------- |
 | ai-patterns-es.md | AI writing tics in Spanish: inflated phrases, filler, templates |
 | lexicon-es-mx.md  | Preferred es-MX vocabulary vs. Spain Spanish                    |
+| structures-es.md  | Structural patterns to avoid: binary contrasts, false agency... |
 | modes-es-mx.md    | Rules per mode (marketing, technical, support, etc.)            |
 | voice-es-mx.md    | How to add human voice: rhythm, concreteness, variety           |
 | checklist.md      | Final QA before delivering the text                             |

@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-05-22
+
+### CLI
+
+#### Added
+- **Interactive skill selection during `aiskills install`** — the install command now presents a checkbox prompt listing all skills with their descriptions so users can deselect the ones they don't want. Previously, every install was an all-or-nothing operation. `--all` and `--path` modes skip the prompt (CI/automation). Unselected skills are cleaned up from `~/.agents/skills/` and any platform symlinks. New utilities `readSkillDescription` and `shortenSkillDescription` in `lib/utils.js` drive the checkbox labels — they parse YAML frontmatter and compress descriptions to a one-line hint.
+- **`removeUnselectedSkills` / `removeUnselectedSymlinks` in `lib/cleanup.js`** — when the user de-selects skills during a partial install, stale directories and symlinks are swept so on-disk state matches the selection.
+- **Gemini redundant symlink detection and removal** — previous aiskills versions created symlinks at `~/.gemini/skills/`, but Gemini CLI auto-discovers skills from `~/.agents/skills/` per the agentskills.io standard. The duplicate symlinks caused "Skill conflict detected" warnings on Gemini startup. `cleanupLegacyArtifacts` now removes Gemini symlinks during `install`/`update`, and `con cleanup` / `aiskills install` also trigger the removal for existing installations.
+
+#### Changed
+- **Gemini CLI removed from platform auto-detection** — `getPlatforms()` in `lib/config.js` no longer includes a Gemini entry. Gemini discovers skills from `~/.agents/skills/` natively; aiskills no longer creates or updates platform symlinks for it. The column count in the install output decreased by one with no loss of functionality.
+- **`aiskills install` output now shows install path prominently** — before the platform selection prompt, the command prints where skills are going (`~/.agents/skills/`) and which agents read from there, making the "did it actually work?" confirmation explicit.
+- **`installSkills()` accepts a `skillsToInstall` subset** — `lib/installer.js` now supports installing a filtered skill list, used by the new interactive selector.
+
+### Skill: humaniza
+
+#### Added
+- **8 new core rules** adapted from Stop Slop for Spanish prose: corta los abridores, rompe estructuras formulaicas, usa voz activa, sé concreto, pon al lector en la escena, varía el ritmo, confía en el lector, corta lo citable.
+- **`references/structures-es.md`** — new reference covering 9 structural patterns to avoid in Spanish: contrastes binarios, listado negativo, fragmentación dramática, setups retóricos, agencia falsa, narrador desde la distancia, voz pasiva, inicios de oración a evitar, patrones de ritmo. Each category includes specific Spanish examples and replacements.
+- **Quick Checks section** in `SKILL.md` — 12 pre-delivery checks mirroring Stop Slop's approach, adapted for Spanish: adverbs -mente, passive voice, false agency, wh- openers, throat-clearing, sentence length rhythm, paragraph endings, em dashes, vague declaratives, meta-commentary, false contrasts, LinkedIn-style quotables.
+
+#### Changed
+- **`references/ai-patterns-es.md`** — added 8 new patterns: abridores (throat-clearing), muletas de énfasis, agencia falsa, narrador desde la distancia, comentario meta, vagos declarativos, adverbiomanía, falsa intimidad.
+- **`references/lexicon-es-mx.md`** — added 6 new sections: abridores, muletas de énfasis, adverbios -mente inflados, comentario meta, agencia falsa, vagos declarativos.
+- **`references/checklist.md`** — expanded from 7 to 16 checks, covering all new Stop Slop-inspired patterns.
+- **`references/examples.md`** — added 5 new before/after examples demonstrating abridor+falso contraste, énfasis vacío+fragmentación, agencia falsa, and abridor vago.
+
 ## [1.13.0] - 2026-05-16
 
 ### CLI
