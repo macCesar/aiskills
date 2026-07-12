@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-07-12
+
+### Skill: audit-codebase
+
+#### Added
+- **New skill `audit-codebase`** — comprehensive software audit covering architecture, security, compatibility, performance, maintainability, and tests. Two-stage workflow: a read-only audit that delivers an evidence-based diagnosis, decision matrix, and phased correction plan, followed by an authorized implementation of the approved matrix. Core principles: evidence before patterns (Confirmed / Conditional risk / Unverified), proportional security (every restrictive recommendation must name affected use cases and the less-restrictive alternative evaluated), severity ≠ scope (every confirmed finding gets an explicit disposition), and minimal, complete, verifiable changes. Written in English for global reach; the audit report is produced in the user's language.
+- **`references/comprehensive-audit.md`** — mandatory principles, 24-area technical scope, 5-phase working method, severity classification, and recommendation/communication rules.
+- **`references/report-format.md`** — exact deliverable formats: executive summary, findings table, special sections, decision matrix, phased correction plan, and stage-2 implementation report.
+- **`agents/openai.yaml`** — Codex interface metadata (display name, short description, default prompt).
+
 ## [1.14.0] - 2026-05-22
 
 ### CLI
