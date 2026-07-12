@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audit Codebase"
+  short_description: "End-to-end technical audit and evidence-based correction plan"
+  default_prompt: "Run a comprehensive technical audit of this project: architecture, security, compatibility, performance, maintainability, and tests. Deliver a diagnosis, decision matrix, and correction plan without modifying code."

@@ -71,6 +71,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | -------------------- | ------------ | ------------------------------------ | --------------- |
 | refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 7 files         |
 | humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 7 files         |
+| audit-codebase       | Auditing     | Evidence-based audit methodology     | 2 files         |
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 
@@ -236,6 +237,39 @@ Scope:
 - Keeps technical terms, brands, code, and proper names intact
 - Prefers es-MX: avoids Spain-specific words like "vosotros", "ordenador", "móvil"
 - Returns only the final text, no explanation (unless requested)
+
+---
+
+### audit-codebase
+
+A senior software auditor that reviews an entire project — architecture, security, compatibility, performance, maintainability, and tests — and delivers an evidence-based diagnosis with a decision matrix and correction plan. Works in two stages: a read-only audit first, then an authorized implementation of the approved plan. Every restrictive security recommendation must name the legitimate use cases it could break and the less-restrictive alternative that was evaluated. The report is written in the user's language.
+
+When it activates:
+- Asking for a full technical audit or security review of a project
+- Checking if a project is ready for production
+- Reviewing architecture, dependencies, compatibility, or test coverage
+- Implementing an approved audit correction plan
+
+Example prompts:
+```
+"Audit this project end to end"
+"Is this backend ready for production?"
+"Do a security review without breaking the anonymous flows"
+"Find real problems before we ship"
+"Implement the audit plan we approved"
+```
+
+Reference files:
+| File                   | Topics                                                                     |
+| ---------------------- | --------------------------------------------------------------------------- |
+| comprehensive-audit.md | Mandatory principles, 24-area technical scope, 5-phase method, severity     |
+| report-format.md       | Executive summary, findings table, decision matrix, correction plan formats |
+
+Scope:
+- Stage 1 never modifies files; the first deliverable is always diagnosis + plan
+- Every confirmed finding gets an explicit disposition (fix now, later, accept, won't fix)
+- Findings are classified as Confirmed / Conditional risk / Unverified — no pattern-matched "vulnerabilities" without evidence
+- Stage 2 only starts after the user approves the decision matrix, and implements it completely
 
 ---
 
