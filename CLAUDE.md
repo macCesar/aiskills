@@ -35,6 +35,22 @@ Anthropic's exact wording: *"If you change your plugin's code but don't bump the
 
 The sibling repo TiTools shipped v2.6.0 with `plugin.json` frozen at `3.0.0` (pre-existing value from a feature branch). npm published 2.6.0 but the marketplace announced 3.0.0. Had to sync manually and amend the release. Both repos share the same `lib/` and the same release mechanics, so the rule applies identically here: **always sync before the release commit**.
 
+### How a release propagates to each install channel (verified 2026-07-13, v1.15.0)
+
+`npm publish` is **not** the whole story. A release reaches users through two independent channels, and `npm publish` only feeds one of them. Confirmed empirically when shipping `audit-codebase`:
+
+- **npm channel** (`~/.agents/skills/`) — used by Gemini CLI, Codex CLI, and Claude Code via symlink. Updated by `npm update -g @maccesar/aiskills` (for end users) then **one** of `aiskills update` / `aiskills install` (not both — `update` already re-syncs skills). The maintainer's own CLI is `npm link`-ed to this repo, so on the maintainer's machine `aiskills install` reads straight from the dev repo — `npm publish` is only for *other* npm users, not to refresh the maintainer's own box.
+- **Marketplace channel** (`~/.claude/plugins/cache/maccesar-aiskills/`) — used by Claude Code plugin installs (`aiskills:<skill>` prefix). **`npm publish` does nothing here.** It updates only inside Claude Code.
+
+Marketplace channel facts (not in Anthropic's docs — confirmed by inspecting the cache):
+
+- **Third-party marketplaces do NOT auto-update by default** (only official Anthropic ones do). So a release does *not* appear "tomorrow" on its own. Enable auto-update once via `/plugin` → Marketplaces → `maccesar-aiskills` → Enable auto-update, or refresh manually every release.
+- The refresh command is **`/plugin marketplace update maccesar-aiskills`** (does the `git pull`), then **`/reload-plugins`** to apply in the live session. There is **no** `/plugin update <plugin>` command.
+- The `source` in `marketplace.json` is `{github, repo}` with **no pinned version**, so the update tracks the **default-branch HEAD**, not the latest git tag. It moves to whatever `plugin.json` says at HEAD and **ignores the numeric version of the stale cache** — e.g. a leftover `2.0.0/` cache did not block moving to `1.15.0/`. (This is why the `plugin.json` bump still matters for *end users* whose cache compares versions, but the maintainer's `/plugin marketplace update` always jumps to HEAD.)
+- **Duplicate-symlink cleanup:** while a new skill exists only on npm (not yet in the marketplace cache), `aiskills install` creates a `~/.claude/skills/<skill>` symlink so Claude Code sees it. Once the marketplace cache catches up (after `/plugin marketplace update`) and the user re-runs `aiskills install`, the CLI detects the marketplace now provides it and **removes that symlink** to avoid the "skill conflict" duplicate — leaving it marketplace-only, like the other skills.
+
+**Full post-release sequence to refresh every channel on the maintainer's machine:** `/release` → `npm publish` (manual, 2FA) → `/plugin marketplace update maccesar-aiskills` → `aiskills install` → `/reload-plugins`.
+
 ## Code conventions
 
 ### Claude Code hooks format in `settings.json`
