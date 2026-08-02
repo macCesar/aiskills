@@ -6,10 +6,11 @@ If you are an agent invoked by a user to *use* a skill (e.g. "humanize this text
 
 ## Project state
 
+- `docs/project/context.md` — architecture, and the parity contract with TiTools
 - `docs/project/status.md` — where the work stands right now
 
-Read it when resuming work. Do not import it at startup: it changes constantly,
-and loading it invalidates the cached prefix behind it.
+Read `status.md` when resuming work. Do not import it at startup: it changes
+constantly, and loading it invalidates the cached prefix behind it.
 
 ## What this repo is
 
@@ -20,7 +21,9 @@ aiskills ships two things from a single source:
 
 Skills conform to the [agentskills.io specification](https://agentskills.io/specification) so any compatible agent can load them. The CLI itself is ESM Node.js with Commander.js and `ora` spinners.
 
-Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` shares the same `lib/` infrastructure but ships Titanium SDK-specific skills (purgetss, ti-expert, ti-ui, ti-api, ti-howtos, alloy-guides, alloy-howtos, ti-create-release, ti-module-update) plus a `ti-pro` agent and a SessionStart hook. When you change `lib/`, consider porting the change there too — see [CLAUDE.md](CLAUDE.md) § "Parallel project: TiTools".
+Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (8 Titanium ones there, 6 general-purpose here) and their slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
+
+**When you change shared machinery, port it there in the same session.** The full contract, including the table of what legitimately diverges and a measured per-file comparison, is in [docs/project/context.md](docs/project/context.md) § "Sibling project".
 
 ## Layout
 

@@ -1,4 +1,4 @@
-# Status — 2026-08-01
+# Status — 2026-08-02
 
 **Phase:** v1.16.1 shipped — `session-log` published and the four bugs its rollout
            exposed are fixed
@@ -6,7 +6,38 @@
               machine: 6 skills in `~/.agents/skills/` (what Gemini CLI and Codex CLI
               read), 6 symlinks in `~/.claude/skills/`, marketplace plugin
               **uninstalled on purpose**, `aiskills doctor` reports no issues.
-**Branch:** `main`, pushed, clean at `49036f0`
+**Branch:** `main`, pushed, clean at `49036f0`, plus the uncommitted doc changes below
+
+## Changed 2026-08-02 — from a TiTools session, docs only
+
+No code touched here; `npm test` still reports 39 passing, 10 suites.
+
+- **New `docs/project/context.md`** with the parity contract against TiTools: what
+  the two repos share, the table of what legitimately diverges, and a measured
+  per-file comparison of `lib/` as of today. Added to the pointer block in
+  `CLAUDE.md` and `AGENTS.md`.
+- **Corrected stale facts** in `CLAUDE.md` and `AGENTS.md`: both listed
+  `ti-create-release` and `ti-module-update` among TiTools' skills. Neither is in
+  its `SKILLS` array or its `skills/` directory — it ships 8, all Titanium docs and
+  patterns.
+
+**What happened on the TiTools side the same day** (v4.2.0, built but not yet
+released there): the plugin-detection work from this repo's v1.16.0–v1.16.1 was
+ported over — `lib/claude-plugin.js`, the `skipped` handling in symlinks and command
+installs, and the doctor changes. TiTools had none of it and had been duplicating
+every skill for anyone running both channels. Its three slash commands also turned
+out to be sitting in gitignored `.claude/commands/`, reaching neither channel.
+
+Nothing came back the other way this session.
+
+**The Knowledge Index question is now settled: not porting it.** It had sat in
+TiTools' `docs/PENDING-IMPROVEMENTS.md` as ALTA PRIORIDAD. Measured on 2026-08-02 it
+costs ~850 tokens in every session, and its entire justification is that the model's
+Titanium training data is wrong — an enemy none of the skills here have. There is
+also no `tiapp.xml`-equivalent trigger, and the 6 skills cover disjoint domains, so a
+single index would be noise in most repos. That item is marked discarded upstream;
+the multi-domain SessionStart hook is the part still worth doing. Full reasoning in
+`context.md` § "Why the Knowledge Index is not a gap here".
 
 ## Where things stand
 
