@@ -1,28 +1,53 @@
 # Status — 2026-08-01
 
-**Phase:** `session-log` built, measured and reviewed; uncommitted
-**Deployed:** the GitHub plugin is at v1.15.0, which does **not** include `session-log`
-**Branch:** `main`, none of this work pushed
+**Phase:** v1.16.0 shipped on every channel — done
+**Deployed:** npm serves `1.16.0` (published 2026-08-02 01:24 UTC, tarball verified to
+              contain all nine `session-log` files). Tag and GitHub release are live.
+              On César's machine: `~/.agents/skills/session-log` present (this is what
+              Gemini CLI and Codex CLI read), marketplace cache at `1.16.0` with the
+              skill, and no duplicate symlink at `~/.claude/skills/`.
+**Branch:** `main`, pushed, clean at `d13f942`
 
 ## Where things stand
 
-`skills/session-log/` was built in one session — `commands/session-log.md` was built
-alongside it and then deleted the same day (see the review below) — with three A/B
-rounds (18 runs) plus two installations on real projects: Logger, and a copy of E&M
-Industrial, backend and app. What's missing is César's decision on whether it goes
-into the published plugin.
+`session-log` shipped in v1.16.0 — six commits: the skill itself, the first test
+suite, the `npm test` glob fix, the plugin-description sync, this `docs/project/`,
+and the release commit. It was built and reviewed across two sessions on 2026-08-01,
+with three A/B rounds (18 runs, earlier layout) plus installations on Logger and a
+copy of E&M Industrial. `commands/session-log.md` existed briefly and was deleted the
+same day (see the first review below).
 
 ## In flight
 
-- **Uncommitted in two repos.** Here: `skills/session-log/` (now including the
-  second-pass fixes below), this `docs/project/`, and changes to `README.md`,
-  `CHANGELOG.md`, `CLAUDE.md`, `AGENTS.md`, `lib/config.js`, `plugin.json`,
-  `marketplace.json` and `.gitignore`. In Logger: the migration from
-  `.claude/memory/` to `docs/project/` with all four files.
-- **The version hasn't been bumped.** `session-log` is already in the README and
-  the CHANGELOG, but no bump and no tag.
-- **Nothing committed on purpose.** César is opening a fresh session on this repo
-  to review it before anything lands.
+- **Logger still has uncommitted work**: the migration from `.claude/memory/` to
+  `docs/project/` with all four files.
+- **A second project got the convention installed** the same day — four files in
+  Spanish (the project was already documented that way), 9 product requirements,
+  6 refactor ones, 15 technical contracts each naming the script that verifies it,
+  8 dated decisions reconstructed from git history, and a map of the 36 documents
+  already under `docs/`. That install surfaced **~35 uncommitted files dating back
+  to 2026-02-14** — the whole Domain → Service migration, including an untracked
+  `ARCHITECTURE_GUIDE.md` that exists nowhere else. Six months of finished work on
+  a single disk. Not this repo's problem, but it is the finding worth acting on.
+
+## Refresh order, learned the hard way
+
+`npm publish` → **`/plugin marketplace update`** → **`aiskills install`** →
+`/reload-plugins`. Done in the other order, `aiskills install` cannot see a plugin
+that hasn't updated yet, so it creates a `~/.claude/skills/<skill>` symlink and
+Claude Code ends up listing the skill twice — once from the symlink, once from the
+plugin. A second `aiskills install` after the marketplace update removes the stale
+symlink (`lib/symlink.js:128`). That is exactly what happened with v1.16.0.
+
+The two channels are not alternatives: npm is what Gemini CLI and Codex CLI read
+(`getPlatforms()` in `lib/config.js` lists only Claude, so they get no symlinks and
+don't need any); the marketplace is Claude Code only but also carries the `/release`
+slash command.
+- **The skill was exercised once, on the install path only.** `/session-log` was
+  invoked explicitly in a repo with no `docs/project/`; it surveyed first, then read
+  the existing docs before writing. The resume path and automatic triggering are
+  still unexercised — the test for both is to open Logger or E&M and type
+  "en qué quedamos aquí?" without naming the skill.
 
 ## Review — 2026-08-01, afternoon
 
@@ -105,8 +130,8 @@ Two repo-level defects surfaced by the same review and fixed after:
 
 ## Next step
 
-Agreed 2026-08-01: **port `/release` to a skill** so it can be used from Codex and
-Gemini, not just Claude Code. Today, Claude Code has to be opened for that alone.
+Agreed 2026-08-01: **port `/release` to a skill** so it can be used from Codex
+and Gemini, not just Claude Code. Today, Claude Code has to be opened for that alone.
 
 What was measured before recording it:
 
