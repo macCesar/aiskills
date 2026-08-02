@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.16.1] - 2026-08-02
+
+### Fixed
+
+- fix(symlink): uninstalling the marketplace plugin left Claude Code with **no skills at all**, and re-running `aiskills install` could not repair it. `isClaudePluginSkillInstalled` decided the plugin provided a skill by checking whether the directory existed in `~/.claude/plugins/cache/`, but Claude Code removes the plugin from `enabledPlugins` in `settings.json` and leaves that cache behind. The CLI read the leftover as proof of installation, skipped every symlink and reported `0/6 skills linked`. Detection now requires the plugin to be **enabled**, not merely cached.
+- fix(installer): slash commands never asked whether the plugin already provided them, so `/release` was installed next to the plugin's own copy and appeared twice in the autocomplete. `installCommands` now applies the same rule the symlink step applies to skills, and removes a duplicate left from before the plugin was installed.
+- fix(doctor): on a healthy marketplace install, `aiskills doctor` counted every absent mirror as a missing skill — `0/6 skills linked`, six issues, and "run `aiskills install` to fix", which correctly does nothing. Absent mirrors are the *right* state when the plugin serves them. Skills provided by the plugin are now reported as such instead of as failures.
+- fix(cli): `✓ Claude Code detected` read as though Gemini and Codex had not been found. Only assistants that need aiskills-managed mirrors are ever listed there; the others read `~/.agents/skills/` directly and need no setup. The header now says so.
+
+### Added
+
+- **"Marketplace plugin" section in `aiskills doctor`**, distinguishing the three states the two channels can produce — enabled (mirrors intentionally absent), not installed (skills reach Claude Code through npm mirrors), and **uninstalled with a cache directory left behind**, which is the state that broke installs on 1.16.0 and now prints the command that clears it.
+- **`lib/claude-plugin.js`** — internal module answering "does the installed plugin provide this?", for both skills and commands. It reads `enabledPlugins` from `settings.json` and `settings.local.json`, and fails toward `false`: a wrong `false` costs a duplicate entry, a wrong `true` costs the user every skill they have. No new public surface — no new command, flag or config.
+- **16 tests** covering both failures, each run against a throwaway home directory. Verified by restoring each bug and confirming the corresponding tests go red — the stale-cache bug fails 2, the duplicate-command bug fails 1.
+
 ## [1.16.0] - 2026-08-01
 
 ### Added
