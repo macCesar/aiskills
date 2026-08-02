@@ -7,7 +7,7 @@
     "aiskills": "./bin/aiskills.js"
   },
   "scripts": {
-    "test": "node --test test/**/*.test.js",
+    "test": "node --test test/*.test.js",
     "lint": "eslint lib/**/*.js",
     "format": "prettier --write lib/**/*.js"
   },
