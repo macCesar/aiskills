@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.17.0] - 2026-08-02
+
+### Added
+
+- **Frontmatter size guard in `test/manifest.test.js`.** The agentskills.io spec caps a skill's YAML frontmatter at 1024 characters, past which an agent may fail to load the skill — and the symptom is the skill silently never triggering, not an error anyone would notice. `vscode-extension-dev` crossed it at 1059 while its description was being widened for better triggering, and was trimmed back to 899. `audit-codebase` sits at 1015, nine characters from the cap.
+
+### Fixed
+
+- **Two README reference-file tables listed files that don't exist.** `refactoring-ui`'s table carried the eight original filenames (`01-design-process.md`, `05-color.md`, …) against seven differently-named files on disk, and `vscode-extension-dev`'s listed a single `api-patterns.md` — a file that was split into seven per-API references — while omitting ten others, `lsp.md`, `notebooks.md`, `debugger.md` and `testing.md` among them. Both tables now match the directories.
+
+### Changed
+
+- **All six skills aligned with the current Anthropic skill-creator guidance.** No behavior changes to the CLI; this is entirely skill content.
+  - **Descriptions rewritten for `humaniza`, `refactoring-ui`, `stitch-showcase` and `vscode-extension-dev`.** The frontmatter `description` is the only thing Claude reads when deciding whether to invoke a skill, and the guidance warns that skills are more often *under*-triggered than over-triggered. Each one now covers the phrasings people actually use — including the ones that never name the skill ("esto suena a ChatGPT", "why does this look off", editing `contributes` in a `package.json`) — and closes with what the skill is **not** for, which is what keeps the near-misses from firing. `audit-codebase` and `session-log` already followed this shape and are unchanged.
+  - **Removed the `## When to use` sections** from `refactoring-ui` and `vscode-extension-dev`. They restated the description almost verbatim, and body text loads only *after* the invocation decision has been made — it cannot influence triggering, so it was paying context rent for nothing.
+  - **Collapsed the duplicated references tables** in the same two skills into the Step 1 routing table, which is the one that does the work. The second copy was 8 and 15 lines respectively, and the two versions had already begun to disagree about what each file covered.
+  - **`session-log/SKILL.md` is back under the 500-line budget** (524 → 496). The multi-repo detail — installing from inside each repo, the sibling header format, writing a sibling's status honestly — moved to `references/file-layout.md` under a new "Repos that come in pairs" section. It applies to a minority of projects and was loading in full on every invocation.
+  - **Tables of contents** added to the three reference files over 300 lines (`session-log/references/file-layout.md`, `vscode-extension-dev/references/architecture.md` and `references/package-json-schema.md`), so a reader can jump to a section instead of loading the file to find out what's in it.
+  - **`refactoring-ui`'s anti-pattern list now covers all seven references.** It cited only `01`–`03`, so polish, motion, dark mode and component patterns contributed reference files that nothing at the top level pointed at — the list read as complete while skipping four topics. Twenty entries added, each drawn from its reference and carrying the `[source:]` citation the skill requires of its own answers.
+  - **`vscode-extension-dev`'s anti-pattern list went from 8 entries to 27**, and from 5 references cited to 13 of 14. Publishing, LSP, notebooks, debug adapters and testing each ship a reference file whose failure modes — a VSIX with the TypeScript sources still in it, `innerHTML` from untrusted cell output, a debug session that never sends `terminated` and leaves "Stop" hanging — appeared nowhere at the top level. The list is now grouped by area (manifest, lifecycle, security, publishing, language servers, notebooks and debug adapters, testing) because the domains are far enough apart that 27 flat bullets stop being scannable. `api-statusbar.md` is the one reference still uncited: it documents no failure mode, and inventing one is exactly what the skill's own contract forbids.
+  - **Prohibitions now carry their reason.** The `❌`-prefixed "banned behaviors" lists and the shouted `CRITICAL` / `NEVER` / `ALWAYS` in `stitch-showcase` were rewritten to say *why* — that a hand-written `index.html` is erased by the next build, that a plausible-looking `vscode.*` call fails in the extension host where the stack trace helps least. The guidance treats all-caps absolutes as a yellow flag: a model that understands the reason handles the cases the list never anticipated.
+- **`CLAUDE.md` § "Documentation-grounded skill template"** records the two omissions above, so the next advisory skill doesn't reintroduce them.
+
 ## [1.16.1] - 2026-08-02
 
 ### Fixed

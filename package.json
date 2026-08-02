@@ -1,6 +1,6 @@
 {
   "name": "@maccesar/aiskills",
-  "version": "1.16.1",
+  "version": "1.17.0",
   "description": "AI coding assistant skills for Claude Code, Gemini CLI, and Codex CLI",
   "type": "module",
   "bin": {
@@ -53,7 +53,8 @@
   "files": [
     "bin/",
     "lib/",
-    "skills/"
+    "skills/",
+    "commands/"
   ],
   "publishConfig": {
     "access": "public"

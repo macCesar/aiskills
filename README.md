@@ -177,16 +177,15 @@ Example prompts:
 ```
 
 Reference files:
-| File                    | Topics                                                                 |
-| ----------------------- | ---------------------------------------------------------------------- |
-| 01-design-process.md    | Feature-first workflow, low-fidelity, personality, pre-defined systems |
-| 02-visual-hierarchy.md  | Weight, color, size hierarchy; labels; icons; button tiers             |
-| 03-layout-spacing.md    | White space, spacing scale, columns, law of proximity                  |
-| 04-typography.md        | Type scale, line length, alignment, line-height, letter-spacing        |
-| 05-color.md             | HSL, shade systems, WCAG contrast, color signals                       |
-| 06-depth-shadows.md     | Light source, raised/inset elements, shadow elevation                  |
-| 07-images.md            | Stock photos, text over images, icons at scale, favicons               |
-| 08-finishing-touches.md | Icons, borders, backgrounds, empty states, leveling up                 |
+| File                     | Topics                                                                                  |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| 01-foundations.md        | Project mindset: feature-first work, scope discipline, defining systems, picking a voice |
+| 02-page-mechanics.md     | Visual hierarchy, layout, white space, spacing scales, typography                       |
+| 03-visual-treatment.md   | Color systems (HSL, shades, greys, contrast), depth and shadows, image handling         |
+| 04-polish.md             | Borders, accents, empty states, decorative defaults, sharpening design intuition        |
+| 05-motion.md             | Motion system, hover/press states, loading patterns, `prefers-reduced-motion`           |
+| 06-dark-mode.md          | Dark mode color tokens, text contrast, shadows, images, theme toggle                    |
+| 07-component-patterns.md | Modals (focus, layout), forms (labels, validation), tables (density, alignment)         |
 
 ---
 
@@ -298,12 +297,22 @@ Example prompts:
 ```
 
 Reference files:
-| File                   | Topics                                                               |
-| ---------------------- | -------------------------------------------------------------------- |
-| package-json-schema.md | contributes, activationEvents, engines, scripts, devDependencies     |
-| api-patterns.md        | TreeView, Webview, QuickPick, StatusBar, SecretStorage, withProgress |
-| architecture.md        | Project structure, layered architecture, testing strategy            |
-| publishing.md          | vsce, .vscodeignore, CI/CD, Open VSX, versioning                     |
+| File                   | Topics                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
+| api-treeview.md        | TreeDataProvider, TreeView registration                                                                    |
+| api-webview.md         | Webview Panel, CSP/nonce, postMessage, asWebviewUri                                                        |
+| api-quickpick.md       | Simple and async QuickPick with debounced search                                                           |
+| api-statusbar.md       | StatusBarItem, codicons, dynamic updates                                                                   |
+| api-secretstorage.md   | Credential manager pattern, onDidChange                                                                    |
+| api-progress.md        | withProgress (Notification + Window), cancellation tokens                                                  |
+| api-additional.md      | FileSystemWatcher, Disposable cleanup, Diagnostics, OutputChannel, ContextKeys, TextDocumentContentProvider |
+| architecture.md        | Project structure, layered architecture, testing strategy                                                  |
+| package-json-schema.md | contributes, activationEvents, engines, scripts, devDependencies                                           |
+| publishing.md          | vsce, .vscodeignore, CI/CD, Open VSX, versioning                                                           |
+| lsp.md                 | LSP client setup, server lifecycle, capabilities, diagnostics                                              |
+| notebooks.md           | Notebook serializers, controllers, renderers, output mime types                                            |
+| debugger.md            | DAP: descriptor factory, configuration provider, adapter lifecycle                                         |
+| testing.md             | Multi-suite test config, workspace fixtures, mocking `vscode`, CI, coverage                                |
 
 ---
 
