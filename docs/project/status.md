@@ -1,53 +1,80 @@
 # Status — 2026-08-01
 
-**Phase:** v1.16.0 shipped on every channel — done
-**Deployed:** npm serves `1.16.0` (published 2026-08-02 01:24 UTC, tarball verified to
-              contain all nine `session-log` files). Tag and GitHub release are live.
-              On César's machine: `~/.agents/skills/session-log` present (this is what
-              Gemini CLI and Codex CLI read), marketplace cache at `1.16.0` with the
-              skill, and no duplicate symlink at `~/.claude/skills/`.
-**Branch:** `main`, pushed, clean at `d13f942`
+**Phase:** v1.16.1 shipped — `session-log` published and the four bugs its rollout
+           exposed are fixed
+**Deployed:** npm serves `1.16.1`. Tag and GitHub release are live. On César's
+              machine: 6 skills in `~/.agents/skills/` (what Gemini CLI and Codex CLI
+              read), 6 symlinks in `~/.claude/skills/`, marketplace plugin
+              **uninstalled on purpose**, `aiskills doctor` reports no issues.
+**Branch:** `main`, pushed, clean at `49036f0`
 
 ## Where things stand
 
 `session-log` shipped in v1.16.0 — six commits: the skill itself, the first test
 suite, the `npm test` glob fix, the plugin-description sync, this `docs/project/`,
 and the release commit. It was built and reviewed across two sessions on 2026-08-01,
-with three A/B rounds (18 runs, earlier layout) plus installations on Logger and a
-copy of E&M Industrial. `commands/session-log.md` existed briefly and was deleted the
-same day (see the first review below).
+with three A/B rounds (18 runs, earlier layout) plus installations on two real
+private projects — a Node CLI and a Laravel backend with its Titanium client.
+`commands/session-log.md` existed briefly and was deleted the same day (see the
+first review below).
+
+Shipping it exposed four CLI bugs the same evening, fixed in v1.16.1 — see
+"What shipping v1.16.0 taught" below.
+
+### One channel, not two
+
+César uses Claude Code, Gemini CLI and Codex CLI, so **npm is the channel that
+serves him** — `aiskills install` covers all three, including the slash commands
+in `~/.claude/commands/`. The marketplace plugin only reaches Claude Code and adds
+nothing he doesn't already get, so it was uninstalled. Refresh is now one command:
+
+```
+npm update -g @maccesar/aiskills && aiskills install
+```
+
+The plugin still matters as a product: it exists for users who only run Claude Code
+and don't want a global npm install. Worth reinstalling occasionally to test it the
+way they experience it — but reinstalling brings back the two-channel refresh order.
 
 ## In flight
 
-- **Logger still has uncommitted work**: the migration from `.claude/memory/` to
-  `docs/project/` with all four files.
-- **A second project got the convention installed** the same day — four files in
-  Spanish (the project was already documented that way), 9 product requirements,
-  6 refactor ones, 15 technical contracts each naming the script that verifies it,
-  8 dated decisions reconstructed from git history, and a map of the 36 documents
-  already under `docs/`. That install surfaced **~35 uncommitted files dating back
-  to 2026-02-14** — the whole Domain → Service migration, including an untracked
-  `ARCHITECTURE_GUIDE.md` that exists nowhere else. Six months of finished work on
-  a single disk. Not this repo's problem, but it is the finding worth acting on.
+- **The Node CLI project still has uncommitted work**: the migration from
+  `.claude/memory/` to `docs/project/` with all four files.
+- **A second private project got the convention installed** the same day, and the
+  install went the way the skill intends: files written in the language the project
+  was already documented in, requirements carrying the script that verifies each
+  one, decisions reconstructed from git history, and a map of the documentation the
+  repo already had. The inventory step also surfaced months of finished work sitting
+  uncommitted — which is the strongest argument for the skill so far, and belongs in
+  *that* project's `status.md`, not here.
 
-## Refresh order, learned the hard way
-
-`npm publish` → **`/plugin marketplace update`** → **`aiskills install`** →
-`/reload-plugins`. Done in the other order, `aiskills install` cannot see a plugin
-that hasn't updated yet, so it creates a `~/.claude/skills/<skill>` symlink and
-Claude Code ends up listing the skill twice — once from the symlink, once from the
-plugin. A second `aiskills install` after the marketplace update removes the stale
-symlink (`lib/symlink.js:128`). That is exactly what happened with v1.16.0.
-
-The two channels are not alternatives: npm is what Gemini CLI and Codex CLI read
-(`getPlatforms()` in `lib/config.js` lists only Claude, so they get no symlinks and
-don't need any); the marketplace is Claude Code only but also carries the `/release`
-slash command.
 - **The skill was exercised once, on the install path only.** `/session-log` was
   invoked explicitly in a repo with no `docs/project/`; it surveyed first, then read
   the existing docs before writing. The resume path and automatic triggering are
-  still unexercised — the test for both is to open Logger or E&M and type
-  "en qué quedamos aquí?" without naming the skill.
+  still unexercised — the test for both is to open one of the projects that already
+  has the convention and type "en qué quedamos aquí?" without naming the skill.
+
+## What shipping v1.16.0 taught, and cost
+
+Rolling out `session-log` across both channels exposed four bugs in a single
+evening, all fixed in v1.16.1. They are recorded here because each one was found by
+asking "is this right?" rather than by a test:
+
+- **A leftover plugin cache is not an installed plugin.** Uninstalling the
+  marketplace plugin leaves `~/.claude/plugins/cache/` behind. The CLI read that as
+  proof of installation, skipped every symlink, reported `0/6 skills linked`, and
+  left Claude Code with no skills that `aiskills install` could restore.
+- **`aiskills doctor` was useless in exactly the configuration that breaks.** With
+  the plugin enabled it counted the (correctly) absent mirrors as six failures and
+  recommended a command that does nothing.
+- **Slash commands never asked about the plugin**, so `/release` appeared twice.
+- **`✓ Claude Code detected`** read as though Gemini and Codex had not been found.
+
+**Refresh order, if the plugin is ever reinstalled:** `npm publish` →
+`/plugin marketplace update` → `aiskills install` → `/reload-plugins`. In any other
+order the install cannot see a plugin that has not updated yet, creates a symlink,
+and the skill is listed twice. This no longer applies while the plugin stays
+uninstalled.
 
 ## Review — 2026-08-01, afternoon
 
@@ -155,7 +182,7 @@ they will diverge the moment one is edited).
 - **Verified:** 3 A/B rounds with adversarial grading; the stable/volatile split
   scored 9 of 9 with the skill against 0 of 9 without; the convention is read
   unprompted at startup (an agent with no skill went straight to `status.md` in
-  two files); `node --test` on the E&M app copy, 13/13. Automatic skill triggering
+  two files); `node --test` on the Titanium client copy, 13/13. Automatic skill triggering
   works: a fresh agent, given only "audita este proyecto completo antes de
   producción", opened `audit-codebase` as its first action with nobody naming it.
 - **Assumed:** that the convention works the same in Codex and Gemini. Reasonable
