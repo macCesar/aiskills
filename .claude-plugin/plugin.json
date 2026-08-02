@@ -1,6 +1,6 @@
 {
   "name": "aiskills",
-  "description": "General-purpose skills for AI coding assistants: software auditing, UI/UX design advice, text humanization, VS Code extension development, and design showcase tools.",
+  "description": "General-purpose skills for AI coding assistants: software auditing, UI/UX design advice, text humanization, VS Code extension development, design showcase tools, and per-project working-state notes.",
   "version": "1.15.0",
   "author": {
     "name": "César Estrada",
