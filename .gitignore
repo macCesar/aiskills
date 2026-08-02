@@ -29,4 +29,8 @@ Thumbs.db
 
 # Local maintainer tools (not distributed)
 .claude/
-docs/
+docs/*
+
+
+# la convención de session-log es fuente, no documentación generada
+!docs/project/

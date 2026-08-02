@@ -2,9 +2,16 @@
 
 Project-specific instructions for Claude Code sessions working on this repo. These rules travel with the repo via git, unlike machine-local `~/.claude/projects/` memory which is lost when the repo is cloned elsewhere.
 
+## Project state
+
+- `docs/project/status.md` — where the work stands right now
+
+Read it when resuming work. Do not import it at startup: it changes constantly,
+and loading it invalidates the cached prefix behind it.
+
 ## What aiskills is
 
-- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 4 general-purpose AI coding assistant skills (humaniza, refactoring-ui, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
+- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 6 general-purpose AI coding assistant skills (audit-codebase, humaniza, refactoring-ui, session-log, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
 - Distribution channels:
   - **npm**: `npm install -g @maccesar/aiskills` then `aiskills install` (works with Claude Code, Gemini CLI, Codex CLI).
   - **Claude Code plugin marketplace**: `/plugin marketplace add macCesar/aiskills` then `/plugin install aiskills@maccesar-aiskills` (Claude Code only).

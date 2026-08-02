@@ -4,6 +4,13 @@ Guidance for AI agents — **Claude Code, Gemini CLI, Codex / OpenAI Codex CLI, 
 
 If you are an agent invoked by a user to *use* a skill (e.g. "humanize this text", "review my UI"), read the relevant `skills/<name>/SKILL.md` directly and follow it — not this file.
 
+## Project state
+
+- `docs/project/status.md` — where the work stands right now
+
+Read it when resuming work. Do not import it at startup: it changes constantly,
+and loading it invalidates the cached prefix behind it.
+
 ## What this repo is
 
 aiskills ships two things from a single source:

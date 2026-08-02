@@ -74,6 +74,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | audit-codebase       | Auditing     | Evidence-based audit methodology     | 2 files         |
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
+| session-log          | Project      | Convention + 3 A/B rounds            | 2 files         |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -132,8 +133,6 @@ Hard restrictions:
 
 Distribution note:
 - Available via the plugin install (Option A above). Slash commands are not distributed by the npm CLI (Option B) because they are a Claude Code feature.
-
----
 
 ## How skills work
 
@@ -307,6 +306,52 @@ Reference files:
 | publishing.md          | vsce, .vscodeignore, CI/CD, Open VSX, versioning                     |
 
 ---
+
+### session-log
+
+Gives a project one predictable place for its working state, so both you and any assistant know where to look instead of hunting through scattered notes. It installs a fixed four-file convention under `docs/project/` and writes a short pointer into every context file the repo has — `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` — so the notes stay findable no matter which assistant opens the project next.
+
+The convention:
+
+| File | Holds | Loaded at startup |
+| --- | --- | --- |
+| `status.md` | Where the work stands: half-done things, next step, what's blocked, deployment state | **No** |
+| `requirements.md` | What the system must do, and the acceptance criterion for each item | Yes |
+| `decisions.md` | What was chosen and why. Append-only, dated | Yes |
+| `context.md` | Documentation map, architecture, conventions, traps | Yes |
+
+**Why `status.md` is excluded from startup.** Cached context is matched as a prefix — the first byte that differs invalidates everything after it. Status written inside a startup-loaded file means every update throws away the cache for all the stable content behind it. The file you edit most often is the one that must not load at startup.
+
+How to use it — just say it, in whatever words you'd use anyway:
+
+```
+"set up the project notes here — the mobile app lives at ../../Apps/MyApp"
+"ya me voy, déjame anotado dónde quedé"
+"where did we leave off? I haven't touched this repo in weeks"
+"my CLAUDE.md has the progress and a date inside it — should I move that?"
+```
+
+Closing a session and resuming one are different jobs and it treats them differently. On the way out it writes; on the way back in it reads `status.md` and then checks it against the repo before repeating it to you — what landed since the file was written, whether the branch it names still exists, what's uncommitted that it never mentioned. A three-week-old note is a snapshot, and the most expensive way to use one is to trust it.
+
+There is no slash command, by design: a command and a skill doing the same job means two copies of the logic that drift apart, and a command only works in Claude Code. This is one file that Claude, Codex and Gemini all read the same way — point any of them at `skills/session-log/SKILL.md` if it doesn't pick it up on its own.
+
+Once the convention is installed, finding the notes no longer depends on the skill at all — the pointer in `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` is what any assistant reads at startup.
+
+What it will not do:
+- Commit, tag, push, or write CHANGELOG entries — that is a release, and releasing assumes the work is finished, which is the opposite of why this exists. Use `/release` for that.
+- Edit your uncommitted code. It reports what it finds broken and leaves it alone.
+- Invent a completion percentage. Without a fixed denominator any number is made up, so it counts what is enumerable or describes status in words.
+- Write a token, a password or a client's private details into the files. They get committed, and a secret deleted in a later commit is still in the history — it records where the credential lives instead.
+- Overwrite the record on arrival. If a resumed file turns out to be badly out of date it says so and offers; rewriting is your call.
+
+Measured behaviour, across three A/B rounds against a no-skill baseline (18 runs, adversarially graded):
+
+| | With skill | Without |
+| --- | --- | --- |
+| Kept volatile status out of the startup chain | 9 / 9 | 0 / 9 |
+| Left the user's broken uncommitted code untouched | yes | no — fixed it unasked |
+
+Token cost is 3–13% higher per run. **Those rounds graded an earlier layout** — a single status file versus an imported memory index — so what they establish is the split itself, not the four filenames. The paths added since (resuming against a stale file, upgrading an earlier install, monorepos, a gitignored `docs/`) have prompts written for them and have not been run. The grading notes, and an explicit account of what is and isn't measured, are in `skills/session-log/evals/`.
 
 ### stitch-showcase
 

@@ -1,0 +1,23 @@
+[
+  {"query": "dónde debería ir guardando las notas de avance de este proyecto? cada vez las pongo en un lugar distinto", "should_trigger": true},
+  {"query": "el CLAUDE.md de este repo tiene el porcentaje de avance y la fecha de la última sesión adentro. eso está bien o lo debería mover?", "should_trigger": true},
+  {"query": "our AGENTS.md has the sprint progress and a last-updated date inside it — is that a problem?", "should_trigger": true},
+  {"query": "quiero estandarizar dónde viven las notas de estado en todos mis proyectos, ahorita cada uno las tiene en su propio lado y no me acuerdo dónde buscar", "should_trigger": true},
+  {"query": "migra las notas que tengo en .claude/memory/ a una estructura predecible", "should_trigger": true},
+  {"query": "set up project tracking for this repo — nothing exists yet", "should_trigger": true},
+  {"query": "where should handoff notes live so that codex and gemini both find them, not just claude?", "should_trigger": true},
+  {"query": "ya me voy, déjame anotado dónde quedé para mañana", "should_trigger": true},
+  {"query": "cierra la sesión y actualiza las notas del proyecto", "should_trigger": true},
+  {"query": "where did we leave off? i haven't touched this repo in three weeks", "should_trigger": true},
+
+  {"query": "qué sigue en esta función? no entiendo el flujo después del early return", "should_trigger": false},
+  {"query": "cómo va el build de android? lleva rato", "should_trigger": false},
+  {"query": "escríbeme el mensaje de commit para estos cambios, son 4 archivos del modulo de pagos", "should_trigger": false},
+  {"query": "haz el release ya, bump de version y súbelo con tag", "should_trigger": false},
+  {"query": "resúmeme qué hicimos hoy, nomás para leerlo", "should_trigger": false},
+  {"query": "cuánto avance llevamos según el jira? saca el porcentaje del sprint", "should_trigger": false},
+  {"query": "add a CHANGELOG entry for 2.1 with this week's fixes", "should_trigger": false},
+  {"query": "what's the status of the staging deploy, did it go out or not", "should_trigger": false},
+  {"query": "open a github issue for that login hang, i'll get to it later", "should_trigger": false},
+  {"query": "document this function with a docstring, nobody can tell what it takes", "should_trigger": false}
+]

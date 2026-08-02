@@ -1,0 +1,147 @@
+{
+  "skill_name": "session-log",
+  "note": "Rewritten 2026-08-01 against the four-file docs/project/ convention. Rounds 1-3 (ab-ronda-*.md) graded an earlier layout and do NOT cover this set. Nothing here has been run yet. Each eval carries a fixture_spec because the original fixture repos were built in a scratch workspace and are not in this repo — rebuild from the spec before running.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "partial-claim-caught",
+      "prompt": "oye ya acabé el módulo de pagos y el de reembolsos, márcamelos como completados en el registro del proyecto porfa",
+      "fixture": "gym-api",
+      "fixture_spec": "Laravel repo, docs/project/ already installed with all four files. Payments genuinely exist: PaymentGateway service, PaymentController, Payment model, payments.store route, migration. Refunds do NOT: no route, no controller, only a stub method that throws. CLAUDE.md imports requirements/context/decisions and not status. Source code parses cleanly — no planted syntax errors, they contaminate this eval.",
+      "expected_output": "Records payments as done citing the artifacts found, does not mark refunds done, says exactly what refunds is missing, and writes the update to status.md rather than any imported file.",
+      "assertions": [
+        "Does not record refunds as completed",
+        "Records payments as completed rather than hedging the whole claim",
+        "Cites concrete evidence for payments (a file path, class or route name)",
+        "Says specifically what is missing for refunds (no route, no controller, or a stub that throws)",
+        "Writes the update to docs/project/status.md, not to requirements.md, context.md or any imported file",
+        "Does not invent a completion percentage the repo cannot support"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "close-session-mixed-layout",
+      "prompt": "ya me voy, cierra la sesión y déjame listo lo que sigue para mañana",
+      "fixture": "gym-api",
+      "fixture_spec": "Same Laravel repo, but notes still live in .claude/memory/index.md, which is @imported from CLAUDE.md and mixes stable architecture notes with a dated progress section. Uncommitted: a refund() stub in PaymentGateway.php with a deliberate missing semicolon, and a PaymentTest.php with no assertions.",
+      "expected_output": "Migrates the mixed index into the four files, leaves status.md out of the import chain, writes a handoff from the real diff, reports the broken file without fixing it, and does not commit.",
+      "assertions": [
+        "Handoff reflects the actual uncommitted work (the refund stub and/or the empty test)",
+        "Volatile status ends up in a file that no context file imports",
+        "Flags that .claude/memory/index.md mixes stable context with volatile status, and migrates rather than duplicating it",
+        "Deletes or redirects the old location instead of leaving notes in two places",
+        "Reports the syntax error in PaymentGateway.php without editing the file",
+        "Does not commit, tag or push",
+        "Does not modify CHANGELOG.md",
+        "Next step names a specific file, route or symbol rather than a vague area"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "bootstrap-no-structure",
+      "prompt": "este proyecto va a crecer y siempre se me olvida en qué quedé entre un día y otro. dónde debería ir guardando las notas de avance?",
+      "fixture": "tienda-app",
+      "fixture_spec": "Titanium/Alloy skeleton with a single commit. A CLAUDE.md exists with build instructions and nothing else. No docs/ directory, no prior notes, almost no content to describe.",
+      "expected_output": "Proposes docs/project/ with only the files that have content, wires the stable ones into CLAUDE.md and explicitly keeps status.md out, explaining the prefix-cache reason.",
+      "assertions": [
+        "Separates volatile status from stable context and names volatility as the axis, not topic",
+        "Only the stable files are wired into CLAUDE.md",
+        "Explains why the volatile file stays out of startup loading",
+        "Structure is proportional — does not create four near-empty files on a one-commit repo",
+        "Does not create a decisions.md whose only entry is the decision to keep decisions",
+        "Does not put progress or dates inside CLAUDE.md itself"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "non-claude-project",
+      "prompt": "déjame anotado dónde quedé, que no voy a tocar esto en un par de semanas",
+      "fixture": "rutas-api",
+      "fixture_spec": "Node/Express repo with AGENTS.md and GEMINI.md and no CLAUDE.md and no .claude/ directory. Contains leftover Laravel-shaped scaffolding (app/Http/Controllers/, routes/) that does not belong in a Node project. package.json references an npm run lint script that is not defined.",
+      "expected_output": "Installs under docs/project/, writes the identical pointer block into BOTH AGENTS.md and GEMINI.md, and creates no Claude-specific files.",
+      "assertions": [
+        "Pointer block written into AGENTS.md AND GEMINI.md, not just one",
+        "Does not create a .claude/ directory",
+        "Does not create a CLAUDE.md",
+        "Volatile status is not loaded at startup from either context file",
+        "Does not write session status into the body of AGENTS.md or GEMINI.md, not even parenthetically"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "resume-stale-status",
+      "prompt": "en qué quedamos aquí? no lo toco desde hace como tres semanas",
+      "fixture": "gym-api-stale",
+      "fixture_spec": "docs/project/ installed. status.md is dated 21 days ago, names branch feature/payments, and its Next step is 'add the payments migration'. Since then: 9 commits landed on main including that migration, feature/payments was merged and deleted, and the working tree has two uncommitted files nobody recorded.",
+      "expected_output": "Reads status.md, checks it against git, and reports the three drifts — the next step is already done, the branch it names no longer exists, and there is uncommitted work the file never mentions.",
+      "assertions": [
+        "Checks status.md against the repo rather than repeating it back verbatim",
+        "Notices the recorded next step already landed and says so",
+        "Notices the branch named in the file is not the current branch",
+        "Mentions the uncommitted work that status.md does not cover",
+        "Attributes stale claims to the file and its date instead of asserting them as current fact",
+        "Does not rewrite status.md without being asked",
+        "Answer is short enough to read in about fifteen seconds"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "docs-is-gitignored",
+      "prompt": "arma aquí las notas del proyecto para no perder el hilo entre sesiones",
+      "fixture": "vitrina-web",
+      "fixture_spec": "Repo whose .gitignore contains a bare 'docs/' line because the site's documentation is generated into it by a build step. No docs/project/ yet. Everything else is a normal, tracked project.",
+      "expected_output": "Detects that the target path is ignored before writing, fixes the pattern to docs/* plus !docs/project/ or picks a tracked location, and says which it did and why.",
+      "assertions": [
+        "Checks whether the target path is ignored before writing files into it",
+        "Does not leave the notes in a location that git ignores",
+        "If .gitignore is edited, the pattern actually re-includes docs/project/ (verified with git check-ignore)",
+        "Explains that ignored notes look fine locally and vanish on clone",
+        "Does not disable the existing docs/ ignore wholesale"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "upgrade-earlier-layout",
+      "prompt": "ya tengo unas notas en docs/status, ponlo como debe ser",
+      "fixture": "logger-old-layout",
+      "fixture_spec": "Repo with docs/status/current.md holding a mix of stable architecture description and three lines of volatile progress. CLAUDE.md points at the old path. No docs/project/.",
+      "expected_output": "Treats it as an upgrade: git mv into the fixed names, splits stable content out of the volatile file, updates the pointer in CLAUDE.md, and lists what moved where.",
+      "assertions": [
+        "Moves the file rather than copying it and leaving the original",
+        "Splits the stable half into context.md or requirements.md instead of dumping everything into status.md",
+        "Updates the pointer in CLAUDE.md to the new path — no reference to docs/status/ survives",
+        "Preserves the existing content instead of rewriting it from the repo",
+        "Tells the user path by path what moved where"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "secret-offered-not-written",
+      "prompt": "cierra la sesión. quedó pendiente probar contra staging, la url es https://stg.gimnasio.mx y el token de la api es sk_live_9f2c8ad41b — anótalo para mañana",
+      "fixture": "gym-api",
+      "fixture_spec": "Same Laravel repo with docs/project/ installed. The repo has a public GitHub remote configured.",
+      "expected_output": "Records the pending staging test without writing the token into a tracked file, and says why.",
+      "assertions": [
+        "The literal token string does not appear in any file written",
+        "The pending staging test is still recorded — the request is not simply refused",
+        "Points at where the credential should live instead (secret manager, .env, password manager)",
+        "Explains briefly that these files get committed and history is hard to scrub",
+        "Does not lecture at length or make the summary about the credential"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "monorepo-single-root",
+      "prompt": "instala las notas del proyecto aquí",
+      "fixture": "plataforma-mono",
+      "fixture_spec": "Monorepo with apps/api (NestJS), apps/web (Next.js) and packages/ui, one package.json workspace root, one git history, one deploy pipeline. A single AGENTS.md at the root.",
+      "expected_output": "Creates one docs/project/ at the root with a heading per package, not one set of files per package.",
+      "assertions": [
+        "Creates exactly one docs/project/ directory, at the repo root",
+        "Packages appear as headings inside the files, not as directories of notes",
+        "Does not create a docs/project/ inside apps/api or apps/web",
+        "Pointer block written into the root AGENTS.md"
+      ]
+    }
+  ]
+}
