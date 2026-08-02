@@ -97,6 +97,14 @@ describe('skill frontmatter', () => {
       assert.equal(fm.name, skill, `frontmatter name "${fm.name}" does not match directory "${skill}"`);
       assert.ok(fm.description && fm.description.length > 0, `skills/${skill}/SKILL.md has an empty description`);
     });
+
+    test(`${skill} frontmatter stays within the 1024-char spec limit`, () => {
+      const fm = readFrontmatter(path.join(SKILLS_DIR, skill, 'SKILL.md'));
+      assert.ok(
+        fm.block.length <= 1024,
+        `frontmatter is ${fm.block.length} chars; agentskills.io caps it at 1024, past which agents may fail to load the skill`,
+      );
+    });
   }
 });
 
@@ -136,6 +144,72 @@ describe('commands are wired into the CLI', () => {
   test('COMMANDS and LEGACY_COMMANDS do not overlap', () => {
     const overlap = COMMANDS.filter((command) => LEGACY_COMMANDS.includes(command));
     assert.deepEqual(overlap, [], `these commands are installed and marked legacy at once: ${overlap.join(', ')}`);
+  });
+});
+
+describe('everything that ships is in the npm files allowlist', () => {
+  // The quiet failure mode: the repo is correct, the tarball is not. `commands/`
+  // was missing from this list until 2026-08-02, so every published version up to
+  // 1.16.1 shipped without the /release slash command — invisible locally, because
+  // the maintainer's CLI is npm link-ed to the repo and reads the working tree.
+  const shipped = ['bin/', 'lib/', 'skills/', 'commands/'];
+
+  for (const entry of shipped) {
+    test(`${entry} is listed`, () => {
+      const pkg = readJson('package.json');
+      assert.ok(
+        pkg.files.includes(entry),
+        `package.json files omits ${entry} — npm would publish a package without it`,
+      );
+    });
+  }
+
+  test('maintainer-only paths stay out of the tarball', () => {
+    const pkg = readJson('package.json');
+    for (const entry of pkg.files) {
+      assert.ok(
+        !entry.startsWith('scripts/') && !entry.startsWith('.claude/'),
+        `package.json files includes ${entry}, which is maintainer tooling and should not ship`,
+      );
+    }
+  });
+});
+
+describe('the bundled hook uses the format Claude Code accepts', () => {
+  // hooks.json currently declares no events, which is fine — this repo ships no
+  // SessionStart hook. The assertions describe the shape any future entry must
+  // take: the flat `{ command, timeout }` form fails settings validation on
+  // session start, which is what forced TiTools's v2.4.0 → v2.4.1 hotfix. Same
+  // lib/, same rule, so the guard belongs here before the first hook is added,
+  // not after it breaks.
+  test('every declared hook entry nests under a hooks array', () => {
+    const hooks = readJson('hooks', 'hooks.json');
+    const groups = Object.values(hooks.hooks ?? {}).flat();
+
+    for (const group of groups) {
+      assert.ok(
+        Array.isArray(group.hooks),
+        'a hook entry is missing its nested `hooks` array — this is the flat format that fails validation',
+      );
+      for (const entry of group.hooks) {
+        assert.equal(entry.type, 'command', 'hook entries must declare type: "command"');
+        assert.ok(entry.command, 'hook entry has no command');
+      }
+    }
+  });
+
+  test('any script a hook points at exists', () => {
+    const hooks = readJson('hooks', 'hooks.json');
+    const commands = Object.values(hooks.hooks ?? {})
+      .flat()
+      .flatMap((group) => group.hooks ?? [])
+      .map((entry) => entry.command);
+
+    for (const command of commands) {
+      const match = /\$\{CLAUDE_PLUGIN_ROOT\}\/(\S+)/.exec(command);
+      if (!match) continue;
+      assert.ok(existsSync(path.join(ROOT, match[1])), `hooks.json points at ${match[1]}, which does not exist`);
+    }
   });
 });
 
