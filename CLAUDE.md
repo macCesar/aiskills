@@ -123,9 +123,13 @@ User intends to eventually merge TiTools + aiskills into a single CLI with skill
 Tests live under `test/` using Node's built-in test runner (`node:test`):
 
 ```bash
-npm test                        # all suites
-node --test test/list.test.js   # single file
+npm test                            # all suites
+node --test test/manifest.test.js   # single file
 ```
+
+**Keep test files flat in `test/`.** The `test` script is `node --test test/*.test.js` — npm runs scripts through `sh`, where `**` collapses to a single `*`, so the original `test/**/*.test.js` pattern looked in `test/<subdir>/` and matched nothing. `npm test` reported `1..0` and passed for months while testing nothing. A file in a subdirectory would be silently skipped the same way.
+
+`test/manifest.test.js` guards the wiring between the repo's contents and the files that declare them: skills present on disk but missing from `lib/config.js:SKILLS` (which happened to `session-log` — the skill shipped in the repo and the CLI never installed it), orphaned command files, frontmatter whose `name` disagrees with its directory, `references/*.md` pointers that resolve to nothing, and `package.json` / `plugin.json` versions drifting apart (the TiTools failure documented above). When adding a skill or command, this suite is what tells you the registration was actually done.
 
 Add tests whenever a new command or skill-scripted behavior ships. Skills that include executable scripts should have tests covering: frontmatter validity, CLI help output, argument validation, shell syntax of any bash scripts.
 
