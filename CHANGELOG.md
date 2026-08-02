@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-08-01
+
+### Added
+
+- test(manifest): first test suite — `test/manifest.test.js`, 23 checks, no new dependencies. It guards the wiring between what the repo contains and what declares it: a skill directory missing from `lib/config.js:SKILLS` (which is exactly how `session-log` shipped in the repo while the CLI never installed it), an orphaned command file, frontmatter whose `name` disagrees with its directory, a `references/*.md` pointer that resolves to nothing, `SKILLS`/`LEGACY_SKILLS` overlap, bundled eval JSON that no longer parses, and `package.json` drifting from `plugin.json` — the TiTools failure where npm published 2.6.0 while the marketplace announced 3.0.0. Each assertion was verified against a deliberately broken repo state before being trusted: an orphan skill directory, an orphan command file and a desynced version each made the suite fail as intended.
+
+- feat(session-log): new skill. Installs a fixed four-file convention under `docs/project/` — status (never loaded at startup), requirements, decisions and context — and writes a pointer into every context file the repo has, so the notes are findable from Claude Code, Codex or Gemini alike. Keeping volatile status out of the startup chain stops each progress update from invalidating the cached prefix behind it. Skill only, no slash command: commands are Claude Code-only, and a command duplicating the skill's logic is a second copy that drifts.
+  - **Resuming is a first-class job, not a side effect of closing.** `SKILL.md` now dispatches on four situations (fresh install, upgrade from an earlier layout, arriving, leaving) instead of two, and the arriving path reads `status.md` and then checks it against git — commits landed since the file was written, whether the branch it names still exists, uncommitted work it never mentioned — before repeating any of it back. `references/verification.md` covers the direction of error in an old record: it rots toward understating what exists and overstating what's blocked.
+  - **Safeguards.** These files get committed and often pushed to public repos, so credentials and client details get recorded by location, never verbatim. The notes are written in the language the project is already documented in. The import-chain check at the end of a session is now two greps instead of an instruction to look, with the failure mode spelled out: naming a file that doesn't exist makes `grep` exit non-zero and print nothing, which reads exactly like a clean result.
+  - **Layout variants** in `references/file-layout.md` — a monorepo takes one `docs/project/` at the root with a heading per package (one repo, one branch, one deploy); `status.md` is conflict-prone with more than one writer, resolved by merging sections rather than splitting the file; `decisions.md` is append-only *and* imported, so past ~200 lines everything but the current year moves to a `decisions-archive.md` that is not imported; upgrading an earlier install is `git mv` plus a volatility split, not a rewrite.
+  - **Evals rewritten and honestly labelled.** The three A/B rounds graded an earlier layout, so `evals.json` was rebuilt against the four-file convention — 9 prompts, including resuming against a stale file, a gitignored `docs/`, an upgrade, an offered credential and a monorepo — each carrying a `fixture_spec`, since the original fixture repos lived in a scratch workspace and are gone. Nothing in the new set has been run and the README says so; the unsupported "files created: 2 vs 4" row was removed from the repo README because no eval file backs it.
+
+### Fixed
+
+- fix(test): `npm test` ran zero tests and passed. The script was `node --test test/**/*.test.js`, and npm runs scripts through `sh`, where `**` collapses to a single `*` — so the pattern looked in `test/<subdir>/` and matched nothing, reporting `1..0` as success. Now `node --test test/*.test.js`, with test files kept flat.
+- fix(marketplace): `marketplace.json` described four skills and omitted `audit-codebase`, which `plugin.json` already listed. Both descriptions now name every shipped skill.
+
+
 ## [1.15.0] - 2026-07-12
 
 ### Skill: audit-codebase
