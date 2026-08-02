@@ -4,10 +4,11 @@ Project-specific instructions for Claude Code sessions working on this repo. The
 
 ## Project state
 
+- `docs/project/context.md` — architecture, and the parity contract with TiTools
 - `docs/project/status.md` — where the work stands right now
 
-Read it when resuming work. Do not import it at startup: it changes constantly,
-and loading it invalidates the cached prefix behind it.
+Read `status.md` when resuming work. Do not import it at startup: it changes
+constantly, and loading it invalidates the cached prefix behind it.
 
 ## What aiskills is
 
@@ -98,8 +99,13 @@ The template, in `SKILL.md`:
 1. **Step 1 — Open the relevant reference files**: a `| Task involves | Required reading |` table that routes each topic to a specific `references/<file>.md`. Keep one topic per row, granular enough that a typical question loads one reference, not the whole set.
 2. **Step 2 — Output contract**: every cited rule, value, API, or behavior must include `[source: references/<file>.md]`. Show one literal example.
 3. **Step 3 — FROM_MEMORY fallback**: if the model answers without having read the reference that backs the claim, it must prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
-4. **Banned behaviors**: a short bullet list of things the skill must never do (invent values not in references, reproduce source prose verbatim, mix in unrelated doctrines, mark answer complete without listing read references).
+4. **Banned behaviors**: a short bullet list of things the skill must never do (invent values not in references, reproduce source prose verbatim, mix in unrelated doctrines, mark answer complete without listing read references). Give each one its half-sentence of *why*: an instruction the model understands the reason for survives situations the list never anticipated, and a bare prohibition doesn't.
 5. **Anti-Patterns**: a table or bullet list of common mistakes in the domain. **Each anti-pattern should cite `[source: references/<file>.md]`** — same contract Step 2 enforces on responses.
+
+Two things the template deliberately leaves out, because both were in these skills and both were dead weight:
+
+- **No `## When to use` section in the body.** Anthropic's skill-creator is explicit that all trigger information belongs in the frontmatter `description`, which is what Claude actually reads when deciding to invoke a skill. A body section repeating it only loads *after* the decision is made — it can't affect triggering and it costs context every time.
+- **One references table, not two.** The Step 1 routing table is the table. A second "Reference Files" listing at the bottom drifts out of sync with it and, in `vscode-extension-dev`, was 15 duplicated lines.
 
 Existing instances:
 
@@ -110,9 +116,14 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 
 ## Parallel project: `TiTools`
 
-`@maccesar/titools` lives at `~/Developer/openSource/TiTools` and shares **identical** `lib/` infrastructure (Commander.js, ora, chalk, ESM, same install paths, same symlink pattern). Only the `skills/` contents differ — TiTools ships Titanium SDK-specific skills (purgetss, ti-expert, ti-ui, ti-api, ti-howtos, alloy-guides, alloy-howtos, ti-create-release, ti-module-update) plus a `ti-pro` agent and a SessionStart hook that injects a Titanium Knowledge Index. aiskills ships general-purpose skills.
+`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 8 Titanium skills; here: 6 general-purpose) and the slash commands that drive them (TiTools: `ti-check`, `ti-new-screen`, `ti-audit`; here: `release`).
 
-**When implementing features in aiskills, consider porting the equivalent to TiTools in the same session** — adapted to add Titanium-specific pieces (Knowledge Index, `tiapp.xml` detection, SessionStart hook) if they apply.
+**A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
+
+`docs/project/context.md` § "Sibling project" carries the full contract: the table of
+what legitimately diverges (TiTools additionally has the `ti-pro` agent, the Knowledge
+Index / `sync`, and a `tiapp.xml` SessionStart hook — this repo has none of those), plus
+a measured per-file comparison. Read it before assuming two files should match.
 
 ### Long-term direction
 

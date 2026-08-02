@@ -3,6 +3,19 @@
 Read this when installing the convention in a project or migrating one that keeps
 its notes somewhere else.
 
+<!-- TOC-START -->
+## Contents
+
+- [Layout](#layout)
+- [The pointer block](#the-pointer-block)
+- [Two variants](#two-variants)
+- [Repos that come in pairs](#repos-that-come-in-pairs)
+- [Templates](#templates)
+- [Migrating an existing project](#migrating-an-existing-project)
+- [Sizing](#sizing)
+
+<!-- TOC-END -->
+
 ## Layout
 
 ```
@@ -86,6 +99,41 @@ Resolve conflicts by **keeping both sides and merging by section** — two peopl
 "In flight" entries are both true, and whichever loses a conflict is information
 nobody gets back. If the friction is constant rather than occasional, the team wants
 a heading per workstream inside the file. Still one file.
+
+## Repos that come in pairs
+
+A web backend and the mobile client that consumes it. The mechanics of installing
+and closing both are in the skill; what follows is the detail that didn't need to
+load every session.
+
+**Install from inside each repo, separately.** Open the backend, install; open the
+app, install. It's a one-time act per repo and it's worth doing from the right
+place: sitting inside the project means its own context file loads, its own MCP
+servers connect, and its stack-specific skills detect themselves. Installing a
+repo's notes from its sibling means describing a project you're looking at from
+outside — and the result reads like it, because the detail that makes `context.md`
+useful is exactly what you don't see from across the fence.
+
+Put the sibling's **path** in the header of `status.md`, not just its name, so
+whoever reads it next can actually go there:
+
+```markdown
+**Sibling:** `../../Apps/EM Industrial` (Titanium client) — waiting on
+`/work-orders/{id}/progress`, not built here yet.
+```
+
+**Once both are installed, updating them from one session is fine** — that's the
+day-to-day case, and it's different from installing. The files already exist and
+carry the project's own vocabulary; you're appending what changed, not inventing a
+description of a repo you can't see.
+
+Write the sibling's status from what you did to it, not from what you assume about
+it. "Added the client call for `/work-orders/{id}/progress`" is something you know.
+"The app is now feature-complete for E5" is something the app would have to tell
+you. And if the sibling isn't reachable from where you're working, say so in the
+handoff rather than guessing: "endpoint added here; the app side needs its status
+updated, I couldn't reach that repo" is honest and actionable. A confident claim
+about a repo you didn't open is neither.
 
 ## Templates
 

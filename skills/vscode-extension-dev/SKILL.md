@@ -1,11 +1,11 @@
 ---
 name: vscode-extension-dev
-description: 'Use when the user is creating, scaffolding, designing, debugging, testing, bundling, or publishing a VS Code extension. Covers TreeView, QuickPick, Webview, StatusBar, commands, configuration, SecretStorage, progress indicators, and esbuild bundling. Triggers: "create a VS Code extension", VS Code Extension APIs, package.json contributes/activationEvents/keybindings, debugging activation/disposables/memory leaks, bundling with esbuild/webpack, publishing to Marketplace or Open VSX, Webview CSP/nonce/postMessage, SecretStorage, extension testing (@vscode/test-electron).'
+description: 'VS Code extension development grounded in the official Extension API docs. Use this whenever someone is creating, scaffolding, designing, debugging, testing, bundling or publishing a VS Code extension — TreeView, QuickPick, Webview, StatusBar, commands, configuration, SecretStorage, progress indicators, FileSystemWatcher, Diagnostics, Language Server Protocol, Debug Adapter Protocol, notebooks — and also when they never say "extension" but the work clearly is one: editing `package.json` `contributes` / `activationEvents` / `keybindings`, an `activate(context)` function, importing from `vscode`, disposables leaking, `yo code`, `vsce`, `.vscodeignore`, bundling with esbuild or webpack, publishing to the Marketplace or Open VSX, Webview CSP/nonce/postMessage, or testing with @vscode/test-electron. Not for: configuring your own editor (user settings, keybindings, installing extensions), Claude Code plugins, skills or MCP servers, or general TypeScript/Node questions with no extension host involved.'
 ---
 
 # VS Code Extension Development Skill
 
-You are a VS Code extension development advisor. Base ALL guidance on the reference files below — not training data.
+You are a VS Code extension development advisor. Ground every answer in the reference files below rather than in training data: the Extension API moves fast, deprecates surfaces, and adds new ones every release, so a remembered signature is often a signature that used to be right.
 
 ## Required workflow (read before responding)
 
@@ -18,7 +18,7 @@ SKILL.md is not enough.**
 | Task involves | Required reading |
 |---|---|
 | TreeView, TreeDataProvider, sidebar trees | [references/api-treeview.md](references/api-treeview.md) |
-| Webview Panel, CSP, postMessage, nonce | [references/api-webview.md](references/api-webview.md) |
+| Webview Panel, CSP, postMessage, nonce, `asWebviewUri` | [references/api-webview.md](references/api-webview.md) |
 | QuickPick (simple or async with debounce) | [references/api-quickpick.md](references/api-quickpick.md) |
 | StatusBarItem, codicons, status bar UI | [references/api-statusbar.md](references/api-statusbar.md) |
 | SecretStorage, credential management | [references/api-secretstorage.md](references/api-secretstorage.md) |
@@ -27,8 +27,8 @@ SKILL.md is not enough.**
 | Activation events, project structure, layered architecture, testing | [references/architecture.md](references/architecture.md) |
 | `contributes`, `activationEvents`, `engines`, `scripts`, `keybindings`, esbuild config | [references/package-json-schema.md](references/package-json-schema.md) |
 | Marketplace publishing, vsce, Open VSX, CI/CD, `.vscodeignore`, versioning | [references/publishing.md](references/publishing.md) |
-| Language Server Protocol, `vscode-languageclient`, language servers | [references/lsp.md](references/lsp.md) |
-| Notebook serializers, controllers, renderers | [references/notebooks.md](references/notebooks.md) |
+| Language Server Protocol, `vscode-languageclient`, server lifecycle, capabilities, diagnostics | [references/lsp.md](references/lsp.md) |
+| Notebook serializers, controllers, renderers, output mime types | [references/notebooks.md](references/notebooks.md) |
 | Debug Adapter Protocol, `DebugAdapterDescriptorFactory`, `DebugConfigurationProvider` | [references/debugger.md](references/debugger.md) |
 | Advanced testing — multi-suite `.vscode-test.mjs`, fixtures, mocking, CI, coverage | [references/testing.md](references/testing.md) |
 
@@ -48,22 +48,12 @@ prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
 
 ### Banned behaviors
 
-- ❌ Inventing API methods, event names, or configuration keys not in the references
-- ❌ Importing from anywhere other than the `'vscode'` module
-- ❌ Suggesting deprecated APIs (e.g. `vscode.workspace.rootPath`) without flagging them as deprecated
-- ❌ Marking the answer complete without listing which reference files you read
+These four are where extension advice usually goes wrong, so they're worth naming:
 
-## When to use
-
-- User wants to create a new VS Code extension
-- User asks about VS Code extension APIs (TreeView, Webview, QuickPick, etc.)
-- User needs help with package.json contributes, activationEvents, or keybindings
-- User is debugging extension activation, disposables, or memory leaks
-- User asks about bundling extensions with esbuild or webpack
-- User wants to publish an extension to the VS Code Marketplace or Open VSX
-- User asks about Webview CSP, nonce, or postMessage communication
-- User asks about SecretStorage or credential management in extensions
-- User needs help with extension testing (@vscode/test-electron)
+- Inventing API methods, event names, or configuration keys not in the references. A plausible-looking `vscode.*` call fails at runtime, in the extension host, where the stack trace is least helpful.
+- Sourcing editor APIs from anywhere other than the `'vscode'` module. That module is injected by the host at runtime rather than installed, which is why it's marked `external` in the bundler config — ordinary npm dependencies are fine and get bundled normally.
+- Suggesting deprecated APIs (`vscode.workspace.rootPath` and friends) without flagging them. They still work today, which is exactly why they get copied into new code.
+- Marking the answer complete without listing which reference files you read. The list is what lets the reader tell a grounded answer from a remembered one.
 
 ## Source
 
@@ -128,32 +118,50 @@ VS Code Extension API documentation (https://code.visualstudio.com/api)
 - Mark `vscode` as external (it's provided by the runtime)
 - See `references/package-json-schema.md` for scripts configuration
 
-## Reference Files
-
-| File                                  | Topics                                                                             |
-| ------------------------------------- | ---------------------------------------------------------------------------------- |
-| `references/api-treeview.md`          | TreeDataProvider, TreeView registration                                            |
-| `references/api-webview.md`           | Webview Panel, CSP/nonce, postMessage, asWebviewUri                                |
-| `references/api-quickpick.md`         | Simple and async QuickPick with debounced search                                   |
-| `references/api-statusbar.md`         | StatusBarItem, codicons, dynamic updates                                           |
-| `references/api-secretstorage.md`     | Credential manager pattern, onDidChange                                            |
-| `references/api-progress.md`          | withProgress (Notification + Window), cancellation tokens                          |
-| `references/api-additional.md`        | FileSystemWatcher, Disposable cleanup, Diagnostics, OutputChannel, ContextKeys, TextDocumentContentProvider |
-| `references/architecture.md`          | Project structure, layered architecture, testing strategy                          |
-| `references/package-json-schema.md`   | contributes, activationEvents, engines, scripts, devDependencies                   |
-| `references/publishing.md`            | vsce, .vscodeignore, CI/CD, Open VSX, versioning                                  |
-| `references/lsp.md`                   | LSP client setup, server lifecycle, capabilities, diagnostics                      |
-| `references/notebooks.md`             | Notebook serializers, controllers, renderers, output mime types                    |
-| `references/debugger.md`              | DAP: descriptor factory, configuration provider, adapter lifecycle                 |
-| `references/testing.md`               | Multi-suite test config, workspace fixtures, mocking `vscode`, CI, coverage        |
-
 ## Anti-Patterns to Avoid
 
+**Manifest and activation**
+
 - Using `*` activation event in production (activates on every VS Code start) [source: references/package-json-schema.md]
-- Storing secrets in `configuration` instead of `SecretStorage` [source: references/api-secretstorage.md]
-- Forgetting to dispose subscriptions (causes memory leaks) [source: references/api-additional.md]
-- Missing CSP in Webviews (security vulnerability) [source: references/api-webview.md]
-- Bundling `node_modules` instead of using esbuild/webpack [source: references/package-json-schema.md]
-- Using synchronous file I/O in the extension host (blocks the UI) [source: references/architecture.md]
 - Registering commands without corresponding `contributes.commands` entries [source: references/package-json-schema.md]
+- Bundling `node_modules` instead of using esbuild/webpack [source: references/package-json-schema.md]
+
+**Lifecycle and runtime**
+
+- Forgetting to dispose subscriptions (causes memory leaks) [source: references/api-additional.md]
+- Using synchronous file I/O in the extension host (blocks the UI) [source: references/architecture.md]
 - Hardcoding `vscode.workspace.rootPath` (deprecated — use `workspaceFolders`) [source: references/architecture.md]
+- Recreating a TreeView to refresh it instead of firing `onDidChangeTreeData` [source: references/api-treeview.md]
+- Declaring `cancellable: true` and never checking `token.isCancellationRequested` — the Cancel button appears and does nothing [source: references/api-progress.md]
+- Querying on every keystroke in a QuickPick without debouncing, and leaving the in-flight request running when the picker hides [source: references/api-quickpick.md]
+
+**Security**
+
+- Missing CSP in Webviews (security vulnerability) [source: references/api-webview.md]
+- Storing secrets in `configuration` instead of `SecretStorage` [source: references/api-secretstorage.md]
+- Setting `innerHTML` from untrusted cell output in a notebook renderer — XSS in the notebook viewer [source: references/notebooks.md]
+
+**Publishing**
+
+- Shipping `.ts` sources or `node_modules/` inside the VSIX instead of only the bundled output [source: references/publishing.md]
+- Publishing without a `README.md` — it *is* the Marketplace listing page, and the publish fails without one [source: references/publishing.md]
+- A `publisher` field that doesn't match the Marketplace publisher exactly [source: references/publishing.md]
+
+**Language servers**
+
+- Re-parsing the whole document on every keystroke instead of using `TextDocumentSyncKind.Incremental` [source: references/lsp.md]
+- Heavy work inside `onInitialize` — it blocks editor startup; do it lazily on first request [source: references/lsp.md]
+- Not awaiting `client.stop()` in `deactivate()` — leaves the server process alive [source: references/lsp.md]
+
+**Notebooks and debug adapters**
+
+- Forgetting `exec.end(...)` — the cell stays in "running" state forever [source: references/notebooks.md]
+- Bundling a notebook renderer with `vscode` as a dependency — renderers run in an iframe and have no `vscode` import [source: references/notebooks.md]
+- Forgetting to send `terminated` — the debug session never closes and "Stop" hangs [source: references/debugger.md]
+- Long-running synchronous work in `DebugAdapterInlineImplementation` — blocks the extension host [source: references/debugger.md]
+
+**Testing**
+
+- Keeping editor-independent business logic in `extension.ts` — forces every test to spin up Electron [source: references/testing.md]
+- `setTimeout` / sleep to "wait for activation" instead of `await ext.activate()` [source: references/testing.md]
+- Running `xvfb-run` on macOS or Windows — it's only needed on Linux [source: references/testing.md]

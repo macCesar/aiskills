@@ -1,13 +1,13 @@
 ---
 name: stitch-showcase
-description: 'Use when the user has Google Stitch design exports and wants to do anything with them — build a gallery, organize screens, generate a navigable showcase, process zip files, or browse designs. Triggers: "organiza mis diseños de Stitch", "arma el muestrario", "organize my Stitch designs", "build the showcase", "tengo los zips de Stitch", "mis exports de Stitch", or any mention of Stitch exports, screen.png + code.html pairs, or design zip files. Also: "optimiza el showcase", "mejora las descripciones", "enrich the showcase" to improve an existing showcase.'
+description: 'Turns Google Stitch design exports (zips holding `code.html` + `screen.png`) into a navigable showcase — gallery, viewer, component catalog — in about three seconds, and enriches it on demand. Use this for anything involving those exports: "organiza mis diseños de Stitch", "arma el muestrario", "organize my Stitch designs", "build the showcase", "tengo los zips de Stitch", "mis exports de Stitch", or a bare path to a folder of design zips. Also for maintaining one that already exists: "optimiza el showcase", "mejora las descripciones", "agrega estas pantallas nuevas", "el cliente pidió otra pantalla", "estandariza los navbars", "make all the footers the same". Not for: Figma or Sketch exports, loose screenshots, redesigning the screens themselves, or building the real app from them.'
 ---
 
 # stitch-showcase
 
 Converts Google Stitch exports (zips with `code.html` + `screen.png`) into a navigable showcase with `index.html` + `viewer.html` + `catalog.html`.
 
-**Architecture**: Python script generates all HTML from pre-built templates in ~3 seconds. AI enrichment (descriptions, sections, hero text) is **optional and on-demand** — only when the user asks to optimize. The AI NEVER writes index.html or viewer.html from scratch.
+**Architecture**: a Python script generates all HTML from pre-built templates in ~3 seconds. AI enrichment (descriptions, sections, hero text) is **optional and on-demand** — only when the user asks to optimize.
 
 ## Prerequisites
 
@@ -39,7 +39,11 @@ digraph showcase {
 }
 ```
 
-**CRITICAL**: Always run `build_showcase.py` WITHOUT `--context` to generate HTMLs from templates. The `--context` flag is ONLY for debugging/inspecting the data JSON. NEVER have the AI write index.html or viewer.html manually — the templates handle layout, grid, viewer, theme, tabs, search, and all interactive features.
+Two things about this that are easy to get wrong and expensive to undo:
+
+Run `build_showcase.py` **without** `--context`, since that's the invocation that writes the HTML. `--context` only dumps the data JSON for inspection, so a run with it leaves you with no showcase and no error saying why.
+
+Don't write `index.html` or `viewer.html` by hand. The templates already carry the layout, grid, viewer, theme, tabs, search and every interactive behavior, and every build regenerates both files — so hand-written HTML costs a lot to produce and disappears on the next rebuild.
 
 ## Mode 1: Build (default — instant)
 

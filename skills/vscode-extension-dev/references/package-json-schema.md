@@ -2,6 +2,18 @@
 
 Complete reference for VS Code extension `package.json` configuration.
 
+<!-- TOC-START -->
+## Contents
+
+- [Minimal Valid Extension](#minimal-valid-extension)
+- [engines.vscode](#enginesvscode)
+- [activationEvents](#activationevents)
+- [contributes](#contributes)
+- [scripts (esbuild)](#scripts-esbuild)
+- [devDependencies](#devdependencies)
+
+<!-- TOC-END -->
+
 ## Minimal Valid Extension
 
 ```json

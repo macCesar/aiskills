@@ -2,6 +2,19 @@
 
 Layered architecture, project structure, and testing strategy for VS Code extensions.
 
+<!-- TOC-START -->
+## Contents
+
+- [Directory Structure](#directory-structure)
+- [Layered Architecture](#layered-architecture)
+- [Debug Configuration](#debug-configuration)
+- [Testing Strategy](#testing-strategy)
+- [Extension Entry Point Pattern](#extension-entry-point-pattern)
+- [Extension Host Runtime](#extension-host-runtime)
+- [Workspace Folders (`rootPath` is deprecated)](#workspace-folders-rootpath-is-deprecated)
+
+<!-- TOC-END -->
+
 ## Directory Structure
 
 ```

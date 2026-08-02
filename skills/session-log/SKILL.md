@@ -93,53 +93,25 @@ repositories. Very often it's also **one working session**: someone adds an
 endpoint on the API side and, without switching context, wires the app that
 consumes it. The work is a single thought; only the folders are separate.
 
-**Install from inside each repo, separately.** Open the backend, install; open the
-app, install. It's a one-time act per repo and it's worth doing from the right
-place: sitting inside the project means its own context file loads, its own MCP
-servers connect, and its stack-specific skills detect themselves. Installing a
+**Install from inside each repo, separately**, and let each keep its own
+`status.md` — two repos have two branches, two deploy states and two histories, so
+one shared file goes stale on whichever side isn't being edited. Installing a
 repo's notes from its sibling means describing a project you're looking at from
-outside — and the result reads like it, because the detail that makes `context.md`
-useful is exactly what you don't see from across the fence.
-
-Each keeps its own `status.md` — two repos have two branches, two deploy states
-and two histories, and one shared file would go stale on whichever side isn't
-being edited.
-
-Put the sibling's **path** in the header, not just its name, so whoever reads it
-next can actually go there:
-
-```markdown
-**Sibling:** `../../Apps/EM Industrial` (Titanium client) — waiting on
-`/work-orders/{id}/progress`, not built here yet.
-```
-
-**Once both are installed, updating them from one session is fine** — that's the
-day-to-day case, and it's different from installing. The files already exist and
-carry the project's own vocabulary; you're appending what changed, not inventing
-a description of a repo you can't see.
+outside, and the result reads like it.
 
 **When a session touched both, close both.** This is the part that gets skipped,
 and it's where the two halves drift into separate realities: the mobile notes say
 "waiting on the API" for three weeks while the backend's notes never mention that
-anything is waiting. If you added the endpoint and consumed it in the same
-session, both `status.md` files changed — write both before finishing.
-
-Even then, write the sibling's status from what you did to it, not from what you
-assume about it. "Added the client call for `/work-orders/{id}/progress`" is
-something you know. "The app is now feature-complete for E5" is something the app
-would have to tell you.
-
-If the sibling isn't reachable from where you're working, say so in the handoff
-rather than guessing at its state. "Endpoint added here; the app side needs its
-status updated, I couldn't reach that repo" is honest and actionable. A confident
-claim about a repo you didn't open is neither.
+anything is waiting. Write each side from what you did to it, not from what you
+assume about it — and if you couldn't reach the sibling, say that in the handoff
+instead of guessing at its state.
 
 A **monorepo** is the opposite case and takes the opposite answer — one
 `docs/project/` at the root, packages as headings — because one repo has one branch,
 one deploy and one history to describe. And `status.md` being rewritten whole every
 session makes it **conflict-prone the moment a second person or branch touches it**.
-Both cases are in `references/file-layout.md`; neither comes up on a project with one
-person and one branch, which is most of them.
+All three cases, with the sibling header format, are in `references/file-layout.md`;
+none comes up on a project with one person and one branch, which is most of them.
 
 ### Why status.md is not loaded at startup
 
