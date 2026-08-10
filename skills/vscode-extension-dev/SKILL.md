@@ -9,9 +9,7 @@ You are a VS Code extension development advisor. Ground every answer in the refe
 
 ## Required workflow (read before responding)
 
-The SKILL.md alone is an **index** of references. The detail you need
-to give accurate answers lives in the reference files. **Reading this
-SKILL.md is not enough.**
+The SKILL.md alone is an **index** of references. The detail you need to give accurate answers lives in the reference files. **Reading this SKILL.md is not enough.**
 
 ### Step 1 — Open the relevant reference files
 
@@ -34,8 +32,7 @@ SKILL.md is not enough.**
 
 ### Step 2 — Output contract
 
-Every API symbol, configuration key, command, or behavior you cite MUST
-be backed by a citation in the form:
+Every API symbol, configuration key, command, or behavior you cite MUST be backed by a citation in the form:
 
 `[source: references/<file>.md]`
 
@@ -43,8 +40,7 @@ Example: *"Push all subscriptions to `context.subscriptions` so they are dispose
 
 ### Step 3 — If you must answer from memory
 
-If you write a claim without having read the reference that backs it,
-prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
+If you write a claim without having read the reference that backs it, prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
 
 ### Banned behaviors
 

@@ -9,9 +9,7 @@ Design advice grounded in the principles taught by Adam Wathan & Steve Schoger i
 
 ## Required workflow (read before responding)
 
-The SKILL.md alone is an **index** of references. The detail you need
-to give accurate answers lives in the reference files. **Reading this
-SKILL.md is not enough.**
+The SKILL.md alone is an **index** of references. The detail you need to give accurate answers lives in the reference files. **Reading this SKILL.md is not enough.**
 
 ### Step 1 — Open the relevant reference files
 
@@ -27,8 +25,7 @@ SKILL.md is not enough.**
 
 ### Step 2 — Output contract
 
-Every design recommendation, ratio, value, or rule you cite MUST be
-backed by a citation in the form:
+Every design recommendation, ratio, value, or rule you cite MUST be backed by a citation in the form:
 
 `[source: references/<file>.md]`
 
@@ -36,8 +33,7 @@ Example: *"Use weight and color, not just font size, to establish hierarchy [sou
 
 ### Step 3 — If you must answer from memory
 
-If you write a claim without having read the reference that backs it,
-prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
+If you write a claim without having read the reference that backs it, prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
 
 ### Banned behaviors
 
