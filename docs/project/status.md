@@ -1,15 +1,8 @@
 # Status — 2026-08-10
 
-**Phase:** v1.17.0 shipped. No code in flight — the only work since is Markdown
-           formatting across the repo's documentation.
-**Deployed:** npm serves `1.17.0` (verified against the registry), tag `v1.17.0`
-              pushed, `package.json` and `plugin.json` both at `1.17.0`. On César's
-              machine: 6 skills in `~/.agents/skills/` (what Gemini CLI and Codex CLI
-              read), 6 symlinks in `~/.claude/skills/`, marketplace plugin
-              **uninstalled on purpose** — last verified 2026-08-02, not re-checked
-              today.
-**Branch:** `main`, clean at `f61b57c`, **4 commits ahead of `origin/main` and not
-            pushed** — the four documentation commits below.
+**Phase:** v1.17.0 shipped. No code in flight — the only work since is Markdown formatting across the repo's documentation.
+**Deployed:** npm serves `1.17.0` (verified against the registry), tag `v1.17.0` pushed, `package.json` and `plugin.json` both at `1.17.0`. On César's machine: 6 skills in `~/.agents/skills/` (what Gemini CLI and Codex CLI read), 6 symlinks in `~/.claude/skills/`, marketplace plugin **uninstalled on purpose** — last verified 2026-08-02, not re-checked today.
+**Branch:** `main`, clean at `f61b57c`, **4 commits ahead of `origin/main` and not pushed** — the four documentation commits below.
 
 ## Changed 2026-08-10 — Markdown unwrapped repo-wide, and damage from it undone
 

@@ -2,16 +2,11 @@
 
 ## Purpose
 
-Sometimes a Stitch slot needs to show a video instead of a still image
-(product demo, animated logo, looping background, recorded screen). This
-document captures the exact pattern that works across browsers and avoids
-the common pitfalls — content recropping, layout shift, AV1 codec, and
-aspect-ratio mismatch with the original wrapper.
+Sometimes a Stitch slot needs to show a video instead of a still image (product demo, animated logo, looping background, recorded screen). This document captures the exact pattern that works across browsers and avoids the common pitfalls — content recropping, layout shift, AV1 codec, and aspect-ratio mismatch with the original wrapper.
 
 ## The Tag
 
-Use a plain `<video>` element with native `width` and `height` attributes
-plus inline styling for safe defaults:
+Use a plain `<video>` element with native `width` and `height` attributes plus inline styling for safe defaults:
 
 ```html
 <video
@@ -27,8 +22,7 @@ plus inline styling for safe defaults:
 </video>
 ```
 
-Replace `W` / `H` with the **native** video dimensions and `<slug>` with
-the screen slug (or whatever filename you used inside `videos/`).
+Replace `W` / `H` with the **native** video dimensions and `<slug>` with the screen slug (or whatever filename you used inside `videos/`).
 
 ### Why each attribute
 
@@ -43,15 +37,13 @@ the screen slug (or whatever filename you used inside `videos/`).
 
 ## File Workflow
 
-1. **Download** the source video. For Facebook/Instagram/YouTube/TikTok we
-   recommend `yt-dlp`:
+1. **Download** the source video. For Facebook/Instagram/YouTube/TikTok we recommend `yt-dlp`:
 
    ```bash
    yt-dlp "https://www.facebook.com/<...>/videos/<id>" -o "videos/<slug>.%(ext)s"
    ```
 
-2. **Re-encode to H.264** if the source comes down as AV1. AV1 doesn't
-   preview in macOS Finder and is rejected by Safari < 17:
+2. **Re-encode to H.264** if the source comes down as AV1. AV1 doesn't preview in macOS Finder and is rejected by Safari < 17:
 
    ```bash
    ffmpeg -i in.mp4 \
@@ -63,12 +55,9 @@ the screen slug (or whatever filename you used inside `videos/`).
 
    - `-preset fast`: balanced speed/quality.
    - `-crf 23`: visually-lossless default; lower number = bigger file.
-   - `-movflags +faststart`: moves the moov atom to the front so the video
-     can start playing before fully downloaded.
+   - `-movflags +faststart`: moves the moov atom to the front so the video can start playing before fully downloaded.
 
-3. **Place** the encoded `.mp4` in a `videos/` folder at the **project
-   level** (the same level as `stitch/` or `showcase/`, not inside
-   `assets/`), so the build keeps it out of the screen-extraction pipeline:
+3. **Place** the encoded `.mp4` in a `videos/` folder at the **project level** (the same level as `stitch/` or `showcase/`, not inside `assets/`), so the build keeps it out of the screen-extraction pipeline:
 
    ```text
    my-project/
@@ -80,8 +69,7 @@ the screen slug (or whatever filename you used inside `videos/`).
            └── <slug>.html     ← references ../../videos/hero.mp4
    ```
 
-4. **Reference from the screen HTML** with a relative path. From inside
-   `showcase/assets/<slug>.html`, `videos/` is two levels up:
+4. **Reference from the screen HTML** with a relative path. From inside `showcase/assets/<slug>.html`, `videos/` is two levels up:
 
    ```html
    <source src="../../videos/hero.mp4" type="video/mp4">
@@ -89,18 +77,14 @@ the screen slug (or whatever filename you used inside `videos/`).
 
 ## Aspect-Ratio Mismatch
 
-The original Stitch wrapper for a video slot usually carries a fixed
-aspect ratio (e.g. `aspect-[4/5]`). If your video is a different shape —
-say 9/16 — keeping the wrapper's aspect locks the video into the wrong
-box, which then forces a choice:
+The original Stitch wrapper for a video slot usually carries a fixed aspect ratio (e.g. `aspect-[4/5]`). If your video is a different shape — say 9/16 — keeping the wrapper's aspect locks the video into the wrong box, which then forces a choice:
 
 | Option | Effect |
 |--------|--------|
 | Keep wrapper's `aspect-*` + `object-cover` | Video crops; logos and edges get chopped. |
 | **Remove wrapper's `aspect-*` + `height:auto`** | Video keeps its native aspect; the slot grows or shrinks vertically to fit. ✅ |
 
-The second option is almost always what you want — better to have a
-slightly taller card than to chop the brand logo out of the frame.
+The second option is almost always what you want — better to have a slightly taller card than to chop the brand logo out of the frame.
 
 ## Quick Sanity Checks
 
@@ -109,5 +93,4 @@ After embedding, open the screen in a browser and confirm:
 - The video autoplays without a tap on Chrome, Safari, and Firefox.
 - The video loops cleanly (no flash on rewind).
 - On mobile (iOS Safari), it autoplays silently inline (not fullscreen).
-- The file size is reasonable — re-encode with a higher `-crf` if it's
-  more than ~3-5 MB per 10 seconds.
+- The file size is reasonable — re-encode with a higher `-crf` if it's more than ~3-5 MB per 10 seconds.
