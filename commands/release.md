@@ -102,8 +102,7 @@ Do all of this **internally**. Do not print a status summary or any "Step 1" hea
    - Screenshots in repo root (`*.png`, `*.jpg`, `*.jpeg`, `Screenshot*.png`, `Captura*.png`) unless they live inside an `assets/`, `docs/`, or similarly-blessed directory.
    - Editor scratch files: `*.swp`, `*.tmp`, `.DS_Store`, `Thumbs.db`.
    - Local-only env files: `.env`, `.env.local`, `*.local.json` if the project's `.gitignore` already excludes them but they appear because of `git add -A`.
-   - Credentials, secret keys, large binaries that look unrelated to the project.
-   When in doubt, **list the file in the Step 4 plan as "excluded — confirm?"** instead of silently dropping or silently including it.
+   - Credentials, secret keys, large binaries that look unrelated to the project. When in doubt, **list the file in the Step 4 plan as "excluded — confirm?"** instead of silently dropping or silently including it.
 
    **Output of this step (held internally for Step 4):** an ordered list `[ {type, scope, subject, files[], body?}, ... ]` representing the N semantic commits, plus an "excluded" list.
 
@@ -344,8 +343,7 @@ After Phase 1, the working tree should be clean except for files explicitly list
 
 3. **Update `README.md`** with everything identified in Step 1.6:
    - The documentation gap patches (new command rows, new sections, updated tables) so the README reflects the user-visible surface being shipped in this release.
-   - Plus any version badge / install snippet that referenced the old version.
-   Apply with `Edit` per location. Skip only if Step 1.6 found nothing.
+   - Plus any version badge / install snippet that referenced the old version. Apply with `Edit` per location. Skip only if Step 1.6 found nothing.
 
 4. **Stage exactly the release-commit files** (the bumped version file + lockfile if `npm version` updated it + `CHANGELOG.md` + `README.md` if changed). Use explicit `git add <paths>`, not `git add -A`.
 
