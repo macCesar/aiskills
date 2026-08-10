@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.17.1] - 2026-08-10
+
+### Changed
+
+- **Hard-wrapped Markdown paragraphs unwrapped repo-wide.** `AGENTS.md`, `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `docs/MAINTAINER-GUIDE.md`, `commands/release.md`, both `docs/project/` files and eleven skill documents carried paragraphs hand-wrapped at ~80 columns. A paragraph is one line again, so editing a single word produces a one-line diff instead of reflowing the whole paragraph. Every file was verified to be pure reflow before committing — old and new compared with all whitespace collapsed — so no prose changed anywhere.
+- **Five reference files deliberately keep their line breaks**, because there the same pass had merged structure rather than wrapping: the 36 `Antes:` / `Después:` pairs in `humaniza`'s `ai-patterns-es.md` and `examples.md`, the es-MX substitution list in `lexicon-es-mx.md`, and the guide/spec URL pairs in `vscode-extension-dev`'s `debugger.md` and `lsp.md`. Markdown renders those identically either way, so nothing looked broken — but a model reads these files as raw text, and the break was carrying the structure.
+- **`docs/project/status.md` brought up to date.** It was still dated 2026-08-02 with v1.16.1 as the current phase and never recorded v1.17.0, which shipped later that same day. Deployment state is now verified against the npm registry rather than inferred.
+
 ## [1.17.0] - 2026-08-02
 
 ### Added
