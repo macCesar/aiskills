@@ -1,12 +1,35 @@
-# Status — 2026-08-02
+# Status — 2026-08-10
 
-**Phase:** v1.16.1 shipped — `session-log` published and the four bugs its rollout
-           exposed are fixed
-**Deployed:** npm serves `1.16.1`. Tag and GitHub release are live. On César's
+**Phase:** v1.17.0 shipped. No code in flight — the only work since is Markdown
+           formatting across the repo's documentation.
+**Deployed:** npm serves `1.17.0` (verified against the registry), tag `v1.17.0`
+              pushed, `package.json` and `plugin.json` both at `1.17.0`. On César's
               machine: 6 skills in `~/.agents/skills/` (what Gemini CLI and Codex CLI
               read), 6 symlinks in `~/.claude/skills/`, marketplace plugin
-              **uninstalled on purpose**, `aiskills doctor` reports no issues.
-**Branch:** `main`, pushed, clean at `49036f0`, plus the uncommitted doc changes below
+              **uninstalled on purpose** — last verified 2026-08-02, not re-checked
+              today.
+**Branch:** `main`, clean at `f61b57c`, **4 commits ahead of `origin/main` and not
+            pushed** — the four documentation commits below.
+
+## Changed 2026-08-10 — Markdown unwrapped repo-wide, and damage from it undone
+
+Documentation only. No code touched; `node --test`: 52 passing, 12 suites.
+
+A pass over the repo removed the ~80-column hand wrapping from Markdown paragraphs, so a paragraph is one line again. The reason is diff hygiene: with hard wrapping, changing one word reflows the whole paragraph and the diff touches five lines instead of one. Committed as four commits split by area — repo-level docs, `/release`, `docs/project/`, and the skills.
+
+**Every one of the 23 modified files was verified to be pure reflow** before committing: the old and new contents were compared with all whitespace collapsed, and every file matched. Nothing was added, removed or reworded anywhere.
+
+**Five files were reverted, because there the same pass merged structural line breaks, not wrapping.** Markdown renders consecutive lines as one paragraph either way, so nothing looked broken — but these files are read as raw text by a model, and the line break was carrying the structure:
+
+- `skills/humaniza/references/ai-patterns-es.md` and `examples.md` — every `Antes:` / `Después:` pair collapsed onto one line, 36 of them. The before/after contrast the file exists to teach became a run-on sentence.
+- `skills/humaniza/references/lexicon-es-mx.md` — the six-line es-MX substitution list became one line reading `ordenador -> computadora móvil -> celular fichero -> archivo …`.
+- `skills/vscode-extension-dev/references/debugger.md` and `lsp.md` — the "Official guide:" and "Protocol spec:" URL pairs merged, running two links together.
+
+These five keep their committed form and are excluded from the unwrap. A copy of the discarded versions is in this session's scratchpad only; nothing was lost from git.
+
+## Recorded late — v1.17.0 (2026-08-02)
+
+Shipped after this file was last written, so it never appeared here: all six skills aligned with the current skill-creator guidance, two README reference tables corrected, and a frontmatter size guard added to `test/manifest.test.js` for the agentskills.io 1024-character cap. Full detail in `CHANGELOG.md` § 1.17.0 — not repeated here.
 
 ## Changed 2026-08-02 — from a TiTools session, docs only
 
@@ -89,7 +112,9 @@ Two repo-level defects surfaced by the same review and fixed after:
 
 ## Next step
 
-Agreed 2026-08-01: **port `/release` to a skill** so it can be used from Codex and Gemini, not just Claude Code. Today, Claude Code has to be opened for that alone.
+Immediate: **push the four documentation commits.** They exist only on this machine; `origin/main` is still at `33a5b93`.
+
+Then, agreed 2026-08-01: **port `/release` to a skill** so it can be used from Codex and Gemini, not just Claude Code. Today, Claude Code has to be opened for that alone.
 
 What was measured before recording it:
 
@@ -106,6 +131,7 @@ Agreed shape: `SKILL.md` as the single source of the logic, with `/release` redu
 
 ## Known pending
 
+- **The pointer-block template still teaches the wrapped form.** `skills/session-log/SKILL.md:93` and `references/file-layout.md:48` show the block hard-wrapped inside a fenced code block — the unwrap pass correctly skipped fences — while this repo's own `CLAUDE.md:10` and `AGENTS.md:12` now carry it as one line. The skill's template and its own dogfood disagree. Left alone deliberately; deciding what the template should say is a content call, not formatting.
 - **`release.md` is duplicated**: `~/.claude/commands/release.md` and this repo's `commands/release.md`. If the plugin is installed, the global copy is redundant.
 - **`.skill` packaging doesn't run**: `scripts/package_skill.py` needs `pyyaml` and Homebrew's Python blocks loose installs (PEP 668). Not forced. Not needed either — distribution is through the GitHub plugin.
 - **Nothing has been tested outside Opus 5.** César's criterion is that these skills work in Codex and Gemini; that still has no evidence.
