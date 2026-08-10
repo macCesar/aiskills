@@ -9,8 +9,7 @@ If you are an agent invoked by a user to *use* a skill (e.g. "humanize this text
 - `docs/project/context.md` — architecture, and the parity contract with TiTools
 - `docs/project/status.md` — where the work stands right now
 
-Read `status.md` when resuming work. Do not import it at startup: it changes
-constantly, and loading it invalidates the cached prefix behind it.
+Read `status.md` when resuming work. Do not import it at startup: it changes constantly, and loading it invalidates the cached prefix behind it.
 
 ## What this repo is
 

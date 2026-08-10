@@ -7,8 +7,7 @@ Project-specific instructions for Claude Code sessions working on this repo. The
 - `docs/project/context.md` — architecture, and the parity contract with TiTools
 - `docs/project/status.md` — where the work stands right now
 
-Read `status.md` when resuming work. Do not import it at startup: it changes
-constantly, and loading it invalidates the cached prefix behind it.
+Read `status.md` when resuming work. Do not import it at startup: it changes constantly, and loading it invalidates the cached prefix behind it.
 
 ## What aiskills is
 
@@ -120,10 +119,7 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 
 **A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
 
-`docs/project/context.md` § "Sibling project" carries the full contract: the table of
-what legitimately diverges (TiTools additionally has the `ti-pro` agent, the Knowledge
-Index / `sync`, and a `tiapp.xml` SessionStart hook — this repo has none of those), plus
-a measured per-file comparison. Read it before assuming two files should match.
+`docs/project/context.md` § "Sibling project" carries the full contract: the table of what legitimately diverges (TiTools additionally has the `ti-pro` agent, the Knowledge Index / `sync`, and a `tiapp.xml` SessionStart hook — this repo has none of those), plus a measured per-file comparison. Read it before assuming two files should match.
 
 ### Long-term direction
 

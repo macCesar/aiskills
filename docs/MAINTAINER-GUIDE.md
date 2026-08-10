@@ -24,8 +24,7 @@ Both channels serve the same `skills/` directory.
 5. Push to `main`
 6. Run `npm publish` (for CLI users)
 
-**Plugin users** get the update automatically at next Claude Code startup.
-**CLI users** get the update via `aiskills update` or the auto-update hook.
+**Plugin users** get the update automatically at next Claude Code startup. **CLI users** get the update via `aiskills update` or the auto-update hook.
 
 ---
 
