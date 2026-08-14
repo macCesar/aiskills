@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.19.0] - 2026-08-14
+
 ### Added
 
 - **New skill: `npm-supply-chain`** — the two halves of the registry, both rewritten between November 2025 and July 2026: how a package gets published, and what runs on the machine installing one. Eighth skill in the set; `lib/config.js` `SKILLS`, both plugin manifests, the README table and the skill-count line in `AGENTS.md`, `CLAUDE.md` and `docs/project/context.md` were updated to match.
