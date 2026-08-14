@@ -20,7 +20,7 @@ aiskills ships two things from a single source:
 
 Skills conform to the [agentskills.io specification](https://agentskills.io/specification) so any compatible agent can load them. The CLI itself is ESM Node.js with Commander.js and `ora` spinners.
 
-Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (8 Titanium ones there, 7 general-purpose here) and their slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
+Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (8 Titanium ones there, 8 general-purpose here) and their slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
 
 **When you change shared machinery, port it there in the same session.** The full contract, including the table of what legitimately diverges and a measured per-file comparison, is in [docs/project/context.md](docs/project/context.md) § "Sibling project".
 
@@ -197,7 +197,8 @@ Releases authenticate over trusted publishing (OIDC) from GitHub Actions, so a n
 
 1. Keep total chars ≤ 1024.
 2. If the `description` semantics change meaningfully, update the README row.
-3. Don't add fields the spec doesn't define (`name`, `description`, optional `metadata.*`, `argument-hint`, `allowed-tools` for Claude Code skills).
+3. Don't add fields the spec doesn't define. The [agentskills.io specification](https://agentskills.io/specification) defines exactly six: `name` and `description` (required), plus optional `license`, `compatibility` (max 500 chars, only when the skill has real environment requirements), `metadata` (string→string map) and `allowed-tools` (experimental). `argument-hint` is **not** one of them — it is Claude Code slash-command frontmatter and belongs in `commands/*.md`, not in a `SKILL.md`.
+4. The 1024-character cap is on the `description` field alone, not on the whole frontmatter block. The spec sets no limit on the block, and `name` is separately capped at 64.
 
 ### Don't
 

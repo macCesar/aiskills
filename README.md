@@ -74,6 +74,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 | session-log          | Project      | Convention + 3 A/B rounds            | 2 files         |
 | seo-launch           | Web / SEO    | Head tags, share cards, server files | 5 files         |
+| npm-supply-chain     | npm / CI     | npm and GitHub changelogs, 2025–2026 | 5 files         |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -104,7 +105,7 @@ Example prompts:
 ```
 
 How it works:
-1. **Detect** — reads git status, last tag, existing commits since the tag, version file, `CHANGELOG.md`, `README.md`, and `gh` availability.
+1. **Detect** — reads git status, last tag, existing commits since the tag, version file, `CHANGELOG.md`, `README.md`, `gh` availability, and `.github/workflows/` to see what a pushed tag will set off. Secondary version files count: a repo carrying `.claude-plugin/plugin.json` gets it bumped to the same number in the same commit, because Claude Code compares that field to invalidate its plugin cache and marketplace users otherwise keep running the old code.
 2. **Group the working tree** — reads each modified/untracked file's diff, infers intent, and groups files into N proposed semantic commits (`feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `build`, `ci`). Excludes screenshots in repo root, scratch files, suspicious binaries — and lists them so you can override.
 3. **Infer bump** — across the union of (existing commits since tag) + (proposed semantic commits): `BREAKING CHANGE` / `!:` → major, any `feat:` → minor, otherwise patch. An argument overrides.
 4. **Compose CHANGELOG** — promotes `[Unreleased]` if present, or generates a Keep-a-Changelog entry from the union of all commits being shipped.
@@ -493,6 +494,48 @@ How to invoke it — in whatever words you'd use anyway:
 
 ---
 
+### npm-supply-chain
+
+Both directions of the registry, after everything about them changed between November 2025 and July 2026: how a package gets published, and what happens on the machine installing one.
+
+On the publishing side, the long-lived credential is gone. Classic tokens were removed in November 2025 and revoked in December; `npm login` now opens a **two-hour session** rather than writing a token, which is why publishing by hand asks for credentials every time. The remaining token type caps at 90 days for write access, lost account and package management on 31 July 2026, and loses direct publish around January 2027. The one path without an expiry is **trusted publishing**: GitHub Actions identifies itself to npm with a short-lived OIDC credential, so there is no secret to store and npm attaches provenance to the publish automatically.
+
+On the installing side, **npm v12** turns off three things that used to happen on their own: dependency lifecycle scripts and implicit node-gyp builds, git dependencies, and remote tarballs. The skill covers what breaks, how `npm approve-scripts` works, and why the resulting allowlist gets committed.
+
+`scripts/auditar_npm.py` measures the repo instead of asking about it — standard-library Python, nothing to install, writes nothing:
+
+```bash
+python3 <SKILL_DIR>/scripts/auditar_npm.py            # the repo in the current directory
+python3 <SKILL_DIR>/scripts/auditar_npm.py ~/code/foo
+python3 <SKILL_DIR>/scripts/auditar_npm.py --no-network
+```
+
+It reports tokens sitting in `~/.npmrc` or the project `.npmrc`, Actions secrets that look like npm credentials **and whether any workflow still references them** (one that does not is an orphaned live credential), how each publishing workflow authenticates, `package.json` and `.claude-plugin/plugin.json` versions that have drifted apart, shields.io badges pointing at a package name that does not exist, dependencies that would prompt for approval on npm v12, and the local npm version. Secret *names* are all it reads; a value is never printed.
+
+The badge check earns its place from this repo's own history: three badges asked for `aiskills` while the package publishes as `@maccesar/aiskills`, so shields.io rendered "package not found" instead of an error and the downloads badge hid a real 568/month for months.
+
+| Reference file | Covers |
+| --- | --- |
+| `authentication.md` | the timeline, session-based login, the three token types, the 2FA-bypass phases with dates, the npmjs.com banner, and which paths remain |
+| `trusted-publishing.md` | the publisher form field by field, `id-token: write`, the Node/npm minimums, provenance, the version guard, and the mistakes that break a registration |
+| `install-defaults.md` | npm v12 defaults, `npm approve-scripts`, the committed allowlist, which packages break, and the `ignore-scripts` trap |
+| `migration.md` | the once-per-project procedure in order, what only the package owner can do, and the cleanup the old flow leaves behind |
+| `verification.md` | the command behind each claim — including why `npm view` reports a stale version and what npmjs.com shows when OIDC worked |
+
+`assets/publish.yml` is the workflow template, commented line by line.
+
+How to invoke it — in whatever words you'd use anyway:
+
+```
+"¿por qué me pide login cada vez que publico?"
+"I want to publish from GitHub Actions instead of my laptop"
+"¿qué es esto del bypass 2FA que me sale en npmjs?"
+"npm install stopped running postinstall after I upgraded"
+"cómo quito el NPM_TOKEN de este repo"
+```
+
+---
+
 ## CLI reference
 
 ### aiskills list
@@ -688,18 +731,20 @@ Skills are plain Markdown files. To add a new one:
 
 ### Skill frontmatter format
 
+Only the six fields the [agentskills.io specification](https://agentskills.io/specification) defines: `name` and `description` are required; `license`, `compatibility`, `metadata` and `allowed-tools` are optional. Anything else is ignored by some agents and rejected by others.
+
 ```yaml
 ---
 name: skill-name
-description: >
-  One paragraph describing what this skill does and when to use it.
-when_to_use: >
-  - Bullet list of trigger conditions
-source: "Book title, documentation name, or other authoritative source"
-anti_hallucination_note: >
-  What the AI should NOT do (invent, supplement, guess).
+description: 'What this skill does, the words a user would actually say when they need it, and — after "Not for:" — the neighbouring tasks it should not answer.'
+allowed-tools: Read, Grep, Glob, Bash        # only if the skill needs more than reading
+compatibility: Requires Python 3             # only if it has real environment requirements
 ---
 ```
+
+The `description` is the only part an assistant reads when deciding whether to load the skill, so every trigger belongs in it. A `## When to use` section in the body cannot affect that decision — it loads after the decision was made — and costs context on every invocation.
+
+**The `description` must stay under 1024 characters** and the `name` under 64, both enforced by `test/manifest.test.js`. Past those limits some agents fail to load the skill at all. The block as a whole has no limit, so an optional field costs nothing against the description's budget.
 
 ### Guidelines
 - Every skill must cite a specific source (book, official docs, specification)

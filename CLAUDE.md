@@ -11,7 +11,7 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 
 ## What aiskills is
 
-- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 7 general-purpose AI coding assistant skills (audit-codebase, humaniza, refactoring-ui, seo-launch, session-log, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
+- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 8 general-purpose AI coding assistant skills (audit-codebase, humaniza, npm-supply-chain, refactoring-ui, seo-launch, session-log, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
 - Distribution channels:
   - **npm**: `npm install -g @maccesar/aiskills` then `aiskills install` (works with Claude Code, Gemini CLI, Codex CLI).
   - **Claude Code plugin marketplace**: `/plugin marketplace add macCesar/aiskills` then `/plugin install aiskills@maccesar-aiskills` (Claude Code only).
@@ -98,7 +98,7 @@ Never `execFileSync` — it blocks the Node.js event loop, freezing the spinner 
 The template, in `SKILL.md`:
 
 1. **Step 1 — Open the relevant reference files**: a `| Task involves | Required reading |` table that routes each topic to a specific `references/<file>.md`. Keep one topic per row, granular enough that a typical question loads one reference, not the whole set.
-2. **Step 2 — Output contract**: every cited rule, value, API, or behavior must include `[source: references/<file>.md]`. Show one literal example.
+2. **Step 2 — Output contract**: every cited rule, value, API, or behavior carries `[source: references/<file>.md]` inline. State the reason in the same shared wording all three skills use — a cited value and a remembered one look identical once written, so the citation is the only thing that tells them apart — then show one literal example. The reason is not decoration: an instruction whose purpose the model understands survives the cases the rule never anticipated, which a bare imperative does not.
 3. **Step 3 — FROM_MEMORY fallback**: if the model answers without having read the reference that backs the claim, it must prepend `FROM_MEMORY (unverified):` to that claim. Do not hide it.
 4. **Banned behaviors**: a short bullet list of things the skill must never do (invent values not in references, reproduce source prose verbatim, mix in unrelated doctrines, mark answer complete without listing read references). Give each one its half-sentence of *why*: an instruction the model understands the reason for survives situations the list never anticipated, and a bare prohibition doesn't.
 5. **Anti-Patterns**: a table or bullet list of common mistakes in the domain. **Each anti-pattern should cite `[source: references/<file>.md]`** — same contract Step 2 enforces on responses.
@@ -117,7 +117,7 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 
 ## Parallel project: `TiTools`
 
-`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 8 Titanium skills; here: 6 general-purpose) and the slash commands that drive them (TiTools: `ti-check`, `ti-new-screen`, `ti-audit`; here: `release`).
+`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 8 Titanium skills; here: 8 general-purpose) and the slash commands that drive them (TiTools: `ti-check`, `ti-new-screen`, `ti-audit`; here: `release`).
 
 **A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
 
