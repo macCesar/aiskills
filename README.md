@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![npm](https://img.shields.io/npm/dm/aiskills) ![npm](https://img.shields.io/npm/v/aiskills) ![NPM](https://img.shields.io/npm/l/aiskills)
+![npm](https://img.shields.io/npm/dm/@maccesar/aiskills) ![npm](https://img.shields.io/npm/v/@maccesar/aiskills) ![NPM](https://img.shields.io/npm/l/@maccesar/aiskills)
 
 </div>
 
