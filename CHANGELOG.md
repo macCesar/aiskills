@@ -13,6 +13,16 @@ All notable changes to this project will be documented in this file.
   - **`test/seo-launch.test.js`** is new, and it is the first suite here guarding an executable rather than a document — a broken reference degrades an answer, a broken script fails in front of the user mid-audit. It covers the frontmatter's `allowed-tools`, the `assets/` templates the body names, `py_compile`, the CLI contract, that `CERT_NONE` stays behind `--local`, that `php -l` accepts `head.php`, and `dimensiones()` against PNG, JPEG, WebP VP8L and VP8X headers built byte by byte in the test. That last one is the intricate part of the script and the only pure function in it, so it is the one piece of the audit that can be tested without a network.
   - **The script is invoked as `<SKILL_DIR>/scripts/auditar_seo.py`**, following the convention `stitch-showcase` already established. The working directory during an audit is the user's project, so a relative `scripts/…` resolves to nothing, and the absolute path differs between a marketplace install and an npm one — the skill reads it from the system message rather than assuming either.
 
+### Changed
+
+- **`aiskills list` wraps descriptions to two lines instead of truncating them to one.** The lines align under the description column and size themselves to the terminal width, with a 24-column floor so a narrow window still says something. Two lines is the cap on purpose: past that the text is trigger phrasing written for the agent, not for this screen.
+  - **Every row was printing a stray leading `'`.** The parser matched `description: "…"` but not the single-quoted YAML that all seven skills use — the descriptions contain colons and apostrophes, which is why they are quoted that way — so it fell through to a bare `(.+)` branch that captured the opening quote as part of the text. The same branch stopped at the first newline, so a description written across two lines would have been cut mid-sentence; none is today, but the parser no longer depends on that.
+  - `wrapDescription()` and `parseDescription()` are exported and covered by the new `test/list.test.js`, which is where the two behaviors above are pinned.
+
+### Fixed
+
+- **`aiskills list` printed a stray `'` in front of every description and let the long ones run off the window.** The parser only understood `description: "…"`, and all seven skills are single-quoted, so the opening quote was printed as part of the text; the description was then written unwrapped, so the terminal broke it at column zero and the column stopped lining up. Descriptions are now unquoted — including the doubled apostrophe that single-quoted YAML uses to escape one — wrapped to the terminal's real width, indented to the description column, and capped at two lines with an ellipsis. Two lines is enough to tell what a skill is for; past that the text is trigger material written for the agent, not for this screen, which is why the fix is in the renderer and not in the frontmatter. `test/list.test.js` is new and covers both defects, plus the wrapper's edges: a word wider than the column, a narrow window, and a description written across two lines.
+
 ## [1.17.1] - 2026-08-10
 
 ### Changed
