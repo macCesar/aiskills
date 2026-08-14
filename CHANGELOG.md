@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.18.1] - 2026-08-14
+
+### Fixed
+
+- **The three npm badges in the README asked for a package that does not exist.** They pointed at `aiskills`, while this package publishes as `@maccesar/aiskills` — the unscoped name was unavailable when it first went up — so shields.io rendered "package not found" in all three. The downloads badge had therefore been hiding a real number all along: 568 per month. npmjs.com renders the README of the published version, which is why correcting it needs a release of its own rather than just a push.
+
 ## [1.18.0] - 2026-08-14
 
 ### Added
