@@ -1,6 +1,7 @@
 ---
 name: stitch-showcase
 description: 'Turns Google Stitch design exports (zips holding `code.html` + `screen.png`) into a navigable showcase — gallery, viewer, component catalog — in about three seconds, and enriches it on demand. Use this for anything involving those exports: "organiza mis diseños de Stitch", "arma el muestrario", "organize my Stitch designs", "build the showcase", "tengo los zips de Stitch", "mis exports de Stitch", or a bare path to a folder of design zips. Also for maintaining one that already exists: "optimiza el showcase", "mejora las descripciones", "agrega estas pantallas nuevas", "el cliente pidió otra pantalla", "estandariza los navbars", "make all the footers the same". Not for: Figma or Sketch exports, loose screenshots, redesigning the screens themselves, or building the real app from them.'
+compatibility: Requires Python 3 (standard library only) to extract the zips and build the showcase.
 ---
 
 # stitch-showcase

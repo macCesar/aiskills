@@ -1,6 +1,6 @@
 ---
 name: vscode-extension-dev
-description: 'VS Code extension development grounded in the official Extension API docs. Use this whenever someone is creating, scaffolding, debugging, testing, bundling or publishing a VS Code extension — TreeView, QuickPick, Webview, StatusBar, SecretStorage, Language Server Protocol, Debug Adapter Protocol, notebooks — and also when they never say "extension" but the work clearly is one: editing `package.json` `contributes` / `activationEvents` / `keybindings`, an `activate(context)` function, importing from `vscode`, leaking disposables, `yo code`, `vsce`, `.vscodeignore`, bundling with esbuild, publishing to the Marketplace or Open VSX, Webview CSP/nonce/postMessage, or testing with @vscode/test-electron. Not for: configuring your own editor, Claude Code plugins or MCP servers, or general TypeScript/Node questions with no extension host involved.'
+description: 'VS Code extension development grounded in the official Extension API docs. Use this whenever someone is creating, scaffolding, designing, debugging, testing, bundling or publishing a VS Code extension — TreeView, QuickPick, Webview, StatusBar, commands, configuration, SecretStorage, progress indicators, FileSystemWatcher, Diagnostics, Language Server Protocol, Debug Adapter Protocol, notebooks — and also when they never say "extension" but the work clearly is one: editing `package.json` `contributes` / `activationEvents` / `keybindings`, an `activate(context)` function, importing from `vscode`, leaking disposables, `yo code`, `vsce`, `.vscodeignore`, bundling with esbuild or webpack, publishing to the Marketplace or Open VSX, Webview CSP/nonce/postMessage, or testing with @vscode/test-electron. Not for: configuring your own editor (user settings, keybindings, installing extensions), Claude Code plugins, skills or MCP servers, or general TypeScript/Node questions with no extension host involved.'
 ---
 
 # VS Code Extension Development Skill
@@ -32,9 +32,11 @@ The SKILL.md alone is an **index** of references. The detail you need to give ac
 
 ### Step 2 — Output contract
 
-Every API symbol, configuration key, command, or behavior you cite MUST be backed by a citation in the form:
+Every API symbol, configuration key, command, or behavior you cite carries its citation inline:
 
 `[source: references/<file>.md]`
+
+The citation is what separates a value you read from one that merely sounded right — written down, the two look identical, and the reader has no way to tell them apart. Cite while writing rather than collecting sources at the end, because by then you are reconstructing where something came from instead of recording it.
 
 Example: *"Push all subscriptions to `context.subscriptions` so they are disposed on deactivation [source: references/api-additional.md]"*
 

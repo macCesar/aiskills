@@ -2,6 +2,7 @@
 name: seo-launch
 description: 'Audit and then install everything a site needs to be indexed and to render a proper card when its link is shared: head tags, Open Graph and Twitter card, the 1200x630 og:image, favicon and apple-touch-icon, robots.txt, sitemap.xml, an .htaccess with one canonical domain, JSON-LD, and the Search Console handover. Works on static sites and on Laravel or plain PHP projects. Use when the user says the link shows a grey box with no preview in WhatsApp, asks why Google cannot find the site, is putting a new domain live, or asks for an SEO review, meta tags, og:image, sitemap or robots.txt — even when they never say "SEO". Not for: keyword research, writing the content itself, backlinks, paid ads, or analytics dashboards.'
 allowed-tools: Read, Grep, Glob, Bash, Edit, Write, AskUserQuestion
+compatibility: Requires Python 3 (standard library only) and network access to audit a live site. Stage 2 uses ImageMagick to generate the images.
 ---
 
 # SEO Launch

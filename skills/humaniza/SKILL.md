@@ -2,6 +2,7 @@
 name: humaniza
 description: 'Editor de estilo para textos en español (especialmente es-MX): quita los tics de escritura de IA y devuelve prosa natural, concreta y directa, sin cambiar el contenido. Úsalo siempre que alguien quiera revisar, pulir o reescribir un texto en español —emails, documentación, marketing, soporte, posts, textos técnicos— aunque nunca diga "humanizar": "esto suena a ChatGPT", "quítale lo robótico", "hazlo más natural", "que no parezca IA", "sonó muy acartonado", "límale el tono", "revísame este correo antes de mandarlo". También cuando el texto mismo trae las señales: rayas por todas partes, "no es X, sino Y", "cabe destacar", listas de tres, abridores como "la verdad es que". No es para: traducir, corregir solo ortografía o gramática, escribir un texto desde cero, ni editar textos en inglés.'
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, AskUserQuestion
+compatibility: Requires Python 3 (standard library only) for the pattern checker.
 ---
 
 # Humaniza

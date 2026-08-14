@@ -25,9 +25,11 @@ The SKILL.md alone is an **index** of references. The detail you need to give ac
 
 ### Step 2 — Output contract
 
-Every design recommendation, ratio, value, or rule you cite MUST be backed by a citation in the form:
+Every design recommendation, ratio, value, or rule you cite carries its citation inline:
 
 `[source: references/<file>.md]`
+
+The citation is what separates a value you read from one that merely sounded right — written down, the two look identical, and the reader has no way to tell them apart. Cite while writing rather than collecting sources at the end, because by then you are reconstructing where something came from instead of recording it.
 
 Example: *"Use weight and color, not just font size, to establish hierarchy [source: references/02-page-mechanics.md]"*
 
