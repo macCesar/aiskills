@@ -11,7 +11,7 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 
 ## What aiskills is
 
-- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 6 general-purpose AI coding assistant skills (audit-codebase, humaniza, refactoring-ui, session-log, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
+- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 7 general-purpose AI coding assistant skills (audit-codebase, humaniza, refactoring-ui, seo-launch, session-log, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
 - Distribution channels:
   - **npm**: `npm install -g @maccesar/aiskills` then `aiskills install` (works with Claude Code, Gemini CLI, Codex CLI).
   - **Claude Code plugin marketplace**: `/plugin marketplace add macCesar/aiskills` then `/plugin install aiskills@maccesar-aiskills` (Claude Code only).

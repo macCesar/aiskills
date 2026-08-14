@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **New skill: `seo-launch`** — takes a site from "it is online" to "search engines can find it and the link renders a card when someone shares it". It covers the configuration half of SEO, not the content half: the `<head>` tags, the images the platforms actually fetch, `robots.txt` / `sitemap.xml` / `.htaccess`, the JSON-LD, and the handover to Search Console. Works on static sites and on Laravel or plain PHP. Seventh skill in the set; `lib/config.js` `SKILLS`, both plugin manifests, the README table and the skill-count line in `AGENTS.md`, `CLAUDE.md` and `docs/project/context.md` were updated to match.
+  - **Two stages separated by an explicit authorization**, the same shape as `audit-codebase` and for the same reason: an audit that edits while it looks hands back a list of things it already changed, which is not a diagnosis. Stage 1 writes nothing, including images.
+  - **`scripts/auditar_seo.py`** measures a live URL instead of guessing from the repo. Standard library only, so there is nothing to install. It reads the page once and checks the `<head>` tags and their lengths, the Open Graph block, the Twitter card, the icons, the JSON-LD, `robots.txt`, `sitemap.xml`, the `http→https` and `www→apex` redirects and the response headers — and for the `og:image` it reads the **real dimensions out of the file header**, which is how it catches an image declared as 1200×630 that measures something else. Certificate verification is on by default; `--local` is the explicit opt-out for Herd's `.test` domains, because an unverified response is not evidence of anything.
+  - **Five reference files** (`head-tags`, `images`, `server-files`, `structured-data`, `search-engines`) and four templates in `assets/`: a parameterized `head.php` for static sites, a `social-meta.blade.php` component for Laravel, a commented `.htaccess` and a `robots.txt`.
+  - **`test/seo-launch.test.js`** is new, and it is the first suite here guarding an executable rather than a document — a broken reference degrades an answer, a broken script fails in front of the user mid-audit. It covers the frontmatter's `allowed-tools`, the `assets/` templates the body names, `py_compile`, the CLI contract, that `CERT_NONE` stays behind `--local`, that `php -l` accepts `head.php`, and `dimensiones()` against PNG, JPEG, WebP VP8L and VP8X headers built byte by byte in the test. That last one is the intricate part of the script and the only pure function in it, so it is the one piece of the audit that can be tested without a network.
+  - **The script is invoked as `<SKILL_DIR>/scripts/auditar_seo.py`**, following the convention `stitch-showcase` already established. The working directory during an audit is the user's project, so a relative `scripts/…` resolves to nothing, and the absolute path differs between a marketplace install and an npm one — the skill reads it from the system message rather than assuming either.
+
 ## [1.17.1] - 2026-08-10
 
 ### Changed

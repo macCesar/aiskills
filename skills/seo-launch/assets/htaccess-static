@@ -1,0 +1,86 @@
+# .htaccess for a static site served directly by Apache.
+#
+# Goes in the document root. A Laravel project already ships an .htaccess with
+# the front-controller rewrite: add these blocks to that file, do not replace it.
+#
+# Replace example.com with the real domain in the two RewriteRules below.
+
+# ---------------------------------------------------------------- hidden files
+# Any path starting with a dot returns 404. Defence in depth for the day a
+# deploy tool uploads .vscode/ or .git/ into the document root.
+#
+# The (?!well-known/) exception is NOT optional: AutoSSL renews the certificate
+# by placing a file in /.well-known/acme-challenge/. Without it, validation
+# fails silently and you find out when the certificate expires.
+RedirectMatch 404 /\.(?!well-known/)
+
+# Formats that only exist to work on the site, never to be served.
+<FilesMatch "\.(md|json|lock|yml|yaml|sh|sql|bak|log)$">
+  Require all denied
+</FilesMatch>
+
+# ------------------------------------------------------------ canonical domain
+# Without this, http://, https://www. and https:// all serve the same content
+# with a 200 — duplicate content, with the authority split three ways.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # The double condition is not redundant: behind a proxy or CDN, %{HTTPS} can
+  # arrive off even though the request was secure. Testing only that variable
+  # produces an infinite redirect loop.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://example.com%{REQUEST_URI} [R=301,L]
+
+  # Pick apex or www and stay consistent with the canonical tag and the sitemap.
+  RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
+  RewriteRule ^ https://example.com%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ------------------------------------------------------------------ compression
+# image/svg+xml is the one usually missing from a default config. An SVG is
+# text and compresses enormously.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+    application/javascript application/json image/svg+xml
+</IfModule>
+
+# ----------------------------------------------------------------------- cache
+<IfModule mod_headers.c>
+  # Images and fonts: a year, immutable — the browser will not even ask whether
+  # they changed. What makes this safe is renaming a file when its content does.
+  <FilesMatch "\.(webp|jpe?g|png|gif|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML, CSS and JS: revalidate every time. A stylesheet always named app.css
+  # cannot be cached long — recompile it and returning visitors keep the old one
+  # until it expires, with new classes silently missing and no console error.
+  # This flips only when the build fingerprints filenames (app.4f3a1c.css).
+  <FilesMatch "\.(html|css|js)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # ------------------------------------------------------------------ security
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+  # Content-Security-Policy is deliberately absent. A miscalibrated CSP strips
+  # the site of its styles, and any page with an inline <script> or a
+  # third-party font needs it tuned by hand. Add it once those are self-hosted
+  # and you can test it.
+</IfModule>
+
+# ------------------------------------------------------------------ MIME types
+# An SVG served as text/plain renders blank — including the favicon.
+<IfModule mod_mime.c>
+  AddType image/svg+xml .svg
+  AddType image/webp    .webp
+  AddType application/xml .xml
+</IfModule>
+
+# --------------------------------------------------------------- default files
+DirectoryIndex index.html index.php
+Options -Indexes

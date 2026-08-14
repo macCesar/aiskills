@@ -73,6 +73,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 | session-log          | Project      | Convention + 3 A/B rounds            | 2 files         |
+| seo-launch           | Web / SEO    | Head tags, share cards, server files | 5 files         |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -449,6 +450,46 @@ Anti-patterns `refactoring-ui` guards against:
 - Using `em` units for type scales
 - Using color as the only way to communicate status
 - Using preprocessor `lighten()`/`darken()` to generate color shades
+
+---
+
+### seo-launch
+
+Takes a site from "it's online" to "search engines can find it and the link looks right when someone shares it". It covers the part that is configuration rather than content: the `<head>` tags, the images the platforms actually fetch, the server files, the JSON-LD, and the handover to Search Console.
+
+It runs in two stages, separated by your approval — the same shape as `audit-codebase`, and for the same reason: a tool that edits while it looks hands you a list of things it already changed instead of a diagnosis.
+
+**Stage 1** runs `scripts/auditar_seo.py` against the live URL and reports what is missing, with a severity per finding and the consequence spelled out. The script is standard-library Python, so there is nothing to install. It checks the `<head>` tags and their lengths, the seven Open Graph tags, the Twitter card, the icons, the JSON-LD, `robots.txt`, `sitemap.xml`, the `http→https` and `www→apex` redirects, the response headers, and whether the `og:image` exists — reading its **real dimensions from the file header**, which is how it catches an image declared as 1200×630 that is not.
+
+```bash
+python3 <SKILL_DIR>/scripts/auditar_seo.py https://example.com
+python3 <SKILL_DIR>/scripts/auditar_seo.py https://mysite.test --local   # self-signed Herd certificate
+```
+
+`<SKILL_DIR>` is wherever the skill got installed — `~/.agents/skills/seo-launch` for an npm install, a versioned path under `~/.claude/plugins/cache/` for a marketplace one. The skill reads it from the system message rather than assuming, because the working directory during an audit is your project, not the skill.
+
+Certificate verification is on by default; `--local` is the explicit opt-out for local `.test` domains, because an unverified response is not evidence of anything.
+
+**Stage 2**, once you approve, installs the tags from a parameterized template, generates the images with ImageMagick, writes `robots.txt` / `sitemap.xml` / `.htaccess`, and re-runs the audit against the live site to verify.
+
+| Reference file | Covers |
+| --- | --- |
+| `head-tags.md` | title, description, canonical, robots, the Open Graph block, Twitter card, and why the URLs must be absolute |
+| `images.md` | og:image 1200×630, SVG favicon, apple-touch-icon, and the ImageMagick commands with the decision behind each flag |
+| `server-files.md` | robots.txt, sitemap.xml, .htaccess: canonical domain, compression, split caching, security headers |
+| `structured-data.md` | JSON-LD for LocalBusiness, Organization, Article and BreadcrumbList |
+| `search-engines.md` | Search Console (Domain vs URL prefix), Bing, submitting the sitemap, validators, busting Facebook's cache |
+
+Templates in `assets/`: a parameterized `head.php` for static sites, a `social-meta.blade.php` component for Laravel, a commented `.htaccess`, and a `robots.txt`.
+
+How to invoke it — in whatever words you'd use anyway:
+
+```
+"el enlace sale como cuadro gris cuando lo mando por WhatsApp"
+"why doesn't Google find this site?"
+"vamos a poner el dominio en producción, ¿qué falta?"
+"review the meta tags on this site"
+```
 
 ---
 

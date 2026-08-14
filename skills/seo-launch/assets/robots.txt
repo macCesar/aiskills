@@ -1,0 +1,17 @@
+# robots.txt — goes in the document root, reachable at https://example.com/robots.txt
+#
+# The point of this file here is the Sitemap: line: it is the only standard
+# place to point at the sitemap without submitting it by hand to each engine.
+#
+# It is public. Do not list paths you would rather nobody found — a Disallow
+# reads as a directory of interesting URLs. It keeps polite crawlers out; it is
+# not access control.
+
+User-agent: *
+Allow: /
+
+# Endpoints that are not pages: form handlers, internal APIs, debug routes.
+# Disallow: /send.php
+
+# The URL must be absolute, and must match the canonical domain.
+Sitemap: https://example.com/sitemap.xml
