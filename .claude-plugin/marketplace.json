@@ -4,7 +4,7 @@
     "name": "César Estrada"
   },
   "metadata": {
-    "description": "General-purpose AI coding assistant skills — evidence-based codebase auditing, UI/UX design advice, text humanization, VS Code extension development, design showcase tools, SEO and share-card setup, and per-project working-state notes."
+    "description": "General-purpose AI coding assistant skills — evidence-based codebase auditing, UI/UX design advice, text humanization, VS Code extension development, design showcase tools, SEO and share-card setup, npm publishing and install-time security, and per-project working-state notes."
   },
   "plugins": [
     {
@@ -13,7 +13,7 @@
         "source": "github",
         "repo": "macCesar/aiskills"
       },
-      "description": "General-purpose skills for AI coding assistants: evidence-based codebase audits, Refactoring UI design advice, Spanish text humanizer, VS Code extension development guide, Google Stitch design showcase builder, an SEO and share-card launch auditor, and a per-project working-state convention."
+      "description": "General-purpose skills for AI coding assistants: evidence-based codebase audits, Refactoring UI design advice, Spanish text humanizer, VS Code extension development guide, Google Stitch design showcase builder, an SEO and share-card launch auditor, an npm publishing and supply-chain auditor, and a per-project working-state convention."
     }
   ]
 }
