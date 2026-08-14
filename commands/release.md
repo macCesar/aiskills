@@ -77,6 +77,9 @@ Do all of this **internally**. Do not print a status summary or any "Step 1" hea
    - `*.podspec` → CocoaPods (edit `s.version`)
    - None → **versionless** mode (commit + push + optional tag).
 
+   **Then check for secondary version files.** They accompany the primary one, they do not replace it, and they must reach the **same** number in the **same** commit:
+   - `.claude-plugin/plugin.json` → a Claude Code plugin manifest. Claude Code compares this `"version"` field to decide whether to invalidate its cached copy of the plugin, so a repo that ships both to npm and to a plugin marketplace can publish new code while marketplace users keep running the old one indefinitely. This is not hypothetical: a project shipped 2.6.0 to npm with `plugin.json` still reading 3.0.0, and the marketplace announced a version that did not exist. If the repo also has a CI job that compares the tag against its version files, an unbumped `plugin.json` fails the release outright.
+
 2. **Detect CHANGELOG strategy:** if `CHANGELOG.md` exists and has `## [Unreleased]` → **promote mode**; if exists without it → **generate mode**; if missing → **skip CHANGELOG entirely** (do not create one without asking).
 
 3. **Detect README version references:** grep `README.md` for the current version string and `v\d+\.\d+` badge patterns. Note locations that need updating, or note that none exist.
@@ -143,7 +146,12 @@ Do all of this **internally**. Do not print a status summary or any "Step 1" hea
 
    In `private` mode these flags are **not** raised — tag and GitHub release are skipped by default anyway, so there is nothing to confirm.
 
-9. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below. **Do not** flag "no prior tags" or "no prior releases" as an anomaly on a private repo — in private mode we're not creating either anyway, so it's not a question. On public mode the `first-tag` / `first-release` flags from Step 1.8 are surfaced as their own ⚠️ lines (see Step 4 Part C), not in the generic anomalies list.
+9. **Detect what the pushed tag will trigger.** Read `.github/workflows/*.yml` (if the directory exists) and look for a workflow whose `on:` block includes `push:` with `tags:` matching `v*` **and** whose steps publish (`npm publish`, `gh release`, `cargo publish`, `twine upload`, or similar).
+
+   - **A publishing workflow exists** → Phase 3's `git push origin vX.Y.Z` is not just a label, it **starts a publication**. Hold the workflow's filename for Step 4 and Phase 5; the user is entitled to know that confirming ships the package, not just tags it.
+   - **The project is npm (a `package.json` with a `name` and no `"private": true`) and no such workflow exists** → hold a one-line recommendation for Step 4. Publishing then still requires an interactive `npm login`, which since December 2025 opens a two-hour session rather than writing a durable token. If the `npm-supply-chain` skill is available in this session, name it as the way to set trusted publishing up. **Do not invoke it and do not create the workflow here** — that is a once-per-project migration that also needs the package owner's 2FA on npmjs.com, and it has no business happening in the middle of a release the user is about to confirm.
+
+10. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below. **Do not** flag "no prior tags" or "no prior releases" as an anomaly on a private repo — in private mode we're not creating either anyway, so it's not a question. On public mode the `first-tag` / `first-release` flags from Step 1.8 are surfaced as their own ⚠️ lines (see Step 4 Part C), not in the generic anomalies list.
 
 ---
 
@@ -277,8 +285,10 @@ CHANGELOG entry:
 - ...
 
 README updates (gaps found): <one-line per gap, e.g. "add /release row to Available commands table + new section">  ← omit this line if no gaps
-Release commit: bumps <version-file> A.B.C→X.Y.Z, inserts CHANGELOG section, applies README updates. Subject: `<exact line>`.
+Release commit: bumps <version-file> A.B.C→X.Y.Z (+ <secondary version file> to the same number), inserts CHANGELOG section, applies README updates. Subject: `<exact line>`.
 Push: release commit to <branch>.
+Publishing: pushing the tag triggers `<workflow>.yml`, which publishes to <registry>.   ← include ONLY when Step 1.9 found a tag-triggered publishing workflow; localize to user's language
+Sin publicación automática: este repo publica a mano (`npm login` abre una sesión de dos horas). El skill `npm-supply-chain` monta trusted publishing si te interesa — no lo toco aquí.   ← include ONLY when Step 1.9 found an npm project with no publishing workflow; localize to user's language
 <one of the three rendering modes below — pick by visibility>
    • Public / internal repo: `Tag + GitHub release: vX.Y.Z to <branch> + release with CHANGELOG notes.`
    • Private repo (default): `Repo privado → omitiendo tag y GitHub release. (responde "con tag" si quieres crear el tag de todos modos)` — localize to user's language.
@@ -331,7 +341,7 @@ After Phase 1, the working tree should be clean except for files explicitly list
 
 **Phase 2 — Release commit.**
 
-1. **Bump the version file:**
+1. **Bump the version file** (and every secondary version file found in Step 1.1, to the identical number — `.claude-plugin/plugin.json` with `Edit`):
    - npm: `npm version <patch|minor|major> --no-git-tag-version`
    - tiapp.xml: `Edit` only the **top-level** `<version>` element. Verify no `<module version=...>` matches in your edit.
    - composer.json: `Edit` `"version"` if present; skip if absent.
@@ -345,7 +355,7 @@ After Phase 1, the working tree should be clean except for files explicitly list
    - The documentation gap patches (new command rows, new sections, updated tables) so the README reflects the user-visible surface being shipped in this release.
    - Plus any version badge / install snippet that referenced the old version. Apply with `Edit` per location. Skip only if Step 1.6 found nothing.
 
-4. **Stage exactly the release-commit files** (the bumped version file + lockfile if `npm version` updated it + `CHANGELOG.md` + `README.md` if changed). Use explicit `git add <paths>`, not `git add -A`.
+4. **Stage exactly the release-commit files** (the bumped version file + any secondary version file + lockfile if `npm version` updated it + `CHANGELOG.md` + `README.md` if changed). Use explicit `git add <paths>`, not `git add -A`.
 
 5. **Commit:** `git commit -m "chore(release): vX.Y.Z"` (or the project's release-commit convention).
 
@@ -381,7 +391,15 @@ If `mode=none` (default), skip this phase entirely.
 
 If a Phase 4 step fails, the release itself is already shipped (Phases 1–3 succeeded). Surface the merge/PR failure as a non-fatal note in the final report — do not unwind the release.
 
-**Phase 5 — Final report (one line plus URL).**
+**Phase 5 — Wait for the publish, then report (one line plus URL).**
+
+If Step 1.9 found a tag-triggered publishing workflow and the tag was pushed, the release is not finished when `git push` returns — the workflow is what publishes, and it can still fail on a version guard, on tests, or on a registry credential that was never configured. Wait for it before reporting:
+
+```bash
+gh run watch --exit-status   # or: gh run list --workflow=<workflow>.yml --limit 1
+```
+
+Report its outcome in the final line. If it failed, say so plainly with the reason and the run URL — the commits and the tag are already landed, so this is information, not something to unwind. Skip this entirely when no such workflow exists or `gh` is unavailable.
 
 ```
 ✓ vX.Y.Z → <release URL>
@@ -389,6 +407,8 @@ If a Phase 4 step fails, the release itself is already shipped (Phases 1–3 suc
 ```
 
 The "optional note" only appears if something was non-routine — examples:
+- `published by <workflow>.yml` (when the tag triggered a publish and the run went green)
+- `<workflow>.yml failed: <reason> — <run URL>` (the tag and commits are landed; the publish is not)
 - `merged to main; now on <main-branch>` (when Phase 4 ran successfully with mode=merge; include the new main HEAD short hash)
 - `PR opened: <pr-url>` (when Phase 4 ran with mode=pr)
 - `merge to main aborted: main has diverged — resolve manually`
