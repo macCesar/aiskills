@@ -28,9 +28,11 @@ Every release that ships code or skill changes must bump **BOTH** version files 
 5. Single commit including both bumps.
 6. Tag `vX.Y.Z` pointing at that commit.
 7. Push `main` + push the tag.
-8. `npm publish --access public`.
+8. Nothing by hand — pushing the tag triggers `.github/workflows/publish.yml`, which publishes to npm over trusted publishing (OIDC).
 
-The bundled `/release` slash command automates 2–7 end-to-end. Step 8 (the npm publish) is intentionally manual so the maintainer can confirm the diff before publishing.
+The bundled `/release` slash command automates 2–7 end-to-end, and step 8 then happens on its own once the tag lands. There is no `npm publish` to run and no token stored anywhere: the workflow mints a short-lived OIDC credential that npm verifies against the trusted publisher registered for this package, and npm attaches provenance to the publish as a result. That registration names the workflow by filename, so renaming `publish.yml` breaks publishing until the trusted publisher on npmjs.com is updated to match.
+
+Publishing by hand still works as a fallback, but it is interactive: since December 2025 `npm login` issues a two-hour session rather than a long-lived token, and each `npm publish` then needs a fresh OTP.
 
 ### Why both bumps matter
 
@@ -56,7 +58,7 @@ Marketplace channel facts (not in Anthropic's docs — confirmed by inspecting t
 - The `source` in `marketplace.json` is `{github, repo}` with **no pinned version**, so the update tracks the **default-branch HEAD**, not the latest git tag. It moves to whatever `plugin.json` says at HEAD and **ignores the numeric version of the stale cache** — e.g. a leftover `2.0.0/` cache did not block moving to `1.15.0/`. (This is why the `plugin.json` bump still matters for *end users* whose cache compares versions, but the maintainer's `/plugin marketplace update` always jumps to HEAD.)
 - **Duplicate-symlink cleanup:** while a new skill exists only on npm (not yet in the marketplace cache), `aiskills install` creates a `~/.claude/skills/<skill>` symlink so Claude Code sees it. Once the marketplace cache catches up (after `/plugin marketplace update`) and the user re-runs `aiskills install`, the CLI detects the marketplace now provides it and **removes that symlink** to avoid the "skill conflict" duplicate — leaving it marketplace-only, like the other skills.
 
-**Full post-release sequence to refresh every channel on the maintainer's machine:** `/release` → `npm publish` (manual, 2FA) → `/plugin marketplace update maccesar-aiskills` → `aiskills install` → `/reload-plugins`.
+**Full post-release sequence to refresh every channel on the maintainer's machine:** `/release` (the pushed tag publishes to npm on its own) → `/plugin marketplace update maccesar-aiskills` → `aiskills install` → `/reload-plugins`.
 
 ## Code conventions
 

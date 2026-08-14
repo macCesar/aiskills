@@ -164,17 +164,17 @@ Every release that ships code or skill changes must bump **BOTH** version files 
 5. Single commit including both bumps.
 6. Tag `vX.Y.Z` pointing at that commit.
 7. Push `main` + push the tag.
-8. `npm publish --access public`.
+8. Nothing by hand — pushing the tag triggers `.github/workflows/publish.yml`, which publishes to npm over trusted publishing (OIDC).
 
-The bundled `release` slash command automates steps 2–7 end-to-end (semver bump inference, CHANGELOG update, commit, tag, GitHub release). Use it when releasing from a Claude Code session.
+The bundled `release` slash command automates steps 2–7 end-to-end (semver bump inference, CHANGELOG update, commit, tag, GitHub release). Use it when releasing from a Claude Code session; step 8 then happens on its own once the tag lands.
 
 ### Precedent (do not repeat)
 
 This exact mismatch happened in the sibling repo TiTools: v2.6.0 shipped with `plugin.json` frozen at `3.0.0` (a stale value from a prior feature branch). npm published 2.6.0 but the marketplace announced 3.0.0. Had to sync manually and amend the release. **Always sync before the release commit** — applies here identically.
 
-### npm 2FA and publishing
+### npm authentication
 
-With 2FA enabled, each `npm publish` invocation needs a fresh OTP — even if a prior publish in the same session succeeded. Pass it via `--otp=XXXXXX` or respond to the prompt.
+Releases authenticate over trusted publishing (OIDC) from GitHub Actions, so a normal release needs no token, no OTP and no login. Publishing by hand is the fallback and it is interactive: since December 2025 `npm login` issues a two-hour session rather than a long-lived token, and each `npm publish` then needs a fresh OTP — even if a prior publish in the same session succeeded. Pass it via `--otp=XXXXXX` or respond to the prompt.
 
 ## Common operations
 

@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-08-14
+
 ### Added
 
 - **New skill: `seo-launch`** — takes a site from "it is online" to "search engines can find it and the link renders a card when someone shares it". It covers the configuration half of SEO, not the content half: the `<head>` tags, the images the platforms actually fetch, `robots.txt` / `sitemap.xml` / `.htaccess`, the JSON-LD, and the handover to Search Console. Works on static sites and on Laravel or plain PHP. Seventh skill in the set; `lib/config.js` `SKILLS`, both plugin manifests, the README table and the skill-count line in `AGENTS.md`, `CLAUDE.md` and `docs/project/context.md` were updated to match.
