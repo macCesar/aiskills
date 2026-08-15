@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.20.0] - 2026-08-14
+
+### Changed — `aiskills list` shows the catalog when nothing is installed
+
+The list printed "No skills installed yet." and stopped, so the one moment you most want to see what is on offer — before installing anything — was the one moment it showed nothing. It now always prints the eight skills, marks each ✗ or ✓, and moves the install hint to the footer next to the count. Descriptions for a skill that is not installed come from the copy bundled in this package, so each row says what the skill is for rather than repeating "not installed" eight times. Ported from titools 4.6.1, where the same command had the same early return.
+
+### Added — `ls` as an alias for `list`
+
+`titools list` has accepted `ls` since it shipped and this one never did, for no reason other than nobody added the line.
+
+### Added — Integration coverage for the list command
+
+`list.js` landed in March and went five months with no tests at all. The ones added in August cover `parseDescription` and `wrapDescription` as pure functions — a layer that cannot see a command returning before it ever calls them, which is precisely the bug fixed above. The suite now also runs the binary itself, against a temporary `HOME`, covering both the empty state and one seeded with a `SKILL.md`. The temporary `HOME` is the point: reading the real one is what let the sibling repo's suite pass on a developer machine and fail on a clean CI runner.
+
 ## [1.19.0] - 2026-08-14
 
 ### Added

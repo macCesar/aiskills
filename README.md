@@ -540,10 +540,11 @@ How to invoke it — in whatever words you'd use anyway:
 
 ### aiskills list
 
-Lists all available skills with their descriptions.
+Lists all available skills with their descriptions, marking each one installed (✓) or not (✗). It works before you have installed anything — descriptions for a skill that is not installed come from the copy bundled in this package — so the list doubles as the catalog of what is on offer.
 
 ```bash
 aiskills list
+aiskills ls    # same thing
 ```
 
 ---
