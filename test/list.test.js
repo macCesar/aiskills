@@ -9,10 +9,18 @@
  *     column zero and the description column stopped lining up.
  */
 
-import { test, describe } from 'node:test';
+import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { mkdtemp, rm, mkdir, writeFile } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 
 import { parseDescription, wrapDescription } from '../lib/commands/list.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const binPath = join(resolve(__dirname, '..'), 'bin', 'aiskills.js');
 
 describe('parseDescription', () => {
   test('strips single-quoted YAML, which is what every skill here uses', () => {
@@ -85,5 +93,99 @@ describe('wrapDescription', () => {
   test('a narrow window is clamped to a readable column', () => {
     const lines = wrapDescription('one two three four five six seven eight', 3, 2);
     assert.ok(lines[0].length > 3, 'width is clamped to a readable minimum');
+  });
+});
+
+
+// The unit tests above cover the two pure functions. These run the command
+// itself, which is the layer that caught nothing until `list` was found
+// printing "No skills installed yet." and returning — a regression neither
+// parseDescription nor wrapDescription can see.
+//
+// Every assertion runs against a temporary HOME. Reading the real one would
+// make the result depend on whether this machine happens to have skills
+// installed, which is how the sibling repo's suite passed locally and failed
+// on a clean CI runner.
+describe('list command', () => {
+  let home;
+
+  function run(args) {
+    return new Promise((resolvePromise) => {
+      execFile(
+        process.execPath,
+        [binPath, ...args],
+        { timeout: 15000, env: { ...process.env, HOME: home, USERPROFILE: home } },
+        (error, stdout, stderr) => {
+          resolvePromise({
+            code: error?.code ?? 0,
+            stdout: stdout.toString(),
+            stderr: stderr.toString(),
+          });
+        },
+      );
+    });
+  }
+
+  // Seed an installed skill by writing the SKILL.md `list` reads.
+  async function install(name, description) {
+    const skillDir = join(home, '.agents', 'skills', name);
+    await mkdir(skillDir, { recursive: true });
+    await writeFile(
+      join(skillDir, 'SKILL.md'),
+      `---\nname: ${name}\ndescription: '${description}'\n---\n\n# ${name}\n`,
+      'utf8',
+    );
+  }
+
+  beforeEach(async () => {
+    home = await mkdtemp(join(tmpdir(), 'aiskills-list-'));
+  });
+
+  afterEach(async () => {
+    await rm(home, { recursive: true, force: true });
+  });
+
+  test('prints a skills header', async () => {
+    const result = await run(['list']);
+    assert.equal(result.code, 0);
+    assert.match(result.stdout, /AI Skills/i);
+  });
+
+  test('lists every skill even when none are installed', async () => {
+    const result = await run(['list']);
+    assert.equal(result.code, 0);
+    for (const skill of ['audit-codebase', 'session-log']) {
+      assert.match(result.stdout, new RegExp(skill), `expected skill "${skill}" in list output`);
+    }
+  });
+
+  test('describes a skill that is not installed, from the bundled copy', async () => {
+    const result = await run(['list']);
+    assert.equal(result.code, 0);
+    // The catalog is only useful before installing if it says what each skill
+    // is for, so an uninstalled row must carry more than its own name.
+    const row = result.stdout.split('\n').find((line) => line.includes('audit-codebase'));
+    assert.ok(row, 'expected an audit-codebase row');
+    assert.ok(
+      row.replace('audit-codebase', '').trim().length > 20,
+      `expected a description next to the skill name, got: ${row}`,
+    );
+  });
+
+  test('reports 0 installed and how to install when nothing is there', async () => {
+    const result = await run(['list']);
+    assert.equal(result.code, 0);
+    assert.match(result.stdout, /0\/\d+ installed/);
+    assert.match(result.stdout, /No skills installed yet/i);
+    assert.match(result.stdout, /aiskills install/);
+  });
+
+  test('counts installed skills and points at the directory holding them', async () => {
+    await install('audit-codebase', 'Audit a whole codebase as one unit.');
+    const result = await run(['list']);
+    assert.equal(result.code, 0);
+    assert.match(result.stdout, /1\/\d+ installed/);
+    assert.match(result.stdout, /Audit a whole codebase as one unit/);
+    assert.doesNotMatch(result.stdout, /No skills installed yet/i);
   });
 });
