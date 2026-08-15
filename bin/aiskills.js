@@ -25,6 +25,7 @@ program
 // List command
 program
   .command('list')
+  .alias('ls')
   .description('List available AI skills')
   .action(listCommand);
 

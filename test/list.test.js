@@ -151,6 +151,12 @@ describe('list command', () => {
     assert.match(result.stdout, /AI Skills/i);
   });
 
+  test('aliases to "ls"', async () => {
+    const result = await run(['ls']);
+    assert.equal(result.code, 0);
+    assert.match(result.stdout, /AI Skills/i);
+  });
+
   test('lists every skill even when none are installed', async () => {
     const result = await run(['list']);
     assert.equal(result.code, 0);
