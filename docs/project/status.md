@@ -1,8 +1,44 @@
-# Status — 2026-08-10
+# Status — 2026-08-14
 
-**Phase:** v1.17.0 shipped. No code in flight — the only work since is Markdown formatting across the repo's documentation.
-**Deployed:** npm serves `1.17.0` (verified against the registry), tag `v1.17.0` pushed, `package.json` and `plugin.json` both at `1.17.0`. On César's machine: 6 skills in `~/.agents/skills/` (what Gemini CLI and Codex CLI read), 6 symlinks in `~/.claude/skills/`, marketplace plugin **uninstalled on purpose** — last verified 2026-08-02, not re-checked today.
-**Branch:** `main`, clean at `f61b57c`, **4 commits ahead of `origin/main` and not pushed** — the four documentation commits below.
+**Phase:** v1.20.0 shipped. Nothing in flight.
+**Deployed:** npm serves `1.20.0` — verified with `curl registry.npmjs.org/@maccesar%2Faiskills` → `dist-tags.latest`, not with `npm view`, which served a stale `1.19.0` from its local cache for several minutes after the publish had already succeeded. Tag `v1.20.0` pushed, GitHub release created, `package.json` and `plugin.json` both at `1.20.0`.
+**Branch:** `main`, clean at `2763751`, **0 commits unpushed** (`git log @{u}..HEAD` empty).
+**On César's machine, verified today:** the global CLI is `npm link`-ed to this repo, so `aiskills --version` reports `1.20.0` straight from the working tree. 22 directories in `~/.agents/skills/` (what Gemini CLI and Codex CLI read) including all 8 of this repo's skills, 27 entries in `~/.claude/skills/`. The marketplace plugin is **not** in `enabledPlugins` in `~/.claude/settings.json` — still uninstalled, as intended. No skill content changed in 1.20.0, so the on-disk copies are current.
+
+## Changed 2026-08-14 — `list` parity with titools, and the test layer this repo never had
+
+Released as v1.20.0 in three commits. The trigger was a titools session: the same bug was found there, and `lib/commands/list.js` is shared machinery.
+
+**`aiskills list` printed "No skills installed yet." and returned.** The one moment you most want to see what is on offer — before installing anything — was the one moment the list showed nothing. It now always prints the eight skills with ✗/✓, pulling descriptions for uninstalled ones from the copy bundled in the package (`skills/` ships in the tarball), and moves the install hint to the footer next to the count. The footer drops the directory path when the count is zero, since naming a directory that does not exist yet helped nobody.
+
+**`ls` now aliases `list`.** `titools list` had accepted it since it shipped and this one never did, for no reason other than nobody added the line.
+
+**The integration layer was missing entirely.** `list.js` landed 2026-03-18 and went **five months with no tests at all**. The ones added 2026-08-13 with the wrapping feature cover `parseDescription` and `wrapDescription` as pure functions — a layer that structurally cannot see a command returning before it ever calls them, which is exactly the bug above. Five integration tests were added, plus one for the alias: 111 tests total.
+
+**Every `list` assertion runs against a temporary `HOME`.** This is not incidental. In titools the equivalent tests read the real `HOME`, so they only passed on a machine that already had skills installed — they passed locally and **blocked that repo's v4.6.0 publish** when CI ran them on a runner with none. That release is tagged and was never published. The control that would have caught it is one command, and it now runs before every push in both repos:
+
+```bash
+FAKEHOME=$(mktemp -d) && HOME="$FAKEHOME" npm test; rm -rf "$FAKEHOME"
+```
+
+111/111 under an empty `HOME`, lint clean, verified before pushing.
+
+## Sibling parity as of 2026-08-14
+
+| | aiskills | titools |
+|---|---|---|
+| npm | 1.20.0 | 4.6.1 |
+| Tests | 111 | 140 |
+| `list` shows catalog when nothing installed | yes | yes |
+| Bundled-copy descriptions | yes | yes |
+| `ls` alias | yes | yes |
+| ESLint flat config | yes (predates this session) | added 4.6.0 |
+
+`list.js` is byte-comparable between the repos apart from the product name and the eight vs eight skill sets. The one asymmetry left is deliberate: titools ships the `ti-pro` agent, the Knowledge Index and the `tiapp.xml` SessionStart hook, which have no counterpart here.
+
+## Recorded late — v1.18.0, v1.18.1, v1.19.0 (2026-08-14)
+
+Three releases shipped earlier the same day and are not written up here beyond this line; the CHANGELOG carries them. v1.19.0 added the `npm-supply-chain` skill, which is what documents the `npm view` staleness trap noted at the top of this file.
 
 ## Changed 2026-08-10 — Markdown unwrapped repo-wide, and damage from it undone
 
