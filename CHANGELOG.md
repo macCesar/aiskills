@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.21.0] - 2026-08-17
+
 ### Added — `session-log` records which assistant and model produced the work
 
 Months into a project the four files answered everything except what it was built with, and that turns out to be the question you need when you want to reopen a piece of work by referring back to it. The new `## Which assistant did the work` section adds a provenance table to `context.md` — one row per stretch of work, with the tool, the model and what it produced — plus a `**Session by:**` line in the `status.md` header.

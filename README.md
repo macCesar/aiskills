@@ -324,12 +324,14 @@ The convention:
 
 | File | Holds | Loaded at startup |
 | --- | --- | --- |
-| `status.md` | Where the work stands: half-done things, next step, what's blocked, deployment state | **No** |
+| `status.md` | Where the work stands: half-done things, next step, what's blocked, deployment state, which assistant wrote the note | **No** |
 | `requirements.md` | What the system must do, and the acceptance criterion for each item | Yes |
 | `decisions.md` | What was chosen and why. Append-only, dated | Yes |
-| `context.md` | Documentation map, architecture, conventions, traps | Yes |
+| `context.md` | Documentation map, architecture, conventions, traps, provenance | Yes |
 
 **Why `status.md` is excluded from startup.** Cached context is matched as a prefix — the first byte that differs invalidates everything after it. Status written inside a startup-loaded file means every update throws away the cache for all the stable content behind it. The file you edit most often is the one that must not load at startup.
+
+**It also records what built the project.** Months in, a question comes up that the four files used to leave unanswered: what was this made with? You want to reopen a piece of work by referring back to it, and that only works in the tool that still holds the transcript — a model remembers nothing between sessions, and Codex, Claude Code and Gemini each keep their own history where no other one can read it. So `context.md` gets a provenance table naming the tool, the model and what it produced, and `status.md` gets a line naming what wrote that note. One row per stretch of work, never per session: a row per session would grow without bound inside a startup-loaded file, which is the problem the split above exists to avoid. The model is recorded only as the environment states it — an invented model id reads as verified whether or not anyone checked it.
 
 How to use it — just say it, in whatever words you'd use anyway:
 
