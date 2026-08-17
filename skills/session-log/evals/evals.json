@@ -142,6 +142,38 @@
         "Does not create a docs/project/ inside apps/api or apps/web",
         "Pointer block written into the root AGENTS.md"
       ]
+    },
+    {
+      "id": 9,
+      "name": "which-assistant-built-this",
+      "prompt": "ya no me acuerdo con qué hice este proyecto. si quiero seguirle a la pantalla de pagos, a cuál le pido?",
+      "fixture": "gym-api-provenance",
+      "fixture_spec": "Laravel repo with docs/project/ installed. context.md has a Provenance section with two rows: 2026-06 Codex · gpt-5.6-sol (initial scaffolding, API layer) and 2026-08 Claude Code · Opus 5 (auth rewrite). The payments screen is not named in either row. status.md carries a Session by line naming Claude Code · Opus 5.",
+      "expected_output": "Answers from the provenance table, says which stretch each assistant produced, and is explicit that the payments screen is not attributed in the table rather than guessing — offering git log or the CHANGELOG as the way to narrow it.",
+      "assertions": [
+        "Answers from the provenance table in context.md rather than guessing",
+        "Does not attribute the payments screen to an assistant the table does not attribute it to",
+        "Suggests a checkable source (git log, commit authorship, CHANGELOG) for the part the table cannot answer",
+        "Does not claim that a model remembers the earlier work itself",
+        "Writes nothing — this is a read, not a session close"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "first-session-by-a-new-assistant",
+      "prompt": "cierra la sesión. este proyecto lo empecé con Codex hace como dos meses y hoy fue la primera vez que le meto mano desde aquí",
+      "fixture": "tienda-app-no-provenance",
+      "fixture_spec": "Titanium/Alloy repo with docs/project/ installed and no Provenance section in context.md. Uncommitted work from today: two new controllers and a change to tiapp.xml. git log shows commits from two months ago authored with a Codex co-author trailer, then nothing until today.",
+      "expected_output": "Writes the handoff to status.md with a Session by line, and adds a Provenance section to context.md with a row for Codex (dated from the commit history) and a row for this session's assistant and model as reported by the environment.",
+      "assertions": [
+        "Adds a Provenance section to context.md with a row for the earlier Codex work and a row for this session",
+        "The date for the earlier row comes from the commit history rather than being invented",
+        "Names its own tool and model as the environment reports them, with no invented model id",
+        "status.md gains a Session by line naming the tool that wrote the note",
+        "Does not add one row per session or turn the table into a session log",
+        "The handoff itself still reflects the real uncommitted work (the two controllers and tiapp.xml)",
+        "Does not commit, tag or push"
+      ]
     }
   ]
 }

@@ -10,6 +10,7 @@ Read this when installing the convention in a project or migrating one that keep
 - [Two variants](#two-variants)
 - [Repos that come in pairs](#repos-that-come-in-pairs)
 - [Templates](#templates)
+- [Where each assistant keeps its transcripts](#where-each-assistant-keeps-its-transcripts)
 - [Migrating an existing project](#migrating-an-existing-project)
 - [Sizing](#sizing)
 
@@ -114,6 +115,8 @@ The only file that changes every session. Keep it short enough that someone actu
 # Status — <YYYY-MM-DD>
 
 **Phase:** <proposal · requirements · design · build · testing · live>
+**Session by:** <tool · model that wrote this note — drop the model if you
+                 can't confirm it from the environment>
 **Deployed:** <what's in production and since when — or "nothing yet">
 **Branch:** <branch, and whether it's pushed>
 **Sibling:** <other repo of this same project, and what it's waiting on — omit
@@ -146,7 +149,9 @@ The only file that changes every session. Keep it short enough that someone actu
 
 Absolute dates, never "yesterday" — the file outlives the session that wrote it.
 
-The three header lines exist because they're the questions asked first and answered worst. **Deployed is not the same as committed**: on a project that deploys by file sync, a change can be live and uncommitted, or committed and never uploaded. Write what you know and mark what you don't; a confident wrong answer here sends someone debugging the wrong copy of the code.
+The header lines exist because they're the questions asked first and answered worst. **Deployed is not the same as committed**: on a project that deploys by file sync, a change can be live and uncommitted, or committed and never uploaded. Write what you know and mark what you don't; a confident wrong answer here sends someone debugging the wrong copy of the code.
+
+**Session by** is overwritten every session, on purpose — `git log docs/project/status.md` is the session-by-session history, so nothing needs to pile up here. The lasting record of which assistant produced which stretch of the project is the provenance table in `context.md`.
 
 ### `docs/project/requirements.md`
 
@@ -254,9 +259,30 @@ How the project is put together, and what a newcomer would get wrong on day one.
 
 ## Traps
 - <The thing that cost someone a day, and how to avoid it.>
+
+## Provenance
+| When | Assistant · model | What it produced |
+| --- | --- | --- |
+| <YYYY-MM> | <tool · model, id in backticks if known> | <the stretch of work> |
 ```
 
 The map goes first because it's what someone new needs first: knowing what exists saves them from rewriting it. List every document you found, including the ones that turned out to be stale — marked as stale. A document omitted from the map is a document nobody will open again.
+
+**Provenance goes last** because it's the section consulted least often and the one that most easily turns into noise. One row per stretch of work, not per session: a row per session grows without bound inside an imported file, which is the cache problem this convention exists to avoid. Extend an existing row's date rather than adding a row for the same model doing more of the same thing.
+
+### Where each assistant keeps its transcripts
+
+The provenance table says which tool to go back to. This is where that tool's memory of the work actually sits — and none of them can read another's, which is the whole reason the table is worth keeping.
+
+| Tool | Transcripts |
+| --- | --- |
+| Claude Code | `~/.claude/projects/<absolute-path-with-slashes-as-dashes>/` |
+| Codex | `~/.codex/sessions/<year>/…`, older ones under `~/.codex/archived_sessions/` |
+| Gemini CLI | under `~/.gemini/` |
+
+Check the layout on the machine instead of trusting this table. These are vendor-internal directories, they get reorganized without notice, and a confidently wrong path here sends someone hunting for a history that is sitting somewhere else.
+
+Claude Code's key is the project's **absolute path**, with `/` replaced by `-`. Rename or move the project folder and the slug changes: the old transcripts stay on disk, unreachable, and the project starts again with no history. That is a good reason not to let a chat log be the only record of a decision — and the reason the four files live inside the repo, where they travel with it.
 
 ## Migrating an existing project
 

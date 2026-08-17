@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `session-log` records which assistant and model produced the work
+
+Months into a project the four files answered everything except what it was built with, and that turns out to be the question you need when you want to reopen a piece of work by referring back to it. The new `## Which assistant did the work` section adds a provenance table to `context.md` — one row per stretch of work, with the tool, the model and what it produced — plus a `**Session by:**` line in the `status.md` header.
+
+**The intuition behind the question is wrong in a way that changes the answer, so the skill says so.** A model remembers nothing between sessions; there is no continuity to go back to. What exists is the transcript, stored locally by the tool, and no tool can read another's — verified on disk: Codex keeps its sessions under `~/.codex/sessions/<year>/`, Claude Code under `~/.claude/projects/<slug>/`, Gemini under `~/.gemini/`. So what earns a place in the record is which tool was driving, with the model beside it because the same tool behaves differently across models and the model is what you would choose again. `references/file-layout.md` carries that table, with the warning that these are vendor-internal paths worth checking on the machine rather than trusting — and that Claude Code's slug is the project's **absolute path**, so moving the folder orphans every transcript it has.
+
+**One row per stretch, never per session, and the reason is the same one the whole skill exists for.** `context.md` is imported at startup; a row per session would grow without bound and invalidate the cached prefix on every update. Measured: the table costs 235 bytes with two rows and 73 bytes per row after that, so a project alternating two tools across a couple of years of model releases lands near 750 bytes — against roughly 27 KB a year, thrown away daily, for the session log that was considered and rejected. The `status.md` line is 56 bytes and never grows, because it is overwritten like the rest of that file; `git log docs/project/status.md` is the session-by-session history, so nothing has to accumulate anywhere.
+
+**Two guards, because both failure modes are quiet.** An assistant is a poor witness to its own identity, so the skill says to record what the environment states — a system prompt line, a `--model` flag, a config file — and to name the tool and omit the model when that is not available. An invented model id is worse than an absent one: `gpt-5.6-sol` and `claude-opus-5` read as verified whether or not anyone checked, and months later nobody can tell which. And the table is a workaround, not the fix — needing a transcript to continue means the reasoning lives only in a chat log, on one machine, gone the day the folder moves. That reasoning belongs in `decisions.md`, which is what makes the table a convenience instead of the only way back in.
+
+The rule is anchored to the concept rather than to a phrase. An earlier draft hung it on the literal English "remember when", which only helps a user who says those words; the section now describes the act of reopening work by reference, so it survives the same question asked in any language.
+
+Two eval cases were added: one read-only ("which one do I ask?") and one closing a session where another agent created the project, whose assertions fail an invented model id, an unattributed guess, or a table turned into a session log. Like the other nine, they are written and not run — the fixtures they name are not in this repo.
+
 ## [1.20.0] - 2026-08-14
 
 ### Changed — `aiskills list` shows the catalog when nothing is installed

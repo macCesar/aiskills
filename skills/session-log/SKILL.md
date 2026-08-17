@@ -1,6 +1,6 @@
 ---
 name: session-log
-description: 'The convention that decides WHERE a project keeps its working state, and why part of it must not load at startup. Four fixed files under docs/project/ — status (volatile, never imported), requirements, decisions, context (stable, imported) — plus a pointer written into every context file the repo has, so the notes are findable from Claude Code, Codex or Gemini alike. Use this whenever someone closes a working session or picks one up ("ya me voy, déjame anotado dónde quedé", "where did we leave off?"), asks where project notes should live or why they keep ending up scattered, wonders whether progress and dates belong inside CLAUDE.md / AGENTS.md / GEMINI.md, or wants project tracking set up or migrated — even when they never say "notes" or name this skill. Not for: releases and version bumps, commit messages, CHANGELOG entries, build or deploy status, issue trackers, or a spoken recap the user only wants to read.'
+description: 'The convention that decides WHERE a project keeps its working state, and why part of it must not load at startup. Four fixed files under docs/project/ — status (volatile, never imported), requirements, decisions, context (stable, imported) — plus a pointer written into every context file the repo has, so the notes are findable from Claude Code, Codex or Gemini alike. Use this whenever someone closes a working session or picks one up ("ya me voy, déjame anotado dónde quedé", "where did we leave off?"), asks where project notes should live or why they keep ending up scattered, wonders whether progress and dates belong inside CLAUDE.md / AGENTS.md / GEMINI.md, asks which assistant or model built a project and which one to go back to for a follow-up, or wants project tracking set up or migrated — even when they never say "notes" or name this skill. Not for: releases and version bumps, commit messages, CHANGELOG entries, build or deploy status, issue trackers, or a spoken recap the user only wants to read.'
 ---
 
 # Session Log
@@ -156,6 +156,39 @@ An acceptance criterion is the useful half. "Payments work" isn't checkable; "ch
 
 Proposal, requirements gathering, design — the work is real and it's exactly where people forget where they left off, but there's no diff to verify against. Adapt rather than skip: `requirements.md` and `decisions.md` carry the weight, `status.md` records what the client agreed and what's still open, and verification runs against the artifacts that do exist — a requirement that says "as agreed in the proposal" can be checked against the proposal. Don't create empty files waiting for a phase that hasn't arrived; `references/file-layout.md` covers how to size this down.
 
+## Which assistant did the work
+
+Months into a project a question comes up that none of the four files answers: what was this built with? It matters for a concrete reason — someone wants to reopen a piece of work by referring back to it, the way people refer to a conversation they had, and pick up a detail in the payments screen from last month. That only works in the tool that still holds the transcript.
+
+The intuition behind it is slightly wrong in a way that changes the answer, so it's worth being precise. The model remembers nothing between sessions; there is no continuity to return to. What exists is the **transcript, stored locally by the tool** — Codex keeps its own, Claude Code keeps its own, Gemini keeps its own, and none of them can read another's. So the thing worth recording is which tool was driving, with the model next to it, because the same tool behaves differently across models and the model is what you'd pick again.
+
+That belongs in `context.md`, and it earns a place in a startup-loaded file the same way the rest of that file does: it explains what the code doesn't say. A codebase whose scaffolding came from one assistant and whose auth rewrite came from another has two styles in it for a reason, and knowing that is the difference between "this is inconsistent" and "this had two authors".
+
+One row per **stretch of work**, never per session:
+
+| When | Assistant · model | What it produced |
+| --- | --- | --- |
+| 2026-06 | Codex · gpt-5.6-sol | Initial scaffolding, API layer |
+| 2026-08-17 | Claude Code · Opus 5 (`claude-opus-5`) | Auth rewrite, test suite |
+
+A row per session would grow without end and invalidate the cached prefix on every update — the one failure this convention exists to prevent. Add a row when a new assistant or model touches the project, or when one of them does something substantial enough that you'd want to return to it. Ten sessions of the same model on the same feature is one row whose date extends.
+
+`status.md` carries the volatile half: a `**Session by:**` line naming what wrote that note. It gets overwritten like the rest of the file, and `git log docs/project/status.md` then hands you the session-by-session history for free — which is why nothing has to accumulate anywhere.
+
+### Record what the environment tells you, not what you infer
+
+An assistant is a poor witness to its own identity. The tool name and the model are usually stated somewhere concrete — a line in the system prompt, a `--model` flag, a config file — and that is what to write down. **When you don't have it, name the tool and leave the model out**, or ask.
+
+An invented model id is worse than an absent one, because it reads as something that was checked. `gpt-5.6-sol` and `claude-opus-5` are exactly the kind of string that looks verified whether or not it is, and months later nobody can tell which. Write the commercial name and the id when you have both — commercial names get reused across versions, ids don't — and always the date, which is what makes a wrong guess recoverable.
+
+### If the continuation depends on a transcript, the record failed
+
+The table is a workaround, and mistaking it for the fix is the trap. Needing the original tool's transcript to continue means the reasoning behind that work exists only in a chat log: on one machine, inside one vendor's directory, unsearchable by anyone else and gone the day the project folder moves.
+
+That reasoning belongs in `decisions.md`, and the shape of the work in `context.md`. Do that and the table becomes a convenience — "this part came from Codex, which is why it's structured differently" — instead of the only way back in. A project any assistant can pick up is the goal; the table just says which one has the shortcut.
+
+Where each tool keeps its transcripts, and why Claude Code's are keyed to the project's absolute path — so moving the folder orphans them — is in `references/file-layout.md`.
+
 ## Which job this is
 
 Three jobs share this skill — install the convention, resume work, close a session — and the first has a variant worth catching before you write anything. Which one it is depends on the repo and on whether the person is arriving or leaving, not on how the request was phrased. Look before deciding:
@@ -220,7 +253,7 @@ Three more things belong in `status.md` and are routinely left out:
 - **What's blocked by someone else.** A client who hasn't sent the copy, a store review, a provider whose sandbox is down. These read like pending work but can't be unblocked by working, so mixing them into the technical list makes the list lie about what's actionable.
 - **Which phase the project is in** — proposal, requirements, design, build, testing, live. One line. It tells whoever arrives which of these files matters today.
 
-Update `requirements.md`, `decisions.md` or `context.md` only when something genuinely stable changed: scope moved, a choice was made, a new document appeared. Most sessions change nothing there, and that's normal.
+Update `requirements.md`, `decisions.md` or `context.md` only when something genuinely stable changed: scope moved, a choice was made, a new document appeared, a different assistant or model took over a stretch of the work. Most sessions change nothing there, and that's normal.
 
 **When `status.md` grows, the cause is usually stable content that drifted in.** The test is simple: would this text be the same next week? A test checklist, an acceptance walkthrough, a list of platform-specific gotchas — those don't change between sessions, so they belong in `requirements.md` or `context.md` even though you're using them right now. Being *currently relevant* is not the same as being *volatile*, and confusing the two is how the volatile file ends up carrying half the project.
 
