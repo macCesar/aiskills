@@ -13,7 +13,7 @@
  * Each test builds a throwaway home directory so the real one is never touched.
  */
 
-import { test, describe, before, after } from 'node:test';
+import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -28,11 +28,14 @@ import {
 } from '../lib/claude-plugin.js';
 import { createSkillSymlinks } from '../lib/symlink.js';
 import { installCommands } from '../lib/installer.js';
-import { CLAUDE_PLUGIN_KEY } from '../lib/config.js';
+import {
+  CLAUDE_PLUGIN_KEY,
+  CLAUDE_PLUGIN_MARKETPLACE,
+  CLAUDE_PLUGIN_NAME,
+  COMMANDS,
+} from '../lib/config.js';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-let home;
 
 /** Build a fake home directory; returns its path. */
 function makeHome() {
@@ -49,7 +52,15 @@ function writeSettings(base, { enabled, file = 'settings.json' } = {}) {
 
 /** Populate the plugin cache as Claude Code leaves it. */
 function writePluginCache(base, { skills = [], commands = [], version = '1.16.0' } = {}) {
-  const root = path.join(base, '.claude', 'plugins', 'cache', 'maccesar-aiskills', 'aiskills', version);
+  const root = path.join(
+    base,
+    '.claude',
+    'plugins',
+    'cache',
+    CLAUDE_PLUGIN_MARKETPLACE,
+    CLAUDE_PLUGIN_NAME,
+    version
+  );
   for (const skill of skills) {
     mkdirSync(path.join(root, 'skills', skill), { recursive: true });
   }
@@ -69,14 +80,6 @@ function writeAgentsSkills(base, skills) {
     writeFileSync(path.join(dir, 'SKILL.md'), '---\nname: x\ndescription: y\n---\n');
   }
 }
-
-before(() => {
-  home = makeHome();
-});
-
-after(() => {
-  if (home) rmSync(home, { recursive: true, force: true });
-});
 
 describe('isClaudePluginEnabled', () => {
   test('false when no settings file exists', () => {
@@ -212,8 +215,11 @@ describe('installCommands', () => {
   test('installs the command when the plugin is not enabled', async () => {
     const base = makeHome();
     const result = await installCommands(REPO_ROOT, base);
-    assert.ok(result.installed.includes('release'));
-    assert.ok(existsSync(path.join(base, '.claude', 'commands', 'release.md')));
+    assert.deepEqual(result.installed, COMMANDS);
+    assert.deepEqual(result.failed, []);
+    for (const command of COMMANDS) {
+      assert.ok(existsSync(path.join(base, '.claude', 'commands', `${command}.md`)));
+    }
     rmSync(base, { recursive: true, force: true });
   });
 
