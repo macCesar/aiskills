@@ -48,7 +48,7 @@ The sibling repo TiTools shipped v2.6.0 with `plugin.json` frozen at `3.0.0` (pr
 
 `npm publish` is **not** the whole story. A release reaches users through two independent channels, and `npm publish` only feeds one of them. Confirmed empirically when shipping `audit-codebase`:
 
-- **npm channel** (`~/.agents/skills/`) — used by Gemini CLI, Codex CLI, and Claude Code via symlink. Updated by `npm update -g @maccesar/aiskills` (for end users) then **one** of `aiskills update` / `aiskills install` (not both — `update` already re-syncs skills). The maintainer's own CLI is `npm link`-ed to this repo, so on the maintainer's machine `aiskills install` reads straight from the dev repo — `npm publish` is only for *other* npm users, not to refresh the maintainer's own box.
+- **npm channel** (`~/.agents/skills/`) — used by Gemini CLI, Codex CLI, and Claude Code via symlink. Updated by `npm update -g @maccesar/aiskills` (for end users) then **one** of `aiskills update` / `aiskills install` (not both — `update` already re-syncs skills). The maintainer's own CLI is `npm link`-ed to this repo: the first `aiskills install` symlinks each canonical skill directory to the checkout, so later edits and new references are visible immediately without another install. `npm publish` only refreshes other users.
 - **Marketplace channel** (`~/.claude/plugins/cache/maccesar-aiskills/`) — used by Claude Code plugin installs (`aiskills:<skill>` prefix). **`npm publish` does nothing here.** It updates only inside Claude Code.
 
 Marketplace channel facts (not in Anthropic's docs — confirmed by inspecting the cache):

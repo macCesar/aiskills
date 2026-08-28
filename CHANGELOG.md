@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — `npm link` now makes skill development live
+
+When the CLI resolves to a checkout containing `.git`, `aiskills install` now symlinks each complete skill directory into `~/.agents/skills/` instead of copying it. After the first install, edits and new reference files are visible immediately. Normal published npm installs keep the existing copy behavior. Two installer tests guard both modes; this is the shared fix introduced in TiTools 4.16.2.
+
 ## [1.21.0] - 2026-08-17
 
 ### Added — `session-log` records which assistant and model produced the work

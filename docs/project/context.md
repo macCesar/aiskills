@@ -19,6 +19,8 @@ hooks/hooks.json
 test/                   node:test suites
 ```
 
+`~/.agents/skills/` is the canonical install path. A published npm package copies skills there; when the CLI resolves to a development checkout containing `.git`, it symlinks each whole skill directory instead. After one `aiskills install`, an `npm link` maintainer sees edits and new reference files immediately. Claude Code's platform mirror then points at the same canonical entry.
+
 ## Sibling project — `TiTools`
 
 **Location:** `~/Developer/openSource/TiTools` — npm package `@maccesar/titools`, GitHub `macCesar/titools`, marketplace `titools@maccesar-titools`.
