@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.21.1] - 2026-08-28
+
 ### Fixed — `npm link` now makes skill development live
 
 When the CLI resolves to a checkout containing `.git`, `aiskills install` now symlinks each complete skill directory into `~/.agents/skills/` instead of copying it. After the first install, edits and new reference files are visible immediately. Normal published npm installs keep the existing copy behavior. Two installer tests guard both modes; this is the shared fix introduced in TiTools 4.16.2.
@@ -13,6 +15,8 @@ When the CLI resolves to a checkout containing `.git`, `aiskills install` now sy
 The interactive skills command no longer reports `0/8 skills linked` when an enabled Claude marketplace plugin correctly serves all eight skills and the CLI intentionally removes their duplicate mirrors. `aiskills doctor` now applies the same rule to `/release`: it verifies the local command when npm provides it, accepts its intentional absence when the plugin provides it, and reports a genuinely missing command.
 
 The shared configuration default export now exposes the same generic path and Claude-plugin helpers as TiTools. Both sibling repos carry the same regression test for that public surface and for the downloader's npm-version function, so future engine drift fails in CI instead of surviving as a quiet difference.
+
+Python bytecode generated while running the skill-script tests is now excluded explicitly from the npm `files` allowlist. Previous dry runs included local `__pycache__/*.pyc` files despite the repository `.gitignore`; the package now contains only the portable script sources.
 
 ## [1.21.0] - 2026-08-17
 
