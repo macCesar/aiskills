@@ -8,7 +8,7 @@
 
 `aiskills` is a toolkit of curated skills for AI coding assistants. It provides skill files for Claude Code, Gemini CLI, or Codex CLI.
 
-Each skill is a small knowledge package: a `SKILL.md` file with YAML frontmatter plus a set of reference files. When a prompt matches the skill, the assistant reads those files and answers from the source material.
+Each skill is a small knowledge package: a `SKILL.md` file with YAML frontmatter plus optional references, scripts, and invocation policy. Most activate when a prompt matches; sensitive workflows such as `release` can require explicit invocation.
 
 ---
 
@@ -73,6 +73,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 | session-log          | Project      | Convention + 3 A/B rounds            | 2 files         |
+| release              | Publishing   | Portable, confirmation-gated workflow | 1 file          |
 | seo-launch           | Web / SEO    | Head tags, share cards, server files | 5 files         |
 | npm-supply-chain     | npm / CI     | npm and GitHub changelogs, 2025–2026 | 5 files         |
 
@@ -80,20 +81,22 @@ Use `aiskills list` to see available skills from the command line. Pull requests
 
 ---
 
-## Available commands
-
-Slash commands are Claude Code-only. They ship with the plugin (Option A). The CLI distribution (Option B) installs skills only.
-
-| Command    | Purpose                                                                        |
-| ---------- | ------------------------------------------------------------------------------ |
-| `/release` | Full release workflow: detect project, bump semver, update CHANGELOG + README, commit, push, tag, GitHub release |
-
-### /release
+## Explicit-only release skill
 
 End-to-end release janitor that works across project types: npm, Titanium (`tiapp.xml`), Composer, Cargo, CocoaPods, or versionless (git-tag-only) repos. **Designed for a dirty working tree** — it groups your uncommitted work into semantic commits, then ships the release on top.
 
+Unlike the other skills, `release` is never supposed to activate merely because a repository looks ready. Name it explicitly:
+
+| Platform | Invocation |
+| --- | --- |
+| Claude Code | `/release [patch\|minor\|major]` |
+| Codex CLI | `$release [patch\|minor\|major]` |
+| Gemini CLI | `Use the release skill [with a patch\|minor\|major bump]` |
+
+Codex carries platform-specific metadata that disables implicit invocation. Claude Code has its own equivalent frontmatter field, but adding it to this universal `SKILL.md` makes Codex reject the skill; the common body therefore enforces the boundary for Claude and Gemini: the prompt must name `release` before the workflow may proceed. Gemini still asks for activation consent. Every platform then stops again at the release plan and requires a second explicit confirmation before any mutation.
+
 When to use it:
-- You have weeks of work in the working tree (with maybe a few interim commits you made along the way) and want one command to clean everything into proper semantic commits and ship a release.
+- You have weeks of work in the working tree (with maybe a few interim commits you made along the way) and want one workflow to clean everything into proper semantic commits and ship a release.
 - You maintain `CHANGELOG.md` in Keep-a-Changelog format and want the `[Unreleased]` section promoted automatically.
 - You want the bump level inferred from Conventional Commits across both your existing commits and the proposed new ones, with the option to override.
 
@@ -101,7 +104,8 @@ Example prompts:
 ```
 /release
 /release minor
-/release major
+$release major
+Use the release skill with a patch bump
 ```
 
 How it works:
@@ -128,15 +132,16 @@ Language policy (two independent axes):
 Hard restrictions:
 - Never `--force-push`, `--amend` published commits, or `--no-verify`.
 - Aborts on merge conflicts or rebase-in-progress.
-- Asks before creating the **first** tag on `main` / `master`.
+- Warns before creating the first tag or GitHub release in a public/internal repository.
 - Skips push / tag / release gracefully when the repo has no remote or `gh` is not installed.
 
 Distribution note:
-- Available via the plugin install (Option A above). Slash commands are not distributed by the npm CLI (Option B) because they are a Claude Code feature.
+- The release workflow now ships through both installation options as one Agent Skill. The former Claude-only `commands/release.md` is removed automatically on the next `aiskills update` or `aiskills install`.
+- If npm updates before an enabled Claude marketplace cache, the CLI keeps the old plugin command as the temporary `/release` provider and suppresses the new same-name mirror rather than creating a duplicate. Refresh with `/plugin marketplace update maccesar-aiskills`, run `aiskills install`, then `/reload-plugins` to finish the handoff to the skill.
 
 ## How skills work
 
-Skills activate based on what you ask. You can write prompts normally:
+Most skills activate based on what you ask. You can write prompts normally:
 
 ```
 "How do I create better visual hierarchy in this UI?"
@@ -146,7 +151,7 @@ Skills activate based on what you ask. You can write prompts normally:
 
 The assistant reads the skill's `SKILL.md`, checks whether the request fits, and then loads the reference files for that skill. That keeps the answer tied to the source material.
 
-You do not need to name a skill explicitly, though you still can if you want to force a specific one.
+You do not normally need to name a skill explicitly. `release` is the deliberate exception because it can commit, tag, push, and publish; invoke it using the platform-specific form documented above.
 
 ---
 

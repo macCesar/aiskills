@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.22.0] - 2026-08-29
+
+### Added — `release` is now an explicit-only, cross-agent skill
+
+The 435-line Claude-only slash command is now one portable `release` skill shared by Claude Code, Codex CLI, and Gemini CLI. Its entry point keeps the authorization boundary small and loads the full workflow from `references/workflow.md` only after explicit invocation. The workflow no longer depends on Claude command interpolation: every repository fact is gathered with ordinary read-only checks, and an optional `patch`, `minor`, or `major` override is read from the user's invocation.
+
+Explicit-only means two independent gates. Codex receives `policy.allow_implicit_invocation: false` in `agents/openai.yaml`. Claude Code has a proprietary `disable-model-invocation` field, but a real Codex 0.151 discovery probe proved that placing it in the universal `SKILL.md` makes Codex discard the skill completely; the portable body therefore refuses to proceed in Claude or Gemini unless the prompt names `release`, and Gemini still presents its own activation-consent prompt. Across all three, invoking the skill authorizes only the read-only analysis and Step 4 plan; a second explicit confirmation remains mandatory before any commit, tag, push, release, merge, pull request, or publication.
+
+The CLI now installs `release` with the other skills through `~/.agents/skills/`, so npm users on Claude, Gemini, and Codex all receive it. The old `commands/release.md` is listed in `LEGACY_COMMANDS`, which removes stale Claude-only copies during the next install or update instead of leaving two workflows with the same name. If the enabled marketplace cache is still on the prior version and therefore provides the old `/release` command, the symlink layer treats it as the temporary provider and does not add a conflicting same-name skill mirror; `doctor` applies the same rule until the marketplace refresh lands. README, plugin marketplace copy, maintainer guidance, sibling-context documentation, and regression tests now describe and guard the migration.
+
+### Fixed — zero-command products report a real doctor status
+
+With AISkills no longer carrying an active Claude-only command, `doctor` would otherwise render the nonsensical “all 0 served by the marketplace plugin.” It now reports that no slash commands are active because workflows ship as cross-agent skills. The same shared CORE port also prevents command-to-skill migrations from creating duplicate Claude entries while an older enabled marketplace cache still exposes the command. Both behaviors and their regression coverage were ported to TiTools in this session.
+
+### Changed — sibling CLI CORE parity is now a repository requirement
+
+Shared CLI CORE synchronization with TiTools is now an explicit accepted requirement rather than informal guidance. `docs/project/requirements.md` defines the boundary, and maintainer context records that changes to common CLI behavior, installer/symlink mechanics, diagnostics, shared tests, manifest wiring, or release mechanics must be ported and verified in both siblings in the same session.
+
 ## [1.21.1] - 2026-08-28
 
 ### Fixed — `npm link` now makes skill development live

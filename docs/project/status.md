@@ -1,32 +1,36 @@
-# Status — 2026-08-28
+# Status — 2026-08-29
 
-**Phase:** live and maintained
+**Phase:** v1.22.0 shipped; live and maintained
 **Session by:** Codex
-**Deployed:** `@maccesar/aiskills@1.21.1` is published; tag `v1.21.1`, GitHub Release, marketplace version on `main`, and the OIDC publish workflow were verified.
-**Branch:** `main`; this documentation handoff is to be committed locally and left unpushed for the next update.
-**Sibling:** `../TiTools` — the same shared-CORE invariant is recorded there in the same session.
+**Deployed:** `@maccesar/aiskills@1.22.0`, tag `v1.22.0`, GitHub Release, marketplace version on `main`, and the OIDC publish workflow were verified during the release.
+**Branch:** `main`; the sibling-parity requirement, release-skill migration, and release metadata are published.
+**Sibling:** `../TiTools` — the shared zero-command diagnostics and command-to-skill migration handling introduced here were ported there and verified in the same session.
 
 ## Where things stand
 
-The live `npm link` installer behavior, marketplace diagnostics, shared public API alignment, and Python-bytecode tarball exclusion are already released as 1.21.1. This session changed no executable code: it installed `requirements.md` and converted sibling synchronization from guidance into a permanent, testable engineering requirement.
+The former Claude-only `commands/release.md` is now the cross-agent `skills/release/` package. Codex carries a native explicit-only invocation policy; Claude and Gemini use the portable body's mandatory name gate because Claude's proprietary frontmatter extension makes Codex reject the skill. Gemini CLI successfully discovers the standard skill. The workflow stops at its confirmation plan before any external mutation.
+
+The CLI catalog installs nine skills and marks the old `release` command as legacy so the next install/update removes stale Claude copies. README, marketplace copy, maintainer documentation, CHANGELOG, tests, and the actual npm tarball surface all reflect the migration.
 
 ## In flight
 
-- Nothing. The documentation commit is intentionally being held for the next AISkills update rather than triggering another patch release.
+- Nothing. The migration and both shared-CORE safeguards are released.
 
 ## Requirements
 
-- R1 requires every shared-CORE change to be ported to TiTools in the same working session, with both repos verified independently. Intentional differences must already be listed in `context.md` or recorded as a decision.
+- R1 remains satisfied: the zero-active-commands branch and same-name command-to-skill migration handling exist in both sibling repos with matching regression coverage.
+- `release` remains explicit-only and requires a second confirmation after the plan before commit, tag, push, publication, merge, or pull request.
 
 ## Next step
 
-Include this local documentation commit in the next AISkills update. Before changing shared CLI machinery, inspect the equivalent TiTools implementation and finish the session with both repos synchronized.
+Refresh the maintainer's Claude marketplace cache with `/plugin marketplace update maccesar-aiskills`, run `aiskills install`, then `/reload-plugins` so the old command-to-skill handoff completes locally.
 
 ## Verified vs. assumed
 
-- Verified: v1.21.1 release and npm publication succeeded; the current full suite passed 115/115 with lint clean; `aiskills doctor` reported no issues; all 8 canonical and Claude skill links resolved to this checkout; the documentation diff passes `git diff --check`.
-- Assumed: none for this documentation-only handoff.
+- Verified: AISkills tests pass 121/121 and lint is clean; the focused manifest suite passes 57/57; `git diff --check` is clean; `npm pack --dry-run` includes all three `skills/release/` files and excludes `commands/release.md`; Gemini CLI 0.56.0 discovers the skill; Codex 0.151 rejects the Claude-only frontmatter extension and accepts the standards-only entry point; an isolated `doctor` run reports the zero-command state correctly.
+- Verified: TiTools tests pass 346/346 and lint is clean after the shared CORE port.
+- Verified during release: `main`, tag `v1.22.0`, GitHub Release, and npm `1.22.0` all resolve to the published release.
 
 ## Known pending
 
-- Push and release this documentation commit as part of the next AISkills update; do not create a standalone version, tag, or release for it.
+- TiTools: carry its small diagnostics/symlink parity patch in the next appropriate release; it does not change current behavior while TiTools has active, non-overlapping slash commands.
