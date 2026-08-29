@@ -6,6 +6,7 @@ If you are an agent invoked by a user to *use* a skill (e.g. "humanize this text
 
 ## Project state
 
+- `docs/project/requirements.md` — what the system must do
 - `docs/project/context.md` — architecture, and the parity contract with TiTools
 - `docs/project/status.md` — where the work stands right now
 
@@ -15,12 +16,12 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 
 aiskills ships two things from a single source:
 
-1. **An npm CLI** (`@maccesar/aiskills`) that installs and updates general-purpose AI coding assistant skills into `~/.agents/skills/` (universal) plus per-agent symlinks for Claude Code and Gemini CLI. Codex CLI auto-discovers `~/.agents/skills/` directly, so no Codex symlink is created.
+1. **An npm CLI** (`@maccesar/aiskills`) that installs and updates general-purpose AI coding assistant skills into `~/.agents/skills/` (universal) plus mirror symlinks for Claude Code. Gemini CLI and Codex CLI read the universal path directly.
 2. **A Claude Code plugin marketplace** (`aiskills@maccesar-aiskills`) that exposes the same content plus slash commands as a plugin via `/plugin marketplace add macCesar/aiskills`.
 
 Skills conform to the [agentskills.io specification](https://agentskills.io/specification) so any compatible agent can load them. The CLI itself is ESM Node.js with Commander.js and `ora` spinners.
 
-Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (8 Titanium ones there, 8 general-purpose here) and their slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
+Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (9 Titanium ones there, 8 general-purpose here) and their slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
 
 **When you change shared machinery, port it there in the same session.** The full contract, including the table of what legitimately diverges and a measured per-file comparison, is in [docs/project/context.md](docs/project/context.md) § "Sibling project".
 

@@ -4,6 +4,7 @@ Project-specific instructions for Claude Code sessions working on this repo. The
 
 ## Project state
 
+- `docs/project/requirements.md` — what the system must do
 - `docs/project/context.md` — architecture, and the parity contract with TiTools
 - `docs/project/status.md` — where the work stands right now
 
@@ -117,7 +118,7 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 
 ## Parallel project: `TiTools`
 
-`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 8 Titanium skills; here: 8 general-purpose) and the slash commands that drive them (TiTools: `ti-check`, `ti-new-screen`, `ti-audit`; here: `release`).
+`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 9 Titanium skills; here: 8 general-purpose) and the slash commands that drive them (TiTools: `ti-check`, `ti-new-screen`, `ti-audit`; here: `release`).
 
 **A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
 
