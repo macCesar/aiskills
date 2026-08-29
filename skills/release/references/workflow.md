@@ -1,39 +1,46 @@
----
-allowed-tools: Bash(git:*), Bash(gh:*), Bash(npm version:*), Bash(npm pkg:*), Bash(cat:*), Bash(grep:*), Bash(test:*), Read, Edit, Write, Glob, Grep
-description: Full release workflow — detect project, infer semver bump, update CHANGELOG+README, commit, push. Public repos get a tag + GitHub release (asks before the first ever tag or release); private repos skip both by default.
-argument-hint: [patch|minor|major] (optional; inferred from semantic commits if omitted)
----
+# Release workflow
 
-## Context (read-only — collected automatically)
+<!-- TOC-START -->
+## Contents
 
-- Working tree status: !`git status --porcelain`
-- Current branch: !`git branch --show-current`
-- Last tag: !`git describe --tags --abbrev=0 2>/dev/null || echo "<no tags>"`
-- Commits since last tag: !`git log --pretty=format:"%h %s" $(git describe --tags --abbrev=0 2>/dev/null)..HEAD 2>/dev/null || git log --pretty=format:"%h %s"`
-- Remote URL: !`git remote get-url origin 2>/dev/null || echo "<no remote>"`
-- Recent commit style: !`git log --pretty=format:"%s" -20`
-- Has gh CLI: !`command -v gh >/dev/null 2>&1 && echo "yes" || echo "no"`
-- Repo visibility (GitHub only): !`gh repo view --json visibility -q .visibility 2>/dev/null || echo "<unknown>"`
-- Versioned files present:
-  - package.json: !`test -f package.json && echo "yes" || echo "no"`
-  - tiapp.xml: !`test -f tiapp.xml && echo "yes" || echo "no"`
-  - composer.json: !`test -f composer.json && echo "yes" || echo "no"`
-  - Cargo.toml: !`test -f Cargo.toml && echo "yes" || echo "no"`
-  - podspec: !`ls *.podspec 2>/dev/null | head -1 || echo "<none>"`
-- CHANGELOG.md present: !`test -f CHANGELOG.md && echo "yes" || echo "no"`
-- README.md present: !`test -f README.md && echo "yes" || echo "no"`
+- [Read-only context to collect](#read-only-context-to-collect)
+- [Your task](#your-task)
+  - [What this skill actually does (read this first)](#what-this-skill-actually-does-read-this-first)
+  - [Verbosity discipline](#verbosity-discipline)
+  - [Step 0 — Lock interaction language (do this BEFORE printing anything)](#step-0--lock-interaction-language-do-this-before-printing-anything)
+  - [Step 1 — Establish state (silent)](#step-1--establish-state-silent)
+  - [Step 2 — Infer the bump (silent)](#step-2--infer-the-bump-silent)
+  - [Step 3 — Compose the CHANGELOG entry (silent)](#step-3--compose-the-changelog-entry-silent)
+  - [Language policy (applies to Steps 1–5)](#language-policy-applies-to-steps-15)
+  - [Step 4 — Present the plan in ONE block and STOP](#step-4--present-the-plan-in-one-block-and-stop)
+  - [Step 5 — Execute (silent until done)](#step-5--execute-silent-until-done)
+- [Hard restrictions (never violate)](#hard-restrictions-never-violate)
 
-## Arguments
+<!-- TOC-END -->
 
-`$ARGUMENTS` may contain `patch`, `minor`, or `major` to override the inferred bump. If empty, infer from the commits above.
+## Read-only context to collect
+
+Collect this state with read-only tools before planning anything:
+
+- Working tree status: `git status --porcelain`
+- Current branch: `git branch --show-current`
+- Last tag: `git describe --tags --abbrev=0`
+- Commits since the last tag, or the full log when no tag exists
+- Remote URL and primary branch
+- Recent commit subjects and conventions
+- Whether `gh` is installed and, for GitHub remotes, repository visibility
+- Presence of `package.json`, `tiapp.xml`, `composer.json`, `Cargo.toml`, a root `*.podspec`, `CHANGELOG.md`, and `README.md`
+- Merge or rebase state and unresolved conflicts
+
+The explicit invocation may include `patch`, `minor`, or `major` to override the inferred bump. If none is present, infer it from the work being released.
 
 ## Your task
 
 Execute the **release workflow** in five strict, ordered steps. **Do not skip Step 4** — it is the user's confirmation gate and is non-negotiable.
 
-### What this command actually does (read this first)
+### What this skill actually does (read this first)
 
-`/release` is **not** "make a release commit from already-staged work". It is the full janitor: it takes a project that has been worked on without commits (or with mixed work + a release intent) and turns it into a clean, shipped release.
+The release skill is **not** "make a release commit from already-staged work". It is the full janitor: it takes a project that has been worked on without commits (or with mixed work + a release intent) and turns it into a clean, shipped release.
 
 **Working tree dirty is the expected starting state, not an anomaly.** When the user invokes `/release` with 12 modified files since the last tag, what they want is:
 
@@ -55,9 +62,9 @@ If the working tree is **completely empty** AND there are zero commits since the
 
 ### Step 0 — Lock interaction language (do this BEFORE printing anything)
 
-Before you produce any user-facing output, scan the user's last 1–3 messages in this conversation and determine their language. **This file is in English for distribution; that does not mean you respond in English.** Lock that detected language and use it for **every** message you print to the user from this point until the command ends — Step 1 summary, Step 2 inferred bump, Step 4 plan preview, Step 5 progress, errors, final report.
+Before you produce any user-facing output, scan the user's last 1–3 messages in this conversation and determine their language. **This file is in English for distribution; that does not mean you respond in English.** Lock that detected language and use it for every message you print to the user until the skill ends: the Step 4 plan, errors, and final report.
 
-If the user has not yet said anything in this session (rare — `/release` invoked as the very first message), default to the language of the repo's `README.md`. If that is also unclear, default to English.
+If the user has not yet said anything in this session (rare when the skill is invoked as the first message), default to the language of the repo's `README.md`. If that is also unclear, default to English.
 
 If the user switches language mid-flow, switch with them on the next message.
 
@@ -168,7 +175,7 @@ Apply Conventional Commits rules across that combined set:
 - Any `feat:` (no breaking) → **minor**
 - Otherwise → **patch**
 
-`$ARGUMENTS` (`patch` / `minor` / `major`) overrides the inference.
+An explicit invocation override (`patch` / `minor` / `major`) takes precedence over the inference.
 
 If there are zero existing commits AND zero proposed commits AND the working tree is clean → abort: "Nothing to release."
 
@@ -208,7 +215,7 @@ There are **two independent language axes**. Do not mix them.
 
 #### Axis 1 — Interaction language (your conversation with the user)
 
-**Always match the user's language.** Detect from the user's last 1–3 messages in this conversation — not from this command file (which is in English for distribution), and not from the project files. If the user has been speaking Spanish, every status summary, plan preview, confirmation prompt, error message, and final report you print **must be in Spanish**. If the user switches mid-flow, switch with them.
+**Always match the user's language.** Detect from the user's last 1–3 messages in this conversation — not from this workflow file (which is in English for distribution), and not from the project files. If the user has been speaking Spanish, every plan preview, confirmation prompt, error message, and final report you print **must be in Spanish**. If the user switches mid-flow, switch with them.
 
 This is about what the user **reads on screen**. It does **not** affect what gets written to disk or to GitHub.
 
@@ -222,7 +229,7 @@ This is about what the user **reads on screen**. It does **not** affect what get
 2. Classify the prose: Spanish, English, or other.
 3. Tie-break with `CHANGELOG.md` (recent entries) if README is too short or ambiguous.
 4. Final tie-break: the recent `git log` subjects.
-5. If everything is ambiguous, default to English and tell the user in the Step 1 summary so they can correct you before Step 4.
+5. If everything is ambiguous, default to English and surface that assumption in the Step 4 block so the user can correct it before confirming.
 
 The detected language applies to **all** of the following:
 
@@ -284,7 +291,7 @@ CHANGELOG entry:
 ### Fixed
 - ...
 
-README updates (gaps found): <one-line per gap, e.g. "add /release row to Available commands table + new section">  ← omit this line if no gaps
+README updates (gaps found): <one-line per gap, e.g. "add the new public skill to the available-skills table">  ← omit this line if no gaps
 Release commit: bumps <version-file> A.B.C→X.Y.Z (+ <secondary version file> to the same number), inserts CHANGELOG section, applies README updates. Subject: `<exact line>`.
 Push: release commit to <branch>.
 Publishing: pushing the tag triggers `<workflow>.yml`, which publishes to <registry>.   ← include ONLY when Step 1.9 found a tag-triggered publishing workflow; localize to user's language
@@ -427,9 +434,9 @@ If everything was routine and no merge was requested, the second line is just th
 - **Never** `--no-verify`, `--no-gpg-sign`, or any hook-skipping flag unless the user explicitly asks.
 - **Never** delete tags or branches.
 - **Never** merge to main with anything other than `--ff-only`. If fast-forward is not possible, abort and let the user resolve. Do not fall back to `--no-ff`, `-X theirs`, `-X ours`, or any rebase strategy.
-- **Never** proceed past Step 4 without explicit confirmation. The slash command itself is consent to **invoke**, not consent to commit and push.
+- **Never** proceed past Step 4 without explicit confirmation. Explicitly invoking the skill is consent to **plan**, not consent to commit and push.
 - If the working tree has merge conflicts or rebase-in-progress markers → **abort** with a diagnosis and let the user resolve manually.
 - If the repo is **public/internal** and has **no prior tag** and/or **no prior GitHub release**, surface a ⚠️ line in the Step 4 plan (one per missing milestone) before creating the first ever tag or release — these are meaningful one-way actions. The user's plain confirmation in Step 4 (`yes` / `sí` / `proceed` / …) covers both ⚠️s in that single round-trip; do not require a separate confirmation prompt. On a **private repo** these confirmations are unnecessary and must NOT be raised — private mode skips both the tag and the GitHub release by default, so there's nothing to confirm. The user already opted in/out via the `con tag` modifier in Step 4 (and even then, the GitHub release stays skipped on private repos).
-- If the repo has no remote → run Steps 5.1–5.5 only; skip push, tag, and release. Tell the user.
-- If the repo has a remote but `gh` is not available → run through 5.7's tag step but skip the GitHub release; tell the user how to create the release manually if they want to.
+- If the repo has no remote → land the semantic and release commits only; skip push, tag, and GitHub release. Tell the user.
+- If the repo has a remote but `gh` is not available → push the branch and tag, but skip the GitHub release; tell the user how to create it manually if they want to.
 - **Never** create a GitHub release on a private repo, even if the user added `con tag` to the confirmation. The `con tag` modifier only re-enables the git tag; the GitHub release stays skipped.

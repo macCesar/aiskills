@@ -13,7 +13,7 @@ lib/                    ESM only — 12 modules, shared architecture with TiTool
   claude-plugin.js      marketplace-plugin detection (enabled AND cached)
   config.js             SKILLS, COMMANDS, paths, platform list
 skills/<name>/          SKILL.md + references/ + assets/
-commands/release.md     slash command, versioned and shipped
+skills/release/         explicit-only, cross-agent release workflow
 hooks/hooks.json
 .claude-plugin/         plugin.json + marketplace.json
 test/                   node:test suites
@@ -25,7 +25,7 @@ test/                   node:test suites
 
 **Location:** `~/Developer/openSource/TiTools` — npm package `@maccesar/titools`, GitHub `macCesar/titools`, marketplace `titools@maccesar-titools`.
 
-The two repos are the **same tool shipped twice with different payloads.** What differs is the content — the skills each one ships and the slash commands that drive them. Everything a user touches to get that content installed, updated, diagnosed or removed is the same machinery: `install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`, the `~/.agents/skills/` layout, the Claude Code symlink mirrors, the marketplace-plugin detection, the release checklist and the two-channel versioning.
+The two repos are the **same tool shipped twice with different payloads.** What differs is the content — the skills each one ships and TiTools' Titanium-specific slash commands. Everything a user touches to get that content installed, updated, diagnosed or removed is the same machinery: `install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`, the `~/.agents/skills/` layout, the Claude Code symlink mirrors, the marketplace-plugin detection, the release checklist and the two-channel versioning.
 
 ### The parity contract
 
@@ -39,8 +39,8 @@ For this contract, the shared CLI CORE includes CLI entry behavior, common `lib/
 
 | | aiskills | TiTools |
 |---|---|---|
-| `skills/` | 8 general-purpose skills | 9 Titanium skills |
-| `commands/` | `release` | `ti-check`, `ti-new-screen`, `ti-audit` |
+| `skills/` | 9 general-purpose skills, including explicit-only `release` | 9 Titanium skills |
+| `commands/` | none; the former `release` command is now a cross-agent skill | `ti-check`, `ti-new-screen`, `ti-audit` |
 | `agents/` | none | `ti-pro` |
 | Knowledge Index | **does not apply** — see below | yes — `titools sync`, `lib/commands/agents.js`, 9 functions in `utils.js` |
 | SessionStart hook | `hooks/hooks.json` only | `hooks/session-start.sh` detects `tiapp.xml` |

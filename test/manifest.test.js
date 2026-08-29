@@ -129,6 +129,28 @@ describe('skill frontmatter', () => {
   }
 });
 
+describe('release is explicit-only on every supported path', () => {
+  test('Codex disables implicit invocation and the portable body carries the common gate', () => {
+    const skill = readFileSync(path.join(SKILLS_DIR, 'release', 'SKILL.md'), 'utf8');
+    const openai = readFileSync(path.join(SKILLS_DIR, 'release', 'agents', 'openai.yaml'), 'utf8');
+
+    assert.match(openai, /^\s*allow_implicit_invocation:\s*false$/m);
+    assert.match(skill, /This is an explicit-only skill\./);
+    assert.match(skill, /A generic request that merely discusses releases/);
+    assert.doesNotMatch(
+      skill,
+      /^disable-model-invocation:/m,
+      'Claude-only frontmatter makes Codex reject the otherwise portable skill',
+    );
+  });
+
+  test('the former Claude-only command is removed as a legacy artifact', () => {
+    assert.equal(COMMANDS.includes('release'), false);
+    assert.equal(LEGACY_COMMANDS.includes('release'), true);
+    assert.equal(existsSync(path.join(COMMANDS_DIR, 'release.md')), false);
+  });
+});
+
 describe('reference files a skill points at exist', () => {
   for (const skill of skillDirs) {
     test(`${skill} has no broken references/ pointer`, () => {

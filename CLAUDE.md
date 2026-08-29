@@ -12,11 +12,11 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 
 ## What aiskills is
 
-- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 8 general-purpose AI coding assistant skills (audit-codebase, humaniza, npm-supply-chain, refactoring-ui, seo-launch, session-log, stitch-showcase, vscode-extension-dev) and 1 slash command (`release`).
+- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 9 general-purpose AI coding assistant skills (audit-codebase, humaniza, npm-supply-chain, refactoring-ui, release, seo-launch, session-log, stitch-showcase, vscode-extension-dev). `release` is explicit-only because it can commit, tag, push, and publish.
 - Distribution channels:
   - **npm**: `npm install -g @maccesar/aiskills` then `aiskills install` (works with Claude Code, Gemini CLI, Codex CLI).
   - **Claude Code plugin marketplace**: `/plugin marketplace add macCesar/aiskills` then `/plugin install aiskills@maccesar-aiskills` (Claude Code only).
-- Architecture: ESM modules under `lib/`, commands in `lib/commands/`, CLI entry in `bin/aiskills.js`, skills live in `skills/<name>/SKILL.md` with optional `references/`, `assets/`, `scripts/`. Slash commands live in `commands/<name>.md`.
+- Architecture: ESM modules under `lib/`, commands in `lib/commands/`, CLI entry in `bin/aiskills.js`, skills live in `skills/<name>/SKILL.md` with optional `references/`, `assets/`, `scripts/`, and product UI policy under `agents/`.
 
 ## Release checklist (mandatory)
 
@@ -31,7 +31,7 @@ Every release that ships code or skill changes must bump **BOTH** version files 
 7. Push `main` + push the tag.
 8. Nothing by hand — pushing the tag triggers `.github/workflows/publish.yml`, which publishes to npm over trusted publishing (OIDC).
 
-The bundled `/release` slash command automates 2–7 end-to-end, and step 8 then happens on its own once the tag lands. There is no `npm publish` to run and no token stored anywhere: the workflow mints a short-lived OIDC credential that npm verifies against the trusted publisher registered for this package, and npm attaches provenance to the publish as a result. That registration names the workflow by filename, so renaming `publish.yml` breaks publishing until the trusted publisher on npmjs.com is updated to match.
+The bundled explicit-only `release` skill automates 2–7 end-to-end, and step 8 then happens on its own once the tag lands. There is no `npm publish` to run and no token stored anywhere: the workflow mints a short-lived OIDC credential that npm verifies against the trusted publisher registered for this package, and npm attaches provenance to the publish as a result. That registration names the workflow by filename, so renaming `publish.yml` breaks publishing until the trusted publisher on npmjs.com is updated to match.
 
 Publishing by hand still works as a fallback, but it is interactive: since December 2025 `npm login` issues a two-hour session rather than a long-lived token, and each `npm publish` then needs a fresh OTP.
 
@@ -59,7 +59,7 @@ Marketplace channel facts (not in Anthropic's docs — confirmed by inspecting t
 - The `source` in `marketplace.json` is `{github, repo}` with **no pinned version**, so the update tracks the **default-branch HEAD**, not the latest git tag. It moves to whatever `plugin.json` says at HEAD and **ignores the numeric version of the stale cache** — e.g. a leftover `2.0.0/` cache did not block moving to `1.15.0/`. (This is why the `plugin.json` bump still matters for *end users* whose cache compares versions, but the maintainer's `/plugin marketplace update` always jumps to HEAD.)
 - **Duplicate-symlink cleanup:** while a new skill exists only on npm (not yet in the marketplace cache), `aiskills install` creates a `~/.claude/skills/<skill>` symlink so Claude Code sees it. Once the marketplace cache catches up (after `/plugin marketplace update`) and the user re-runs `aiskills install`, the CLI detects the marketplace now provides it and **removes that symlink** to avoid the "skill conflict" duplicate — leaving it marketplace-only, like the other skills.
 
-**Full post-release sequence to refresh every channel on the maintainer's machine:** `/release` (the pushed tag publishes to npm on its own) → `/plugin marketplace update maccesar-aiskills` → `aiskills install` → `/reload-plugins`.
+**Full post-release sequence to refresh every channel on the maintainer's machine:** invoke the `release` skill (the pushed tag publishes to npm on its own) → `/plugin marketplace update maccesar-aiskills` → `aiskills install` → `/reload-plugins`.
 
 ## Code conventions
 
@@ -118,7 +118,7 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 
 ## Parallel project: `TiTools`
 
-`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 9 Titanium skills; here: 8 general-purpose) and the slash commands that drive them (TiTools: `ti-check`, `ti-new-screen`, `ti-audit`; here: `release`).
+`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 9 Titanium skills; here: 9 general-purpose) and TiTools' three Titanium-specific slash commands (`ti-check`, `ti-new-screen`, `ti-audit`).
 
 **A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
 

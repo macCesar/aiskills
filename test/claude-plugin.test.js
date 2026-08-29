@@ -7,8 +7,8 @@
  *      that leftover directory as "the plugin provides this skill", skipped every
  *      symlink, and reported `0/6 skills linked` — leaving Claude Code with no
  *      skills and no way to repair it by re-running install.
- *   2. Slash commands never asked the question at all, so `/release` was
- *      installed alongside the plugin's own copy and appeared twice.
+ *   2. Slash commands never asked the question at all, so a command installed
+ *      by both channels appeared twice.
  *
  * Each test builds a throwaway home directory so the real one is never touched.
  */
@@ -201,6 +201,24 @@ describe('createSkillSymlinks', () => {
     rmSync(base, { recursive: true, force: true });
   });
 
+  test('skips a skill while an older plugin cache still provides a same-name command', async () => {
+    const base = makeHome();
+    writeAgentsSkills(base, ['release']);
+    writePluginCache(base, { commands: ['release'] });
+    writeSettings(base, { enabled: true });
+
+    const claudeSkills = path.join(base, '.claude', 'skills');
+    const result = await createSkillSymlinks(claudeSkills, ['release'], base);
+
+    assert.deepEqual(result.skipped, ['release']);
+    assert.equal(
+      existsSync(path.join(claudeSkills, 'release')),
+      false,
+      'the new skill must not collide with the old plugin command before marketplace refresh',
+    );
+    rmSync(base, { recursive: true, force: true });
+  });
+
   test('links when there is no plugin cache at all', async () => {
     const base = makeHome();
     writeAgentsSkills(base, ['session-log']);
@@ -212,49 +230,39 @@ describe('createSkillSymlinks', () => {
 });
 
 describe('installCommands', () => {
-  test('installs the command when the plugin is not enabled', async () => {
+  test('has no active Claude-only commands after release became a skill', async () => {
     const base = makeHome();
-    const result = await installCommands(REPO_ROOT, base);
-    assert.deepEqual(result.installed, COMMANDS);
-    assert.deepEqual(result.failed, []);
-    for (const command of COMMANDS) {
-      assert.ok(existsSync(path.join(base, '.claude', 'commands', `${command}.md`)));
+    const originalHome = process.env.HOME;
+    process.env.HOME = base;
+    try {
+      const result = await installCommands(REPO_ROOT, base);
+      assert.deepEqual(COMMANDS, []);
+      assert.deepEqual(result.installed, []);
+      assert.deepEqual(result.failed, []);
+    } finally {
+      if (originalHome === undefined) delete process.env.HOME;
+      else process.env.HOME = originalHome;
+      rmSync(base, { recursive: true, force: true });
     }
-    rmSync(base, { recursive: true, force: true });
   });
 
-  test('skips the command and removes the duplicate when the plugin provides it', async () => {
+  test('removes the legacy /release command during the migration', async () => {
     const base = makeHome();
-    writePluginCache(base, { commands: ['release'] });
-    writeSettings(base, { enabled: true });
-
-    // A copy left from an install that ran before the plugin existed.
     const commandsDir = path.join(base, '.claude', 'commands');
     mkdirSync(commandsDir, { recursive: true });
-    writeFileSync(path.join(commandsDir, 'release.md'), '# stale copy\n');
+    writeFileSync(path.join(commandsDir, 'release.md'), '# legacy copy\n');
 
-    const result = await installCommands(REPO_ROOT, base);
-
-    assert.deepEqual(result.skipped, ['release']);
-    assert.deepEqual(result.installed, []);
-    assert.equal(
-      existsSync(path.join(commandsDir, 'release.md')),
-      false,
-      'the duplicate slash command must be cleaned up',
-    );
-    rmSync(base, { recursive: true, force: true });
-  });
-
-  test('installs the command when the cache is stale but the plugin is gone', async () => {
-    const base = makeHome();
-    writePluginCache(base, { commands: ['release'] });
-    writeSettings(base, {});
-
-    const result = await installCommands(REPO_ROOT, base);
-
-    assert.ok(result.installed.includes('release'));
-    assert.ok(existsSync(path.join(base, '.claude', 'commands', 'release.md')));
-    rmSync(base, { recursive: true, force: true });
+    const originalHome = process.env.HOME;
+    process.env.HOME = base;
+    try {
+      const result = await installCommands(REPO_ROOT, base);
+      assert.ok(result.removed.includes('release'));
+      assert.equal(existsSync(path.join(commandsDir, 'release.md')), false);
+    } finally {
+      if (originalHome === undefined) delete process.env.HOME;
+      else process.env.HOME = originalHome;
+      rmSync(base, { recursive: true, force: true });
+    }
   });
 
   test('pluginProvidesCommand needs both the cache entry and the enabled plugin', () => {

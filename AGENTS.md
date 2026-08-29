@@ -17,11 +17,11 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 aiskills ships two things from a single source:
 
 1. **An npm CLI** (`@maccesar/aiskills`) that installs and updates general-purpose AI coding assistant skills into `~/.agents/skills/` (universal) plus mirror symlinks for Claude Code. Gemini CLI and Codex CLI read the universal path directly.
-2. **A Claude Code plugin marketplace** (`aiskills@maccesar-aiskills`) that exposes the same content plus slash commands as a plugin via `/plugin marketplace add macCesar/aiskills`.
+2. **A Claude Code plugin marketplace** (`aiskills@maccesar-aiskills`) that exposes the same skill content as a plugin via `/plugin marketplace add macCesar/aiskills`.
 
 Skills conform to the [agentskills.io specification](https://agentskills.io/specification) so any compatible agent can load them. The CLI itself is ESM Node.js with Commander.js and `ora` spinners.
 
-Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (9 Titanium ones there, 8 general-purpose here) and their slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
+Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (9 Titanium ones there, 9 general-purpose here) and TiTools' slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
 
 **When you change shared machinery, port it there in the same session.** The full contract, including the table of what legitimately diverges and a measured per-file comparison, is in [docs/project/context.md](docs/project/context.md) § "Sibling project".
 
@@ -44,8 +44,6 @@ Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` —
 │   ├── cleanup.js        # legacy artifact removal on update/uninstall
 │   ├── utils.js          # helpers
 │   └── platform.js
-├── commands/
-│   └── <name>.md         # slash commands shipped to Claude Code (~/.claude/commands/)
 └── skills/
     └── <skill-name>/
         ├── SKILL.md      # required: skill entry point
@@ -167,7 +165,7 @@ Every release that ships code or skill changes must bump **BOTH** version files 
 7. Push `main` + push the tag.
 8. Nothing by hand — pushing the tag triggers `.github/workflows/publish.yml`, which publishes to npm over trusted publishing (OIDC).
 
-The bundled `release` slash command automates steps 2–7 end-to-end (semver bump inference, CHANGELOG update, commit, tag, GitHub release). Use it when releasing from a Claude Code session; step 8 then happens on its own once the tag lands.
+The bundled explicit-only `release` skill automates steps 2–7 end-to-end (semver bump inference, CHANGELOG update, commit, tag, GitHub release). Invoke it as `/release` in Claude Code, `$release` in Codex, or by naming the skill explicitly in Gemini CLI; step 8 then happens on its own once the tag lands.
 
 ### Precedent (do not repeat)
 
@@ -198,7 +196,7 @@ Releases authenticate over trusted publishing (OIDC) from GitHub Actions, so a n
 
 1. Keep total chars ≤ 1024.
 2. If the `description` semantics change meaningfully, update the README row.
-3. Don't add fields the spec doesn't define. The [agentskills.io specification](https://agentskills.io/specification) defines exactly six: `name` and `description` (required), plus optional `license`, `compatibility` (max 500 chars, only when the skill has real environment requirements), `metadata` (string→string map) and `allowed-tools` (experimental). `argument-hint` is **not** one of them — it is Claude Code slash-command frontmatter and belongs in `commands/*.md`, not in a `SKILL.md`.
+3. Don't add fields the spec doesn't define. The [agentskills.io specification](https://agentskills.io/specification) defines exactly six: `name` and `description` (required), plus optional `license`, `compatibility` (max 500 chars, only when the skill has real environment requirements), `metadata` (string→string map) and `allowed-tools` (experimental). Product-specific controls belong in `agents/<product>.yaml` when that product supports a sidecar. This is functional, not cosmetic: Codex 0.151 rejects a universal `SKILL.md` carrying Claude's `disable-model-invocation` extension instead of merely ignoring it.
 4. The 1024-character cap is on the `description` field alone, not on the whole frontmatter block. The spec sets no limit on the block, and `name` is separately capped at 64.
 
 ### Don't
