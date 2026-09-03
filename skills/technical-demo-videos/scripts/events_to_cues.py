@@ -21,33 +21,44 @@ def main():
   args = parser.parse_args()
 
   payload, events = load_events(args.events_json)
+  if args.output_json.exists():
+    raise SystemExit(f'refusing to overwrite: {args.output_json}')
+
+  previous = None
   for event in events:
     if not isinstance(event, dict) or 'name' not in event or 'timestamp_ms' not in event:
       raise SystemExit('each event must contain name and timestamp_ms')
+    current = event['timestamp_ms']
+    if not isinstance(current, (int, float)):
+      raise SystemExit('timestamp_ms values must be numeric and ordered')
+    if previous is not None and current < previous:
+      raise SystemExit('timestamp_ms values must be numeric and ordered')
+    previous = current
 
   starts = [event for event in events if event['name'] == 'recording_started']
   if len(starts) != 1:
     raise SystemExit('event log must contain exactly one recording_started event')
+  stops = [event for event in events if event['name'] == 'recording_stopped']
+  if len(stops) != 1:
+    raise SystemExit('event log must contain exactly one recording_stopped event')
 
+  start_index = events.index(starts[0])
+  stop_index = events.index(stops[0])
+  if stop_index <= start_index:
+    raise SystemExit('recording_stopped must follow recording_started')
+
+  captured_events = events[start_index:stop_index + 1]
   origin = starts[0]['timestamp_ms']
   normalized = []
-  previous = -1
-  for event in events:
+  for event in captured_events:
     current = event['timestamp_ms']
-    if not isinstance(current, (int, float)) or current < previous:
-      raise SystemExit('timestamp_ms values must be numeric and ordered')
-    previous = current
     normalized.append({
       'event': event['name'],
       'at': round((current - origin) / 1000, 3),
       **({'path': event['path']} if 'path' in event else {})
     })
 
-  stop = next(
-    (event['at'] for event in reversed(normalized)
-     if event['event'] == 'recording_stopped'),
-    normalized[-1]['at']
-  )
+  stop = normalized[-1]['at']
   visual = [
     event for event in normalized
     if event['event'] not in {'recording_started', 'recording_stopped'}

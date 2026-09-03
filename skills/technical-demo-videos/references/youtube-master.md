@@ -14,10 +14,18 @@ the final upload master with:
 - 3840×2160 with no baked-in letterboxing;
 - constant 30 FPS unless the approved content genuinely needs its native 60 FPS;
 - BT.709 primaries, transfer, and matrix metadata;
-- AAC audio at 48 kHz;
+- AAC stereo audio at 48 kHz and 384 kbps;
 - the moov atom at the front (`faststart`);
-- a deliberate delivery bitrate. Use 35 Mbps for 4K30 and 53 Mbps for 4K60
-  unless current official YouTube guidance changes.
+- a deliberate variable bitrate. The bundled helper uses the lower edge of
+  YouTube's current SDR upload ranges: 35 Mbps for 4K at 24–30 FPS and 53 Mbps
+  for 4K at 48–60 FPS. It also selects the documented standard/high-frame-rate
+  defaults for 1440p, 1080p, and 720p.
+
+These bitrate and codec recommendations can change. Before creating a delivery
+master, verify them against YouTube's current official
+[recommended upload encoding settings](https://support.google.com/youtube/answer/1722171).
+If the published range changed, pass its lower bound with `--video-bitrate` and
+record the source and chosen value in the production plan.
 
 Run:
 

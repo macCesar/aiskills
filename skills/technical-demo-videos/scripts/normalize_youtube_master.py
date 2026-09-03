@@ -14,10 +14,30 @@ from pathlib import Path
 
 
 STANDARD_BITRATES = {
-  2160: ('35M', 35_000_000),
-  1440: ('16M', 16_000_000),
-  1080: ('8M', 8_000_000),
-  720: ('5M', 5_000_000)
+  2160: {
+    'standard': ('35M', 35_000_000),
+    'high': ('53M', 53_000_000)
+  },
+  1440: {
+    'standard': ('16M', 16_000_000),
+    'high': ('24M', 24_000_000)
+  },
+  1080: {
+    'standard': ('8M', 8_000_000),
+    'high': ('12M', 12_000_000)
+  },
+  720: {
+    'standard': ('5M', 5_000_000),
+    'high': ('7.5M', 7_500_000)
+  },
+  480: {
+    'standard': ('2.5M', 2_500_000),
+    'high': ('4M', 4_000_000)
+  },
+  360: {
+    'standard': ('1M', 1_000_000),
+    'high': ('1.5M', 1_500_000)
+  }
 }
 
 
@@ -39,9 +59,13 @@ def probe(path):
 
 
 def stream(payload, kind):
-  return next(
-    item for item in payload['streams'] if item.get('codec_type') == kind
+  selected = next(
+    (item for item in payload['streams'] if item.get('codec_type') == kind),
+    None
   )
+  if selected is None:
+    raise RuntimeError(f'{kind} stream is required')
+  return selected
 
 
 def parse_bitrate(value):
@@ -52,11 +76,15 @@ def parse_bitrate(value):
   return int(value)
 
 
-def default_bitrate(height):
+def default_bitrate(height, fps):
+  frame_rate_class = 'high' if fps >= 48 else 'standard'
   for threshold, values in STANDARD_BITRATES.items():
     if height >= threshold:
-      return values
-  return ('5M', 5_000_000)
+      return values[frame_rate_class]
+  return (
+    ('1.5M', 1_500_000) if frame_rate_class == 'high'
+    else ('1M', 1_000_000)
+  )
 
 
 def has_faststart(path):
@@ -96,6 +124,8 @@ def validate_master(path, expected_width, expected_height, fps, bitrate):
     errors.append('audio codec must be AAC')
   if int(audio.get('sample_rate', 0)) != 48_000:
     errors.append('audio sample rate must be 48 kHz')
+  if int(audio.get('channels', 0)) != 2:
+    errors.append('audio must be stereo')
   if 'mp4' not in payload['format'].get('format_name', ''):
     errors.append('container must be MP4')
   if not has_faststart(path):
@@ -125,6 +155,8 @@ def main():
     raise RuntimeError(f'input not found: {source}')
   if output.exists():
     raise RuntimeError(f'refusing to overwrite: {output}')
+  if output.suffix.lower() != '.mp4':
+    raise RuntimeError('output must use an .mp4 extension')
   if args.fps not in {24, 25, 30, 48, 50, 60}:
     raise RuntimeError('fps must be one of 24, 25, 30, 48, 50, or 60')
   for tool in ('ffmpeg', 'ffprobe'):
@@ -135,11 +167,10 @@ def main():
   source_video = stream(source_payload, 'video')
   width = int(source_video['width'])
   height = int(source_video['height'])
-  bitrate_text, bitrate = default_bitrate(height)
+  bitrate_text, bitrate = default_bitrate(height, args.fps)
   if args.video_bitrate:
     bitrate_text = args.video_bitrate
     bitrate = parse_bitrate(bitrate_text)
-  buffer_size = f'{round(bitrate / 1_000_000) * 2}M'
   gop = max(1, round(args.fps / 2))
   temporary = output.with_name(f'.{output.stem}.encoding.mp4')
   temporary.unlink(missing_ok=True)
@@ -149,15 +180,15 @@ def main():
     '-map', '0:v:0', '-map', '0:a:0?',
     '-vf', f'fps={args.fps},format=yuv420p',
     '-fps_mode', 'cfr', '-c:v', 'libx264', '-preset', 'fast',
-    '-profile:v', 'high', '-level:v', '5.1',
-    '-b:v', bitrate_text, '-minrate', bitrate_text,
-    '-maxrate', bitrate_text, '-bufsize', buffer_size,
+    '-profile:v', 'high', '-b:v', bitrate_text,
     '-g', str(gop), '-keyint_min', str(gop), '-sc_threshold', '0',
     '-bf', '2',
-    '-x264-params', 'nal-hrd=cbr:force-cfr=1',
+    '-x264-params', (
+      'force-cfr=1:colorprim=bt709:transfer=bt709:colormatrix=bt709'
+    ),
     '-color_primaries', 'bt709', '-color_trc', 'bt709',
     '-colorspace', 'bt709',
-    '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
+    '-c:a', 'aac', '-b:a', '384k', '-ar', '48000', '-ac', '2',
     '-movflags', '+faststart', str(temporary)
   ]
   try:

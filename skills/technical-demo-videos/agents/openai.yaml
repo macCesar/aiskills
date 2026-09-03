@@ -1,4 +1,4 @@
 interface:
   display_name: "Technical Demo Videos"
   short_description: "Plan and produce reproducible technical screen demos"
-  default_prompt: "Create a reviewable recording plan and reproducible production package for this technical demo. Do not record until I approve the plan."
+  default_prompt: "Use $technical-demo-videos to create a reviewable recording plan and reproducible production package for this technical demo. Do not record until I approve the plan."

@@ -9,6 +9,23 @@ Turn a natural-language request into a reviewable production plan and, after app
 
 Act as the project's technical screenwriter, director, producer, screen operator, voice-script writer, and editor. Translate the user's informal explanation into a concise visual story that is technically accurate, pleasant to watch, and practical to reproduce. These roles are responsibilities, not permission to override the user's creative brief, change the product, publish media, spend money, or begin recording without approval.
 
+## Required workflow
+
+Read only the references needed for the current phase, but read each applicable reference before drafting advice or acting:
+
+| Task | Required reference |
+|---|---|
+| Storyboard, narration intent, or take review | [references/story-direction.md](references/story-direction.md) |
+| Production package or artifact cleanup | [references/package-contract.md](references/package-contract.md) |
+| macOS or VS Code automation | [references/recording-workflow.md](references/recording-workflow.md) and [references/vscode-default-profile.md](references/vscode-default-profile.md) |
+| Audio alignment or final duration | [references/audio-timing.md](references/audio-timing.md) |
+| Upload-ready horizontal master | [references/youtube-master.md](references/youtube-master.md) |
+| Vertical or social derivative | [references/vertical-social-video.md](references/vertical-social-video.md) |
+| Publishing copy and settings | [references/publishing-metadata.md](references/publishing-metadata.md) |
+| Automated YouTube publication | [references/youtube-publishing.md](references/youtube-publishing.md) |
+
+In proposals, review notes, and handoff documents, cite each concrete production recommendation from this skill as `[source: references/<file>.md]`. Cite technical claims using the applicable domain skill or official primary documentation. If a claim cannot be verified from the inspected project or a consulted source, prefix it with `FROM_MEMORY (unverified):` instead of presenting it as fact.
+
 ## Establish the request
 
 Resolve these facts from the user's message and the inspected project:
@@ -116,7 +133,7 @@ Do not settle for placing the complete narration track under the capture when th
 
 Verify the final video visually and audibly. Review the beginning, every paragraph transition, every command/result beat, and the ending rather than checking duration alone. Keep a clean final frame after the last spoken line. Preserve the complete reproducible package and remove only intermediates identified by the package contract.
 
-Before naming any render `<slug>-final.mp4`, read [references/youtube-master.md](references/youtube-master.md) and pass its delivery-master quality gate. A stream-copied mux is a review preview, not a final upload file. Validate resolution, constant frame rate, bitrate, H.264 profile, pixel format, BT.709 metadata, AAC sample rate, and fast-start layout; never infer quality from the `.mp4` extension or 4K dimensions alone.
+Before naming any render `<slug>-final.mp4`, read [references/youtube-master.md](references/youtube-master.md), verify its time-sensitive defaults against current official YouTube upload guidance, and pass its delivery-master quality gate. A stream-copied mux is a review preview, not a final upload file. Validate resolution, constant frame rate, bitrate, H.264 profile, pixel format, BT.709 metadata, AAC sample rate, and fast-start layout; never infer quality from the `.mp4` extension or 4K dimensions alone.
 
 Use `scripts/events_to_cues.py` to normalize a completed event log. The generated SRT must reflect final audio alignment rather than estimated plan timings.
 
@@ -124,4 +141,6 @@ When the user requests a vertical or social-media derivative, read [references/v
 
 When the user requests titles, descriptions, keywords, hashtags, upload settings, or a complete social publishing handoff, read [references/publishing-metadata.md](references/publishing-metadata.md). Browse current official platform documentation because these recommendations and limits change, then create one clearly grouped metadata document for each episode.
 
-When the user requests automated YouTube upload, playlist placement, captions, scheduling, or metadata publication, read [references/youtube-publishing.md](references/youtube-publishing.md). Use `scripts/youtube_publish.py` with a production manifest. Dry-run and validate by default; an actual API upload is an external mutation and requires explicit authorization in that turn. Default new uploads to private, never invent a playlist ID, and preserve an upload receipt so retries do not create duplicate videos.
+When the user requests automated YouTube upload, playlist placement, captions, scheduling, or metadata publication, read [references/youtube-publishing.md](references/youtube-publishing.md). Before generating the upload manifest or dry run, present a publishing-target table containing the expected channel ID/name, either an exact playlist ID/name or an explicit `none`, privacy/schedule, captions, and thumbnail. Do not infer “no playlist” from silence. If the user does not know the IDs, request authorization to run `scripts/youtube_publish.py --inspect-account` and present the authenticated channel and available playlists without uploading. Wait for the user to approve these choices.
+
+Then generate the production manifest and run a dry run with `scripts/youtube_publish.py`. Present its exact target, operations, hashes, and confirmation token. A real API upload is a separate external mutation: wait for explicit authorization that refers to the reviewed dry run, then pass its token through `--confirm-plan`. The script must verify that OAuth exposes `expectedChannelId` before performing `videos.insert`. Default new uploads to private, never invent a playlist ID, and preserve an upload receipt so retries do not create duplicate videos.

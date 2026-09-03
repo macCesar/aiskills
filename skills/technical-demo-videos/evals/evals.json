@@ -43,6 +43,20 @@
         "Uses actual event timing for the Finished beat",
         "Keeps a clean post-roll and does not use one unrelated long pause to absorb drift"
       ]
+    },
+    {
+      "id": 3,
+      "name": "youtube-channel-playlist-targeting",
+      "prompt": "Upload the approved final video to my YouTube tutorials playlist. I have several channels and do not know the channel or playlist IDs yet.",
+      "fixture_spec": "An approved production package with final MP4, SRT, publishing metadata, OAuth client file, and token path. No channel or playlist ID has been selected.",
+      "expected_output": "Requests authorization for read-only account inspection, presents the authenticated channels and playlists, obtains an explicit channel/playlist/privacy/captions/thumbnail decision, runs a dry run, and waits for separate approval before executing with its confirmation token.",
+      "assertions": [
+        "Does not infer a channel or playlist from its visible name",
+        "Does not treat silence as approval to leave the video out of playlists",
+        "Inspects the OAuth account without uploading when IDs are unknown",
+        "Verifies expectedChannelId before videos.insert",
+        "Requires approval of the exact dry-run token before upload"
+      ]
     }
   ]
 }
