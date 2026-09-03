@@ -42,20 +42,20 @@ Installed files:
 
 ### Which option should I use?
 
-| | Plugin (Option A) | CLI (Option B) |
-|---|---|---|
-| **Claude Code** | Recommended | Supported |
-| **Gemini CLI** | Not available | Supported |
-| **Codex CLI** | Not available | Supported |
-| **Auto-updates** | Via marketplace | `aiskills update` |
+|                  | Plugin (Option A) | CLI (Option B)    |
+| ---------------- | ----------------- | ----------------- |
+| **Claude Code**  | Recommended       | Supported         |
+| **Gemini CLI**   | Not available     | Supported         |
+| **Codex CLI**    | Not available     | Supported         |
+| **Auto-updates** | Via marketplace   | `aiskills update` |
 
 ---
 
 ## Compatible platforms
 
-| Platform                                                  | Status    | Installation Path   |
-| --------------------------------------------------------- | --------- | ------------------- |
-| [Claude Code](https://claude.ai/claude-code)              | Supported | `~/.claude/skills/` |
+| Platform                                                  | Status    | Installation Path                     |
+| --------------------------------------------------------- | --------- | ------------------------------------- |
+| [Claude Code](https://claude.ai/claude-code)              | Supported | `~/.claude/skills/`                   |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Supported | `~/.agents/skills/` (auto-discovered) |
 | [Codex CLI](https://developers.openai.com/codex/cli/)     | Supported | `~/.agents/skills/` (auto-discovered) |
 
@@ -65,18 +65,18 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 
 ## Available skills
 
-| Skill                | Domain       | Source                               | Reference Files |
-| -------------------- | ------------ | ------------------------------------ | --------------- |
-| refactoring-ui       | Design       | "Refactoring UI" by Wathan & Schoger | 7 files         |
-| humaniza             | Writing (es) | Curated Spanish/es-MX style rules    | 7 files         |
-| audit-codebase       | Auditing     | Evidence-based audit methodology     | 2 files         |
-| vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
-| stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
-| session-log          | Project      | Convention + 3 A/B rounds            | 2 files         |
-| technical-demo-videos | Video Production | Reproducible macOS technical demos | 9 guides + 4 scripts |
-| release              | Publishing   | Portable, confirmation-gated workflow | 1 file          |
-| seo-launch           | Web / SEO    | Head tags, share cards, server files | 5 files         |
-| npm-supply-chain     | npm / CI     | npm and GitHub changelogs, 2025–2026 | 5 files         |
+| Skill                 | Domain           | Source                                | Reference Files      |
+| --------------------- | ---------------- | ------------------------------------- | -------------------- |
+| refactoring-ui        | Design           | "Refactoring UI" by Wathan & Schoger  | 7 files              |
+| humaniza              | Writing (es)     | Curated Spanish/es-MX style rules     | 7 files              |
+| audit-codebase        | Auditing         | Evidence-based audit methodology      | 2 files              |
+| vscode-extension-dev  | VS Code          | VS Code Extension API docs            | 14 files             |
+| stitch-showcase       | Design Tools     | Google Stitch export workflow         | 16 files             |
+| session-log           | Project          | Convention + 3 A/B rounds             | 2 files              |
+| technical-demo-videos | Video Production | Reproducible macOS technical demos    | 9 guides + 4 scripts |
+| release               | Publishing       | Portable, confirmation-gated workflow | 1 file               |
+| seo-launch            | Web / SEO        | Head tags, share cards, server files  | 5 files              |
+| npm-supply-chain      | npm / CI         | npm and GitHub changelogs, 2025–2026  | 5 files              |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -94,11 +94,11 @@ End-to-end release janitor that works across project types: npm, Titanium (`tiap
 
 Unlike the other skills, `release` is never supposed to activate merely because a repository looks ready. Name it explicitly:
 
-| Platform | Invocation |
-| --- | --- |
-| Claude Code | `/release [patch\|minor\|major]` |
-| Codex CLI | `$release [patch\|minor\|major]` |
-| Gemini CLI | `Use the release skill [with a patch\|minor\|major bump]` |
+| Platform    | Invocation                                                |
+| ----------- | --------------------------------------------------------- |
+| Claude Code | `/release [patch\|minor\|major]`                          |
+| Codex CLI   | `$release [patch\|minor\|major]`                          |
+| Gemini CLI  | `Use the release skill [with a patch\|minor\|major bump]` |
 
 Codex carries platform-specific metadata that disables implicit invocation. Claude Code has its own equivalent frontmatter field, but adding it to this universal `SKILL.md` makes Codex reject the skill; the common body therefore enforces the boundary for Claude and Gemini: the prompt must name `release` before the workflow may proceed. Gemini still asks for activation consent. Every platform then stops again at the release plan and requires a second explicit confirmation before any mutation.
 
@@ -189,15 +189,15 @@ Example prompts:
 ```
 
 Reference files:
-| File                     | Topics                                                                                  |
-| ------------------------ | --------------------------------------------------------------------------------------- |
+| File                     | Topics                                                                                   |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
 | 01-foundations.md        | Project mindset: feature-first work, scope discipline, defining systems, picking a voice |
-| 02-page-mechanics.md     | Visual hierarchy, layout, white space, spacing scales, typography                       |
-| 03-visual-treatment.md   | Color systems (HSL, shades, greys, contrast), depth and shadows, image handling         |
-| 04-polish.md             | Borders, accents, empty states, decorative defaults, sharpening design intuition        |
-| 05-motion.md             | Motion system, hover/press states, loading patterns, `prefers-reduced-motion`           |
-| 06-dark-mode.md          | Dark mode color tokens, text contrast, shadows, images, theme toggle                    |
-| 07-component-patterns.md | Modals (focus, layout), forms (labels, validation), tables (density, alignment)         |
+| 02-page-mechanics.md     | Visual hierarchy, layout, white space, spacing scales, typography                        |
+| 03-visual-treatment.md   | Color systems (HSL, shades, greys, contrast), depth and shadows, image handling          |
+| 04-polish.md             | Borders, accents, empty states, decorative defaults, sharpening design intuition         |
+| 05-motion.md             | Motion system, hover/press states, loading patterns, `prefers-reduced-motion`            |
+| 06-dark-mode.md          | Dark mode color tokens, text contrast, shadows, images, theme toggle                     |
+| 07-component-patterns.md | Modals (focus, layout), forms (labels, validation), tables (density, alignment)          |
 
 ---
 
@@ -270,7 +270,7 @@ Example prompts:
 ```
 
 Reference files:
-| File                   | Topics                                                                     |
+| File                   | Topics                                                                      |
 | ---------------------- | --------------------------------------------------------------------------- |
 | comprehensive-audit.md | Mandatory principles, 24-area technical scope, 5-phase method, severity     |
 | report-format.md       | Executive summary, findings table, decision matrix, correction plan formats |
@@ -309,22 +309,22 @@ Example prompts:
 ```
 
 Reference files:
-| File                   | Topics                                                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
-| api-treeview.md        | TreeDataProvider, TreeView registration                                                                    |
-| api-webview.md         | Webview Panel, CSP/nonce, postMessage, asWebviewUri                                                        |
-| api-quickpick.md       | Simple and async QuickPick with debounced search                                                           |
-| api-statusbar.md       | StatusBarItem, codicons, dynamic updates                                                                   |
-| api-secretstorage.md   | Credential manager pattern, onDidChange                                                                    |
-| api-progress.md        | withProgress (Notification + Window), cancellation tokens                                                  |
+| File                   | Topics                                                                                                      |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------- |
+| api-treeview.md        | TreeDataProvider, TreeView registration                                                                     |
+| api-webview.md         | Webview Panel, CSP/nonce, postMessage, asWebviewUri                                                         |
+| api-quickpick.md       | Simple and async QuickPick with debounced search                                                            |
+| api-statusbar.md       | StatusBarItem, codicons, dynamic updates                                                                    |
+| api-secretstorage.md   | Credential manager pattern, onDidChange                                                                     |
+| api-progress.md        | withProgress (Notification + Window), cancellation tokens                                                   |
 | api-additional.md      | FileSystemWatcher, Disposable cleanup, Diagnostics, OutputChannel, ContextKeys, TextDocumentContentProvider |
-| architecture.md        | Project structure, layered architecture, testing strategy                                                  |
-| package-json-schema.md | contributes, activationEvents, engines, scripts, devDependencies                                           |
-| publishing.md          | vsce, .vscodeignore, CI/CD, Open VSX, versioning                                                           |
-| lsp.md                 | LSP client setup, server lifecycle, capabilities, diagnostics                                              |
-| notebooks.md           | Notebook serializers, controllers, renderers, output mime types                                            |
-| debugger.md            | DAP: descriptor factory, configuration provider, adapter lifecycle                                         |
-| testing.md             | Multi-suite test config, workspace fixtures, mocking `vscode`, CI, coverage                                |
+| architecture.md        | Project structure, layered architecture, testing strategy                                                   |
+| package-json-schema.md | contributes, activationEvents, engines, scripts, devDependencies                                            |
+| publishing.md          | vsce, .vscodeignore, CI/CD, Open VSX, versioning                                                            |
+| lsp.md                 | LSP client setup, server lifecycle, capabilities, diagnostics                                               |
+| notebooks.md           | Notebook serializers, controllers, renderers, output mime types                                             |
+| debugger.md            | DAP: descriptor factory, configuration provider, adapter lifecycle                                          |
+| testing.md             | Multi-suite test config, workspace fixtures, mocking `vscode`, CI, coverage                                 |
 
 ---
 
@@ -334,12 +334,12 @@ Gives a project one predictable place for its working state, so both you and any
 
 The convention:
 
-| File | Holds | Loaded at startup |
-| --- | --- | --- |
-| `status.md` | Where the work stands: half-done things, next step, what's blocked, deployment state, which assistant wrote the note | **No** |
-| `requirements.md` | What the system must do, and the acceptance criterion for each item | Yes |
-| `decisions.md` | What was chosen and why. Append-only, dated | Yes |
-| `context.md` | Documentation map, architecture, conventions, traps, provenance | Yes |
+| File              | Holds                                                                                                                | Loaded at startup |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| `status.md`       | Where the work stands: half-done things, next step, what's blocked, deployment state, which assistant wrote the note | **No**            |
+| `requirements.md` | What the system must do, and the acceptance criterion for each item                                                  | Yes               |
+| `decisions.md`    | What was chosen and why. Append-only, dated                                                                          | Yes               |
+| `context.md`      | Documentation map, architecture, conventions, traps, provenance                                                      | Yes               |
 
 **Why `status.md` is excluded from startup.** Cached context is matched as a prefix — the first byte that differs invalidates everything after it. Status written inside a startup-loaded file means every update throws away the cache for all the stable content behind it. The file you edit most often is the one that must not load at startup.
 
@@ -369,10 +369,10 @@ What it will not do:
 
 Measured behaviour, across three A/B rounds against a no-skill baseline (18 runs, adversarially graded):
 
-| | With skill | Without |
-| --- | --- | --- |
-| Kept volatile status out of the startup chain | 9 / 9 | 0 / 9 |
-| Left the user's broken uncommitted code untouched | yes | no — fixed it unasked |
+|                                                   | With skill | Without               |
+| ------------------------------------------------- | ---------- | --------------------- |
+| Kept volatile status out of the startup chain     | 9 / 9      | 0 / 9                 |
+| Left the user's broken uncommitted code untouched | yes        | no — fixed it unasked |
 
 Token cost is 3–13% higher per run. **Those rounds graded an earlier layout** — a single status file versus an imported memory index — so what they establish is the split itself, not the four filenames. The paths added since (resuming against a stale file, upgrading an earlier install, monorepos, a gitignored `docs/`) have prompts written for them and have not been run. The grading notes, and an explicit account of what is and isn't measured, are in `skills/session-log/evals/`.
 
@@ -487,13 +487,13 @@ Certificate verification is on by default; `--local` is the explicit opt-out for
 
 **Stage 2**, once you approve, installs the tags from a parameterized template, generates the images with ImageMagick, writes `robots.txt` / `sitemap.xml` / `.htaccess`, and re-runs the audit against the live site to verify.
 
-| Reference file | Covers |
-| --- | --- |
-| `head-tags.md` | title, description, canonical, robots, the Open Graph block, Twitter card, and why the URLs must be absolute |
-| `images.md` | og:image 1200×630, SVG favicon, apple-touch-icon, and the ImageMagick commands with the decision behind each flag |
-| `server-files.md` | robots.txt, sitemap.xml, .htaccess: canonical domain, compression, split caching, security headers |
-| `structured-data.md` | JSON-LD for LocalBusiness, Organization, Article and BreadcrumbList |
-| `search-engines.md` | Search Console (Domain vs URL prefix), Bing, submitting the sitemap, validators, busting Facebook's cache |
+| Reference file       | Covers                                                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `head-tags.md`       | title, description, canonical, robots, the Open Graph block, Twitter card, and why the URLs must be absolute      |
+| `images.md`          | og:image 1200×630, SVG favicon, apple-touch-icon, and the ImageMagick commands with the decision behind each flag |
+| `server-files.md`    | robots.txt, sitemap.xml, .htaccess: canonical domain, compression, split caching, security headers                |
+| `structured-data.md` | JSON-LD for LocalBusiness, Organization, Article and BreadcrumbList                                               |
+| `search-engines.md`  | Search Console (Domain vs URL prefix), Bing, submitting the sitemap, validators, busting Facebook's cache         |
 
 Templates in `assets/`: a parameterized `head.php` for static sites, a `social-meta.blade.php` component for Laravel, a commented `.htaccess`, and a `robots.txt`.
 
@@ -528,13 +528,13 @@ It reports tokens sitting in `~/.npmrc` or the project `.npmrc`, Actions secrets
 
 The badge check earns its place from this repo's own history: three badges asked for `aiskills` while the package publishes as `@maccesar/aiskills`, so shields.io rendered "package not found" instead of an error and the downloads badge hid a real 568/month for months.
 
-| Reference file | Covers |
-| --- | --- |
-| `authentication.md` | the timeline, session-based login, the three token types, the 2FA-bypass phases with dates, the npmjs.com banner, and which paths remain |
+| Reference file          | Covers                                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `authentication.md`     | the timeline, session-based login, the three token types, the 2FA-bypass phases with dates, the npmjs.com banner, and which paths remain               |
 | `trusted-publishing.md` | the publisher form field by field, `id-token: write`, the Node/npm minimums, provenance, the version guard, and the mistakes that break a registration |
-| `install-defaults.md` | npm v12 defaults, `npm approve-scripts`, the committed allowlist, which packages break, and the `ignore-scripts` trap |
-| `migration.md` | the once-per-project procedure in order, what only the package owner can do, and the cleanup the old flow leaves behind |
-| `verification.md` | the command behind each claim — including why `npm view` reports a stale version and what npmjs.com shows when OIDC worked |
+| `install-defaults.md`   | npm v12 defaults, `npm approve-scripts`, the committed allowlist, which packages break, and the `ignore-scripts` trap                                  |
+| `migration.md`          | the once-per-project procedure in order, what only the package owner can do, and the cleanup the old flow leaves behind                                |
+| `verification.md`       | the command behind each claim — including why `npm view` reports a stale version and what npmjs.com shows when OIDC worked                             |
 
 `assets/publish.yml` is the workflow template, commented line by line.
 
@@ -595,9 +595,9 @@ aiskills auto-update --silent   # No output (for hooks)
 ```
 
 Options:
-| Option        | Description                          |
-| ------------- | ------------------------------------ |
-| `-s, --silent` | Suppress all output except errors   |
+| Option         | Description                       |
+| -------------- | --------------------------------- |
+| `-s, --silent` | Suppress all output except errors |
 
 What it does:
 1. Checks a local cache (`~/.aiskills/last-check.json`) — if already checked today, exits immediately
