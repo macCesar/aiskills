@@ -12,7 +12,7 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 
 ## What aiskills is
 
-- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 9 general-purpose AI coding assistant skills (audit-codebase, humaniza, npm-supply-chain, refactoring-ui, release, seo-launch, session-log, stitch-showcase, vscode-extension-dev). `release` is explicit-only because it can commit, tag, push, and publish.
+- An npm CLI (`@maccesar/aiskills`) + Claude Code plugin marketplace that ships 10 general-purpose AI coding assistant skills (audit-codebase, humaniza, npm-supply-chain, refactoring-ui, release, seo-launch, session-log, stitch-showcase, technical-demo-videos, vscode-extension-dev). `release` is explicit-only because it can commit, tag, push, and publish.
 - Distribution channels:
   - **npm**: `npm install -g @maccesar/aiskills` then `aiskills install` (works with Claude Code, Gemini CLI, Codex CLI).
   - **Claude Code plugin marketplace**: `/plugin marketplace add macCesar/aiskills` then `/plugin install aiskills@maccesar-aiskills` (Claude Code only).
@@ -118,7 +118,7 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 
 ## Parallel project: `TiTools`
 
-`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 9 Titanium skills; here: 9 general-purpose) and TiTools' three Titanium-specific slash commands (`ti-check`, `ti-new-screen`, `ti-audit`).
+`@maccesar/titools` lives at `~/Developer/openSource/TiTools`. The two repos are the **same tool shipped twice with different payloads**: same CLI (`install`, `update`, `auto-update`, `status`, `doctor`, `list`, `remove`), same `~/.agents/skills/` layout, same symlink mirrors, same marketplace-plugin detection, same release mechanics. What differs is the content — the skills each ships (TiTools: 9 Titanium skills; here: 10 general-purpose) and TiTools' three Titanium-specific slash commands (`ti-check`, `ti-new-screen`, `ti-audit`).
 
 **A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
 

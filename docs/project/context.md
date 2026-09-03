@@ -39,7 +39,7 @@ For this contract, the shared CLI CORE includes CLI entry behavior, common `lib/
 
 | | aiskills | TiTools |
 |---|---|---|
-| `skills/` | 9 general-purpose skills, including explicit-only `release` | 9 Titanium skills |
+| `skills/` | 10 general-purpose skills, including explicit-only `release` | 9 Titanium skills |
 | `commands/` | none; the former `release` command is now a cross-agent skill | `ti-check`, `ti-new-screen`, `ti-audit` |
 | `agents/` | none | `ti-pro` |
 | Knowledge Index | **does not apply** — see below | yes — `titools sync`, `lib/commands/agents.js`, 9 functions in `utils.js` |
@@ -54,7 +54,7 @@ It reads like missing work and it is not. TiTools' index opens with *"your train
 
 None of the skills here have that enemy. `refactoring-ui` is principles from a book, `vscode-extension-dev` is a stable documented API, `humaniza` and `session-log` are conventions that exist in no training data at all — there is nothing outdated to correct, so the same 850 tokens buy nothing.
 
-The trigger does not transfer either. `tiapp.xml` identifies a project where **all 9 of TiTools' skills apply**; this repo has no equivalent marker and its 8 skills cover disjoint domains — `stitch-showcase` and `vscode-extension-dev` are noise in a Laravel repo, `humaniza` only matters where there is Spanish text.
+The trigger does not transfer either. `tiapp.xml` identifies a project where **all 9 of TiTools' skills apply**; this repo has no equivalent marker and its 10 skills cover disjoint domains — `stitch-showcase` and `vscode-extension-dev` are noise in a Laravel repo, `humaniza` only matters where there is Spanish text.
 
 The *mechanism* is portable (`buildKnowledgeIndex` just scans `skills/*/references/`). The content and the trigger are not. If that benefit is ever wanted here, the shape is a **selective index keyed to a detected domain** — which is what the SessionStart hook sketch in TiTools' `docs/PENDING-IMPROVEMENTS.md` proposes, and the only part of that plan still worth doing.
 

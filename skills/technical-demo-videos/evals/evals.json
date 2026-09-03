@@ -1,0 +1,48 @@
+{
+  "skill_name": "technical-demo-videos",
+  "note": "Cross-domain planning evals written when a project-specific production workflow was generalized. These prompts are review fixtures, not claims of completed recordings or measured results.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "node-cli-capture-plan",
+      "prompt": "Take /workspace/json-pretty-cli and make a short VS Code video showing npm test, then formatting fixtures/input.json with node bin/pretty.js. Show the output file and give me the recording plan before touching the UI.",
+      "fixture_spec": "A small Node.js CLI repository with package.json, bin/pretty.js, test/pretty.test.js and fixtures/input.json. It has no video conventions or workstation-specific paths.",
+      "expected_output": "Inspects the project and applicable Node documentation, proposes the exact initial frame, command sequence, visible proof, narration beats, disposable-copy location and cleanup, then waits for approval without recording.",
+      "assertions": [
+        "Does not start UI automation or recording before approval",
+        "Uses the exact project path and verified commands instead of framework assumptions",
+        "Shows both test success and the formatted output as separate proof beats",
+        "Keeps workstation geometry and disposable-copy root configurable",
+        "Names the production artifacts and cleanup behavior"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "web-app-runtime-proof",
+      "prompt": "Plan a tutorial from /workspace/inventory-web that starts its dev server, changes the stock filter in VS Code, and proves the result in the browser. I want English narration and selectable captions.",
+      "fixture_spec": "A Vite web application with a documented npm run dev command, a StockFilter component and local fixture data. The browser can be opened without authentication or network access.",
+      "expected_output": "Loads appropriate web/UI expertise, proposes a deterministic server-readiness check and browser proof, keeps setup outside capture, and separates narration source from SRT spelling.",
+      "assertions": [
+        "Routes technical claims through applicable domain skills or primary project documentation",
+        "Waits for observable server readiness instead of a long arbitrary sleep",
+        "Defines the browser state that proves the filter works",
+        "Keeps English voice text and selectable captions as separate artifacts",
+        "Does not publish or create paid voice audio without authorization"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "retake-audio-alignment",
+      "prompt": "The take is good, but paragraph three says the build completed before the terminal reaches Finished. Fix the same recorder, keep my original voice file, and make take 2.",
+      "fixture_spec": "An approved technical-video package with recording plan, permanent recorder, take-01 MOV, event log, paragraph-based narration, original external voice MP3 and cue sheet.",
+      "expected_output": "Edits the permanent recipe rather than creating a throwaway script, preserves the supplied audio, records take 2 after a clapperboard warning, asks for the live review, and performs block-level alignment only after acceptance.",
+      "assertions": [
+        "Modifies the permanent recorder or recipe instead of creating a take-specific automation script",
+        "Never overwrites take 1 or the supplied audio",
+        "Announces the real capture with a clapperboard in a separate update",
+        "Uses actual event timing for the Finished beat",
+        "Keeps a clean post-roll and does not use one unrelated long pause to absorb drift"
+      ]
+    }
+  ]
+}

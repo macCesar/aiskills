@@ -21,7 +21,7 @@ aiskills ships two things from a single source:
 
 Skills conform to the [agentskills.io specification](https://agentskills.io/specification) so any compatible agent can load them. The CLI itself is ESM Node.js with Commander.js and `ora` spinners.
 
-Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (9 Titanium ones there, 9 general-purpose here) and TiTools' slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
+Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` — the same tool shipped twice with different payloads. Same CLI, same install paths, same plugin detection, same release mechanics; what differs is the skills each ships (9 Titanium ones there, 10 general-purpose here) and TiTools' slash commands. TiTools additionally carries the `ti-pro` agent, the Knowledge Index (`titools sync`) and a `tiapp.xml` SessionStart hook.
 
 **When you change shared machinery, port it there in the same session.** The full contract, including the table of what legitimately diverges and a measured per-file comparison, is in [docs/project/context.md](docs/project/context.md) § "Sibling project".
 

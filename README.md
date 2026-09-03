@@ -73,11 +73,18 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | vscode-extension-dev | VS Code      | VS Code Extension API docs           | 14 files        |
 | stitch-showcase      | Design Tools | Google Stitch export workflow        | 16 files        |
 | session-log          | Project      | Convention + 3 A/B rounds            | 2 files         |
+| technical-demo-videos | Video Production | Reproducible macOS technical demos | 9 guides + 4 scripts |
 | release              | Publishing   | Portable, confirmation-gated workflow | 1 file          |
 | seo-launch           | Web / SEO    | Head tags, share cards, server files | 5 files         |
 | npm-supply-chain     | npm / CI     | npm and GitHub changelogs, 2025–2026 | 5 files         |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
+
+### Technical demo videos
+
+`technical-demo-videos` turns a conversational tutorial idea and a project path into a reviewable storyboard, a permanent recorder, an event log, narration and caption sources, and a verified delivery master. It loads the appropriate framework or domain skills before writing technical claims, prepares VS Code outside the capture, announces every real recording with a clapperboard, uses a fresh disposable project for each take, and keeps all production sources needed to recreate the result. YouTube upload automation and vertical derivatives remain opt-in.
+
+The workstation geometry and temporary-copy directory are configuration, not assumptions baked into the skill. A team can calibrate one profile and reuse the same workflow for a CLI, web app, mobile simulator, build process, or another technical tutorial.
 
 ---
 
