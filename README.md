@@ -84,6 +84,8 @@ Use `aiskills list` to see available skills from the command line. Pull requests
 
 `technical-demo-videos` turns a conversational tutorial idea and a project path into a reviewable storyboard, a permanent recorder, an event log, narration and caption sources, and a verified delivery master. It loads the appropriate framework or domain skills before writing technical claims, prepares VS Code outside the capture, announces every real recording with a clapperboard, uses a fresh disposable project for each take, and keeps all production sources needed to recreate the result. YouTube upload automation and vertical derivatives remain opt-in.
 
+Automated YouTube publication requires an explicit channel and playlist choice (including an explicit no-playlist choice), validates both against the authenticated account, and binds execution to a reviewed dry run with a confirmation token.
+
 The workstation geometry and temporary-copy directory are configuration, not assumptions baked into the skill. A team can calibrate one profile and reuse the same workflow for a CLI, web app, mobile simulator, build process, or another technical tutorial.
 
 ---

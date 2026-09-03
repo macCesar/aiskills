@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.23.0] - 2026-09-03
+
 ### Added — reusable technical demo video production
 
 - Added `technical-demo-videos`, a cross-domain workflow for reviewable storyboards, reproducible macOS/VS Code recorders, event-based narration timing, selectable captions, verified delivery masters, and optional social publishing.
-- The reusable Python runtime now accepts a configurable disposable-project root and capture display instead of embedding a maintainer path or monitor selection.
-- Added three cross-domain evaluation specifications and regression coverage for package wiring, portability, approval gates, helper syntax, and npm packaging.
+- The reusable Python runtime accepts a configurable disposable-project root and capture display instead of embedding a maintainer path or monitor selection.
+- Added four cross-domain evaluation specifications and regression coverage for package wiring, portability, approval gates, helper syntax, npm packaging, and safe YouTube targeting.
+- Completed the Codex UI metadata, required reference-routing contract, and public plugin catalog descriptions; fixed frame-rate-aware bitrates, BT.709 tagging, stereo audio settings, cue boundaries, and caption-replacement dry runs.
+- Hardened YouTube targeting with read-only account and playlist inspection, explicit no-playlist decisions, authenticated-channel and playlist verification, and a confirmation token tied to the reviewed dry run.
 
 ## [1.22.0] - 2026-08-29
 
