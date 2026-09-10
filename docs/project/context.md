@@ -21,6 +21,17 @@ test/                   node:test suites
 
 `~/.agents/skills/` is the canonical install path. A published npm package copies skills there; when the CLI resolves to a development checkout containing `.git`, it symlinks each whole skill directory instead. After one `aiskills install`, an `npm link` maintainer sees edits and new reference files immediately. Claude Code's platform mirror then points at the same canonical entry.
 
+## Which assistant built what
+
+One row per stretch of work, not per session. Attribution comes from the `Co-Authored-By` trailer in `git log` (Claude Code sessions carry one; Codex sessions do not) and from the `Session by:` line of past `status.md` revisions. It matters for one reason: transcripts live inside the tool that produced them, so returning to a piece of work means knowing which tool still holds it.
+
+| When | Assistant · model | What it produced |
+| --- | --- | --- |
+| 2026-03 → 2026-05 | Claude Code · Opus 4.6 / 4.7 (1M), Sonnet 4.6 | CLI, installer and symlink layer, the first skill payload through v1.14.0 |
+| 2026-07 → 2026-08 | Claude Code · Opus 4.8, Opus 5 | `audit-codebase`, marketplace channel, plugin detection, the `release` skill migration, v1.15.0 → v1.22.0 |
+| 2026-09-03 | Codex | `technical-demo-videos` and its integration audit, v1.23.0 |
+| 2026-09-10 | Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) | `humaniza` weighting, register inference and scoring rubric; v1.24.0 release |
+
 ## Sibling project — `TiTools`
 
 **Location:** `~/Developer/openSource/TiTools` — npm package `@maccesar/titools`, GitHub `macCesar/titools`, marketplace `titools@maccesar-titools`.
