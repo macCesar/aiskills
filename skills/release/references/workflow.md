@@ -160,6 +160,10 @@ Do all of this **internally**. Do not print a status summary or any "Step 1" hea
 
 10. **Note genuine anomalies** for Step 4: no remote, no `gh`, README/CHANGELOG languages disagree, an excluded file is borderline. **Do not** flag a dirty working tree itself — that's expected. **Do not** flag "branch is not main" as an anomaly either — handle it via the dedicated merge prompt below. **Do not** flag "no prior tags" or "no prior releases" as an anomaly on a private repo — in private mode we're not creating either anyway, so it's not a question. On public mode the `first-tag` / `first-release` flags from Step 1.8 are surfaced as their own ⚠️ lines (see Step 4 Part C), not in the generic anomalies list.
 
+11. **Detect an installed session-notes convention.** Check whether `docs/project/status.md` exists. If it does, the repo keeps its working state under the `session-log` convention, and a release is exactly the event that file has to record: the release commit hash, the tag, the publish outcome and the version the registry actually serves are facts that only exist after Phase 3. Hold a `session-note` flag for Step 4 and Phase 6.
+
+    **If the file is absent, create nothing** — not the file, not `docs/project/`, not a pointer block. Installing that convention is `session-log`'s job and it writes into `CLAUDE.md` / `AGENTS.md`; doing that silently inside a release is a surprise in a command that already performs irreversible actions. No file, no flag, no mention in Step 4.
+
 ---
 
 ### Step 2 — Infer the bump (silent)
@@ -300,6 +304,7 @@ Sin publicación automática: este repo publica a mano (`npm login` abre una ses
    • Public / internal repo: `Tag + GitHub release: vX.Y.Z to <branch> + release with CHANGELOG notes.`
    • Private repo (default): `Repo privado → omitiendo tag y GitHub release. (responde "con tag" si quieres crear el tag de todos modos)` — localize to user's language.
    • Unknown (no gh / non-GitHub remote): `Tag + push: vX.Y.Z to <branch>. GitHub release: skipped (no gh / non-GitHub remote).`
+Nota de sesion: tras publicar, reescribo `docs/project/status.md` con el resultado (y los demas archivos de `docs/project/` que este release deje desactualizados) y lo subo en `docs(project): ...`.   ← include ONLY when the `session-note` flag from Step 1.11 is set; localize to user's language
 
 ⚠️ First tag for this repo (no prior tags found). Confirming creates `vX.Y.Z` as the first ever tag.   ← include ONLY when the `first-tag` flag from Step 1.8 is set (public mode); localize to user's language
 ⚠️ First GitHub release for this repo (no prior releases found). Confirming creates the first ever release.   ← include ONLY when the `first-release` flag from Step 1.8 is set (public mode, `gh` available); localize to user's language
@@ -418,12 +423,29 @@ The "optional note" only appears if something was non-routine — examples:
 - `<workflow>.yml failed: <reason> — <run URL>` (the tag and commits are landed; the publish is not)
 - `merged to main; now on <main-branch>` (when Phase 4 ran successfully with mode=merge; include the new main HEAD short hash)
 - `PR opened: <pr-url>` (when Phase 4 ran with mode=pr)
+- `session note: <short hash>` (when Phase 6 committed the updated `status.md`)
 - `merge to main aborted: main has diverged — resolve manually`
 - `tag is on feature branch; main not aligned`
 - `GitHub release skipped (no gh)`
 - `excluded file left in working tree: screenshot.png`
 
 If everything was routine and no merge was requested, the second line is just the commit summary.
+
+**Phase 6 — Session note (only when Step 1.11 set the `session-note` flag).**
+
+Runs after Phase 5, because what it records is what Phase 5 observed.
+
+**This phase does not define how the notes are written — `session-log` does, and it ships alongside this skill.** Read that skill's closing procedure and follow it: which of the four files move, when the stable ones are allowed to change, and what belongs in each. Do not reimplement those rules here; two copies of one convention drift, and the copy inside a release workflow is the one nobody remembers to update.
+
+What this phase adds is the part `session-log` cannot know, because it only exists once Phase 5 has run:
+
+1. **The release facts go into `status.md` as verified.** The release commit hash, the tag, the outcome of the publishing workflow, and the version the registry actually serves — each from a command run during this release, never carried over from the previous revision of the file. Everything else the file claims still has to earn its place the way `session-log` requires.
+2. **The stable files are checked against this release specifically.** A release is frequently what makes them stale: a requirement got satisfied, a decision was made under the confirmation you just collected, a document appeared. `session-log` says how to judge that; the trigger is simply that a release happened. Most releases change none of them, and that is a fine answer — inventing an entry so the commit looks thorough is worse than leaving the file alone.
+3. **Commit and push without asking again.** `git add docs/project/` — the whole directory, so whichever files moved are included, but as an explicit path and never `-A`, which would sweep in whatever the user left half-done. Then `docs(project): <subject>` and `git push origin <current-branch>`. `session-log` normally offers this commit and waits; here the Step 4 block already announced it and the user confirmed it there, so the offer would be a second ask for permission already given.
+
+If `session-log` is not installed, do step 1 only — rewrite `status.md` with the release facts — and say in the final report that the rest of the convention was not applied.
+
+The note necessarily lands one commit after the tag, and that is correct rather than a defect — the tag points at the code that was published, while the note describes the publication. On a package whose `files` field excludes `docs/`, the tarball is byte-identical either way; confirm that instead of assuming it.
 
 ---
 

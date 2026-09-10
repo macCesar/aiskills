@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — a release now closes its own session note
+
+`release` gains one detection step and one execution phase. When `docs/project/status.md` exists, the Step 4 confirmation block announces that the notes will be rewritten after publication and committed as `docs(project): …`, and a new Phase 6 does it once the publish has been observed. Phase 6 delegates to `session-log` rather than restating it — that skill owns which files move and when the stable ones may change — and contributes only what a release knows and a session close cannot: the release commit hash, the tag, the publish outcome and the version the registry serves, all recorded as verified. The commit is not offered a second time, because Step 4 already collected that permission. The notes necessarily land one commit after the tag, which is correct: the tag points at the code that shipped, while the notes record the shipment. When `docs/project/status.md` is absent, `release` creates nothing; installing the convention writes into `CLAUDE.md` and `AGENTS.md` and has no business happening inside a release.
+
+`session-log` no longer leaves its own output uncommitted. Its "closing is not permission to edit" boundary protects the person's work in progress, and it was being applied to the four files the skill itself had just written — so a closed session ended with the record on one machine, invisible to the clone, which is the scattered-notes failure the convention exists to prevent. Closing now ends by offering the commit in one line and, when confirmed, staging `docs/project/` explicitly. A release is the one path with no second ask, because the confirmation was already collected there.
+
 ## [1.24.0] - 2026-09-10
 
 ### Changed — `humaniza` weighs its tells, deduces register, and scores the result

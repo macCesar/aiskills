@@ -279,7 +279,20 @@ Per-stack specifics — Laravel, Titanium, Node, Python, Rails, Go — are in `r
 
 You'll find real problems while taking inventory. Write them down and leave them. The uncommitted tree is the person's work in progress; a fix applied while they weren't looking is a fix they didn't review, landing in a diff they'll read tomorrow as their own.
 
-Same for publishing: don't commit, tag or push. Releasing assumes the work is finished, which is the opposite of why this exists. A log entry says "auth is half-wired, the form is missing"; a release note never says that. If the project has a release path — a `/release` command, a documented procedure — name it and stop there; deciding that this is the moment to run it is the person's call.
+Same for publishing: don't commit their work, don't tag, don't push. Releasing assumes the work is finished, which is the opposite of why this exists. A log entry says "auth is half-wired, the form is missing"; a release note never says that. If the project has a release path — a `/release` command, a documented procedure — name it and stop there; deciding that this is the moment to run it is the person's call.
+
+**The four files are the exception, and skipping it is how this ends badly.** A session that writes `status.md` and walks away leaves the record uncommitted on one machine — invisible to the clone, to the next person, and to the next assistant. That is the scattered-notes failure this convention exists to prevent, reintroduced at the very last step. So finish by offering it in one line, naming which of the four you touched: *`status.md` and `context.md` are written but uncommitted — commit them?* Name them because a session that moved three of the four should not read as if only the status did. Don't run it unannounced, and don't leave without asking either.
+
+Once it's confirmed, stage the paths explicitly:
+
+```bash
+git add docs/project/    # never -A: that sweeps in whatever they left half-done
+git commit -m "docs(project): session close YYYY-MM-DD"
+```
+
+If the tree was already dirty when you arrived, say so in the summary. A clean `git status` afterwards must not read as "everything is in".
+
+A release is the one case with no second ask. When the person runs `/release` or the project's documented procedure, the note is written **after** the tag — the release commit hash, the publish outcome and the published version don't exist before it — and its commit rides on the confirmation that procedure already collected.
 
 The same boundary holds in the other direction. `status.md` records that an audit found twelve issues and where the report lives; it isn't the place to fix them, and a session that quietly repaired three on the way past leaves a record that no longer matches either the report or the diff.
 
