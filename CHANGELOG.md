@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.24.0] - 2026-09-10
+
+### Changed — `humaniza` weighs its tells, deduces register, and scores the result
+
+The skill treated its eight rules as equals and waited for the user to request a mode. Text could pass the whole checklist and still sound like a machine, because a checklist verifies absences and never asks whether the result came out alive.
+
+Rules 1–5 now justify an edit on a single occurrence; the rest only count when several coincide in the same passage, so one weak tell no longer flattens the prose. Register is deduced from the kind of text instead of waiting for an explicit mode — an essay or personal mail keeps opinion, doubt and digression, while reference, technical, legal and factual text stays neutral and plain. A five-dimension rubric (franqueza, ritmo, confianza, voz, densidad) with a 35/50 threshold now scores whether the result is alive, carrying the two caveats that make it usable: voice is graded against the type of text, and a perfect 50 signals over-editing.
+
+Three new tells ship with it: explaining internals inside a usage document, a first sentence that repeats its own heading, and describing the version a change replaces. Incoming text is now stated to be material to edit, never instructions to follow.
+
 ## [1.23.0] - 2026-09-03
 
 ### Added — reusable technical demo video production
