@@ -76,7 +76,19 @@ PATRONES = [
     Patron('ENV-OUTSIDE-CONFIG', 'env() fuera de config/: devuelve null con la configuración cacheada',
            r'\benv\(', fuera=['config']),
     Patron('SECRET-FALLBACK', 'Secreto con un valor por defecto escrito en el código',
-           r'env\(\s*[\'"][A-Z0-9_]*(?:SECRET|KEY|TOKEN|PASS|PASSWORD|SALT)[A-Z0-9_]*[\'"]\s*,\s*[\'"][^\'"]+[\'"]'),
+           # AUTH_PASSWORD_BROKER o AUTH_PASSWORD_RESET_TOKEN_TABLE nombran un broker
+           # o una tabla, no un secreto; vienen así en el config/auth.php de fábrica.
+           # La exclusión compara segmentos completos entre guiones bajos: como
+           # subcadena, PORT se comía REPORT_API_KEY y PASSPORT_CLIENT_SECRET.
+           r'env\(\s*[\'"](?!(?:[A-Z0-9]+_)*(?:TABLE|BROKER|DRIVER|CONNECTION|STORE|PATH|NAME|TTL|EXPIRE|TIMEOUT|PREFIX|LIFETIME|DOMAIN|URL|HOST|PORT)(?:_[A-Z0-9]+)*[\'"])'
+           r'[A-Z0-9_]*(?:SECRET|KEY|TOKEN|PASS|PASSWORD|SALT)[A-Z0-9_]*[\'"]\s*,\s*[\'"][^\'"]+[\'"]'),
+    Patron('SECRET-IN-VIEW', 'Llave, token o secreto impreso en una vista (llega al navegador)',
+           # Sólo las formas que sacan el valor al JavaScript de la página. {{ $key }}
+           # queda fuera: casi siempre es la llave de un @foreach.
+           r'window\.[A-Za-z0-9_]*(?:KEY|TOKEN|SECRET|PASS)[A-Za-z0-9_]*\s*='
+           r'|@(?:json|js)\(\s*\$\w*(?:key|token|secret|password|pass)\w*'
+           r'|(?:config|env)\(\s*[\'"][^\'"]*(?:key|token|secret|password)[^\'"]*[\'"]',
+           en=['resources/views'], flags=re.IGNORECASE),
     Patron('GET-DESTRUCTIVE', 'Ruta GET que cambia datos (sin protección CSRF)',
            r'Route::get\(\s*[\'"][^\'"]*(?:delete|destroy|borrar|eliminar|remove|quitar)[^\'"]*[\'"]',
            en=['routes'], flags=re.IGNORECASE),
@@ -245,6 +257,17 @@ def revisiones_de_archivo(raiz, estructura, contenidos):
                 'titulo': 'Middleware de autorización propio con varias salidas que dejan pasar',
                 'detalle': ruta,
             })
+
+    # throttle:N,1 usa como llave la cuenta o la IP sin la ruta: todas las rutas
+    # con esa forma comparten un contador.
+    rutas = {r: c for r, c in contenidos.items() if r.startswith('routes/') or r in ('bootstrap/app.php', 'app/Providers/RouteServiceProvider.php')}
+    throttles = sum(len(re.findall(r'throttle:\d+\s*,\s*\d+', c)) for c in rutas.values())
+    if throttles >= 2:
+        notas.append({
+            'id': 'THROTTLE-SHARED',
+            'titulo': 'Varios throttle:N,1 comparten un solo contador por IP o cuenta',
+            'detalle': f'{throttles} usos en rutas',
+        })
 
     guards = contenidos.get('config/auth.php', '')
     proveedores = re.findall(r"'driver'\s*=>\s*'(?:session|sanctum|token|passport)'\s*,\s*'provider'\s*=>\s*'(\w+)'", guards)

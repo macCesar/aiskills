@@ -6,9 +6,9 @@ These patterns come from vulnerabilities confirmed in production Laravel applica
 
 ## Contents
 
-Project-level checks: AUTHZ-MIDDLEWARE · SHARED-PROVIDER · HOST-HEADER · IMAGE-LIMIT · CORS-WILDCARD · APP-DEBUG
+Project-level checks: AUTHZ-MIDDLEWARE · SHARED-PROVIDER · HOST-HEADER · THROTTLE-SHARED · IMAGE-LIMIT · CORS-WILDCARD · APP-DEBUG
 
-Line patterns: SQL-RAW · MASS-ASSIGN · ROLE-FROM-REQUEST · AUTH-ENTRY · RESET-ENUM · RESET-URL · SSRF · UPLOAD-NAME · PATH-FROM-INPUT · XSS-BLADE · EXEC · ENV-OUTSIDE-CONFIG · SECRET-FALLBACK · GET-DESTRUCTIVE · API-MUTATION · CSRF-EXCEPT · LOG-SECRETS
+Line patterns: SQL-RAW · MASS-ASSIGN · ROLE-FROM-REQUEST · AUTH-ENTRY · RESET-ENUM · RESET-URL · SSRF · UPLOAD-NAME · PATH-FROM-INPUT · XSS-BLADE · EXEC · ENV-OUTSIDE-CONFIG · SECRET-FALLBACK · SECRET-IN-VIEW · GET-DESTRUCTIVE · API-MUTATION · CSRF-EXCEPT · LOG-SECRETS
 
 ---
 
@@ -18,7 +18,7 @@ Line patterns: SQL-RAW · MASS-ASSIGN · ROLE-FROM-REQUEST · AUTH-ENTRY · RESE
 
 **Real when** any exit lets the request through without having established that the user may be there. The classic form looks up a permission record (a section, a module, a menu row) from the URL and, when the lookup finds nothing, calls `$next` "because it might be a special route". Every admin page that nobody registered then opens to every logged-in account. Also real: an unconditional bypass for one path (`if ($request->segment(2) === 'dropzone') return $next($request);`) placed before the role check.
 
-**False positive when** each `$next` is reached only after a check that denies by default, or the extra exits are for super-admins identified by something the user cannot set.
+**False positive when** each `$next` is reached only after a check that denies by default, or the extra exits are for super-admins identified by something the user cannot set. Also when the middleware does not authorize at all — it resolves the tenant, the locale or the current branch — and authorization happens in a separate `auth` / `can:` / gate layer that denies by default; confirm that layer exists before discarding.
 
 **Fix.** Deny by default: when nothing matches, redirect or `abort(403)`, and let only the top role through. Put an explicit gate on the admin route group so accounts that are not staff never reach it, whatever else the middleware does. Before shipping, list the roles that actually use the panel in the database, so the change does not lock out the owner.
 
@@ -28,7 +28,7 @@ Line patterns: SQL-RAW · MASS-ASSIGN · ROLE-FROM-REQUEST · AUTH-ENTRY · RESE
 
 **Real when** one of those guards is reachable by public self-registration (an API `register` endpoint, a mobile app sign-up) and another guards the admin panel. The public account then logs in to the panel with the same password. Check `AUTH-ENTRY` matches for `User::create` in API controllers.
 
-**False positive when** every guard on that provider serves staff only, or registration is closed.
+**False positive when** every guard on that provider serves the same audience — all staff, or all customers (a mobile app and a customer portal sharing a members table is fine) — or registration is closed.
 
 **Fix.** Keep public accounts in their own model and table with their own provider. When that is not possible now, reject non-staff roles in the panel login (`LoginRequest::authenticate()` after `Auth::attempt`) and in the admin middleware.
 
@@ -38,9 +38,19 @@ Line patterns: SQL-RAW · MASS-ASSIGN · ROLE-FROM-REQUEST · AUTH-ENTRY · RESE
 
 **Real when** the web server passes arbitrary `Host` headers to Laravel (shared hosting and default vhosts usually do). An attacker requests a reset for the victim's email with `Host: attacker.example`; the genuine email then carries a link to the attacker's domain with a valid token, which leaks when the victim or a mail link scanner opens it.
 
-**False positive when** the server pins the host upstream (a strict vhost that rejects unknown hosts) — say so as an assumption, since it is not visible in the code.
+**False positive when** the server pins the host upstream (a strict vhost that rejects unknown hosts) — say so as an assumption, since it is not visible in the code. Also when every reset notification implements `ShouldQueue` and the queue is not `sync`: the mail is then built in the worker, where there is no request and URLs come from `APP_URL`. Check `QUEUE_CONNECTION` — with `sync` the job runs inside the request and the finding stands — and note that the protection disappears if someone removes `ShouldQueue` later.
 
 **Fix.** Build reset URLs from `config('app.url')`: `ResetPassword::createUrlUsing(...)` in `AuthServiceProvider::boot()`, and `rtrim(config('app.url'), '/') . route(..., absolute: false)` in custom notifications (see `RESET-URL`). Enabling trusted hosts also works but rejects every domain not listed, so check which domains the site serves first. Syntax per structure in `versions.md`.
+
+## THROTTLE-SHARED — `throttle:N,1` in several routes
+
+**Flagged when** routes use `throttle:N,1` (numbers instead of a named limiter) two or more times.
+
+**Real when** those routes are hit by the same IP or account in normal use. The key is the user id or the IP with no route in it, so every such route shares one counter, and the tightest limit wins for all of them: a few reads of a config endpoint can lock the same client out of login or registration. Behind a shared IP — an office, a gym Wi-Fi, a mobile carrier's NAT — different people share the counter too. If the route group also applies `throttle:api`, requests are counted again on top. Prove it locally, never against production: call a loose route a few times, then the strict one, and watch for an early 429.
+
+**False positive when** only one route uses the numeric form, or the routes using it are never reached by the same client.
+
+**Fix.** A named limiter per purpose with the route in its key: `RateLimiter::for('login', fn (Request $r) => Limit::perMinute(5)->by($r->route()->uri() . '|' . $r->ip()))`, then `->middleware('throttle:login')`. Named limiters are keyed by their name, so they do not collide with each other.
 
 ## IMAGE-LIMIT — Glide without a size cap
 
@@ -152,9 +162,19 @@ Expect many matches in content-heavy sites. Triage by where the variable comes f
 
 ## SECRET-FALLBACK — a secret with a literal default
 
-**Real** almost always. `env('DOWNLOAD_SECRET', 'change-me')` means that whenever the variable is missing — a new server, a cached config — every signature, token or encryption made with it uses a value published in the repository.
+**Real** almost always — the script already skips names that are clearly not secrets, such as `AUTH_PASSWORD_BROKER` and `AUTH_PASSWORD_RESET_TOKEN_TABLE`. `env('DOWNLOAD_SECRET', 'change-me')` means that whenever the variable is missing — a new server, a cached config — every signature, token or encryption made with it uses a value published in the repository.
 
 **Fix.** No default. Read it through `config()` and fail loudly (`abort(500)` or an exception at boot) when it is empty. Keep the same variable name so existing signed values stay valid.
+
+## SECRET-IN-VIEW — a key or token printed into a page
+
+**Flagged when** a view assigns `window.SOMETHING_KEY =`, passes a variable named like a key or token to `@json`/`@js`, or calls `config()`/`env()` with a key, token, secret or password name. These are the forms that put a server value into the page's HTML or JavaScript.
+
+**Real when** the value is a server-side credential: a signing key, an API secret, a webhook or bridge key, a private token, a shared key that also authorizes server calls. Anyone who can load the page reads it in the source, so a secret in a page reachable without login is exposed to the internet. Trace the variable to the controller and then to `config/` or `.env` to see what it really is, and check who can load the view (route middleware). The worst form is a key that signs private channels or validates requests: it grants whatever the server trusts it for, such as subscribing to another tenant's real-time events.
+
+**False positive when** the key is public by design and meant for the browser: a Pusher / Reverb app key (not the secret), a reCAPTCHA or Turnstile *site* key, a Google Maps browser key restricted by referrer, a Stripe or payment-gateway *publishable* / *public* key, a Firebase web config, and the CSRF token (`window.csrfToken = '{{ csrf_token() }}'`), which is per session and exists to be sent back by the page. Also the two-factor setup key in the Livewire starter kit's settings view (`@js($manualSetupKey)`): it is the logged-in user's own TOTP secret, shown to them once so they can type it into an authenticator, behind `auth`. The provider's docs say which half is public; the other half must never appear in a view.
+
+**Fix.** Keep the secret on the server: the browser calls your endpoint, and the endpoint uses the secret. For a device that needs its own credential (a kiosk or a tablet), pair it once and store a per-device token that can be revoked, instead of a shared key in the page. Rotate any secret that was ever served, because it has already been read by anyone who loaded the page.
 
 ## GET-DESTRUCTIVE — state changes on GET
 

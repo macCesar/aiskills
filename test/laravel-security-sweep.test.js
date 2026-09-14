@@ -144,6 +144,17 @@ describe('the sweep on fixture projects', () => {
       '}',
       '',
     ].join('\n'));
+    put(project, 'resources/views/kiosk.blade.php', [
+      '<script>',
+      '  window.BRIDGE_KEY = @json($bridgeKey);',
+      '  const items = @json($items);',
+      '</script>',
+      '@foreach ($rows as $key => $row) <option value="{{ $key }}">{{ $row }}</option> @endforeach',
+      '',
+    ].join('\n'));
+    put(project, 'config/auth.php', "<?php\nreturn ['passwords' => env('AUTH_PASSWORD_BROKER', 'users'), 'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens')];\n");
+    put(project, 'config/services.php', "<?php\nreturn [\n  'report' => env('REPORT_API_KEY', 'dev-report-key'),\n  'passport' => env('PASSPORT_CLIENT_SECRET', 'dev-secret'),\n];\n");
+    put(project, 'routes/api.php', "<?php\nRoute::get('config', fn () => 1)->middleware('throttle:30,1');\nRoute::post('register', fn () => 1)->middleware('throttle:3,1');\n");
     put(project, 'app/Http/Controllers/Auth/PasswordResetLinkController.php', "<?php\n$status = Password::sendResetLink($request->only('email'));\nreturn $status == Password::RESET_LINK_SENT ? back() : back()->withErrors([]);\n");
     put(project, '.env', 'APP_KEY=base64:NEVER-PRINT-THIS-SECRET\nAPP_DEBUG=true\n');
 
@@ -172,6 +183,27 @@ describe('the sweep on fixture projects', () => {
     assert.ok(matches('UPLOAD-NAME').length > 0, 'storeAs with the client name not flagged');
     assert.ok(matches('SECRET-FALLBACK').length > 0, 'env() secret with a default not flagged');
     assert.ok(matches('RESET-ENUM').length > 0, 'forgot-password response that reveals accounts not flagged');
+  });
+
+  test('flags a key printed into a page, not a plain @json or a foreach key', () => {
+    const lines = matches('SECRET-IN-VIEW').map((m) => m.linea);
+    assert.deepEqual(lines, [2], `expected only the window.BRIDGE_KEY line, got ${JSON.stringify(lines)}`);
+  });
+
+  test('does not treat the stock broker and token-table names as secrets', () => {
+    const files = matches('SECRET-FALLBACK').map((m) => m.archivo);
+    assert.ok(!files.includes('config/auth.php'), 'AUTH_PASSWORD_BROKER / AUTH_PASSWORD_RESET_TOKEN_TABLE were flagged');
+    assert.ok(files.some((f) => f.endsWith('SearchController.php')), 'the real DOWNLOAD_SECRET fallback was lost');
+  });
+
+  test('excludes stock names by whole segment, not by substring', () => {
+    // PORT inside REPORT or PASSPORT once made real secrets disappear.
+    const lines = matches('SECRET-FALLBACK').filter((m) => m.archivo === 'config/services.php');
+    assert.deepEqual(lines.map((m) => m.linea), [3, 4], 'REPORT_API_KEY / PASSPORT_CLIENT_SECRET fallbacks were not both flagged');
+  });
+
+  test('raises the shared-throttle check when several routes use throttle:N,1', () => {
+    assert.ok(projectChecks().includes('THROTTLE-SHARED'), `project checks: ${projectChecks()}`);
   });
 
   test('raises the host-header check when resets have no fixed root and TrustHosts is commented', () => {

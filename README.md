@@ -316,6 +316,7 @@ Script: `scripts/barrido_laravel.py <project> [--json] [--sin-composer] [--max N
 
 Scope:
 - Stage 1 never modifies files; every match is read before it becomes a finding, and discarded matches are listed with their reason
+- Checks against a live server are read-only — GET requests to public pages and read-only commands over SSH, never sign-ups, logins or form submissions — and every one is disclosed in the report
 - Fixes are proposed for the structure the project actually has (`app/Http/Kernel.php` or `bootstrap/app.php`)
 - Every report lists what the sweep does not cover, so a clean result is not read as a clean bill of health
 

@@ -1,6 +1,6 @@
 ---
 name: laravel-security-sweep
-description: 'Low-cost security review of a Laravel 8–13 project. A bundled script runs composer audit and greps for the patterns behind real Laravel breaches (fail-open role middleware, public sign-ups writing into the admin users table, raw SQL with interpolated input, reset links built from the Host header, SSRF, client-controlled uploads, secrets with hard-coded fallbacks); the agent reads only the matching lines to confirm or discard each. One agent, no subagent swarm. Use when the user asks for a security check, audit or vulnerability review of a Laravel or Blade project — "revisa la seguridad de este proyecto", "busca vulnerabilidades", "is this safe to put online" — or wants the same review across several Laravel sites without a large token bill. Laravel 3 and 4 are reported as out of scope. Not for: reviewing only a diff or PR, non-Laravel stacks, performance or style audits, or pentesting a live server.'
+description: 'Low-cost security review of a Laravel 8–13 project. A bundled script runs composer audit and greps for the patterns behind real Laravel breaches (fail-open role middleware, public sign-ups writing into the admin users table, raw SQL with interpolated input, reset links built from the Host header, SSRF, client-controlled uploads, secrets with hard-coded fallbacks or printed into pages); the agent reads only the matching lines to confirm or discard each. One agent, no subagent swarm. Use when the user asks for a security check, audit or vulnerability review of a Laravel or Blade project — "revisa la seguridad de este proyecto", "busca vulnerabilidades", "is this safe to put online" — or wants the same review across several Laravel sites without a large token bill. Laravel 3 and 4 are reported as out of scope. Not for: reviewing only a diff or PR, non-Laravel stacks, performance or style audits, or pentesting a live server.'
 allowed-tools: Read, Grep, Glob, Bash, Edit, Write, AskUserQuestion
 compatibility: Requires Python 3 (standard library only). composer audit needs Composer 2.4+ and network access; the rest runs offline and never executes the project's code.
 ---
@@ -37,6 +37,8 @@ Respond in the user's language. This skill is written in English for portability
 
 4. **Check what the patterns cannot see**, briefly and only where the script pointed: for each `AUTH-ENTRY` and `AUTHZ-MIDDLEWARE` match, decide who can obtain a session and whether the admin route group rejects everyone who should not be there. That combination — a public registration plus a middleware that lets unknown routes through — is the most damaging pattern this sweep exists to catch, and neither half looks wrong on its own.
 
+   For each `SECRET-IN-VIEW` match, check whether the page is reachable without login. A secret handed to a public page is exposed to anyone, whatever the rest of the application does.
+
 5. **Report**, in this shape:
 
    | # | Finding | Severity | Where | Why it is exploitable |
@@ -46,6 +48,10 @@ Respond in the user's language. This skill is written in English for portability
    Then, separately: matches discarded and the one-line reason for each group (so the owner can see they were read, not skipped); `composer audit` advisories; and a short **Not covered** list (below). Severity is what an attacker gets and how hard it is to get: High is account takeover, data exposure, arbitrary file write or code execution behind at most one real hurdle; Medium is bounded impact or several conditions; Low is limited impact.
 
 6. **Stop.** Present the report and what you would change. Do not start fixing.
+
+### Checking a live server
+
+Some findings only resolve against the real environment: whether `.env` in production has debug on, what headers and cookies the site returns, whether a page really prints a key. Doing that is allowed in stage 1 within one boundary: **reads only**. GET requests to public pages, and read-only commands over SSH (`grep` of a config value, `php artisan about`, listing files). Never register, log in, request password resets, submit forms or run anything that writes against production — those create real records, send real emails and can trip rate limits or a firewall. Experiments that need writes or repeated requests, such as proving a shared rate limit, run on the local copy. Say in the report what you checked live and how, so the owner knows what touched the server.
 
 ## Stage 2 — Authorized fixes
 
