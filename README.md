@@ -125,6 +125,7 @@ How it works:
 4. **Compose CHANGELOG** — promotes `[Unreleased]` if present, or generates a Keep-a-Changelog entry from the union of all commits being shipped.
 5. **Show one compact plan and stop** — header line, optional warnings, the N proposed commits with their files, the CHANGELOG entry, the release commit summary, the push/tag/release lines. If the current branch is not main/master, also offers to fast-forward merge or open a PR. **Waits for explicit confirmation.** You can ask it to merge, split, or skip any of the N commits before confirming.
 6. **Execute** — lands each semantic commit (one at a time, with explicit `git add <files>` per commit, never `git add -A`), then the release commit (bump + CHANGELOG + README), pushes the branch, tags, and creates the GitHub release via `gh`. Optionally fast-forward merges to main or opens a PR if you confirmed that mode.
+7. **Close the session note** — only when the repo has `docs/project/status.md`. After the publish is observed, it rewrites the notes following `session-log` with the release commit hash, the tag, the workflow outcome and the version the registry serves, then commits them as `docs(project): …` without a second ask, because the plan already announced it. When the file is absent it creates nothing.
 
 Confirmations:
 - `proceed` / `sí` / `commitea` → release on current branch only.
@@ -398,7 +399,7 @@ There is no slash command, by design: a command and a skill doing the same job m
 Once the convention is installed, finding the notes no longer depends on the skill at all — the pointer in `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` is what any assistant reads at startup.
 
 What it will not do:
-- Commit, tag, push, or write CHANGELOG entries — that is a release, and releasing assumes the work is finished, which is the opposite of why this exists. Use `/release` for that.
+- Commit your work, tag, push, or write CHANGELOG entries — that is a release, and releasing assumes the work is finished, which is the opposite of why this exists. Use `/release` for that. The one commit it offers is its own files under `docs/project/`, so the record does not stay on one machine; inside a release that commit rides on the release confirmation.
 - Edit your uncommitted code. It reports what it finds broken and leaves it alone.
 - Invent a completion percentage. Without a fixed denominator any number is made up, so it counts what is enumerable or describes status in words.
 - Write a token, a password or a client's private details into the files. They get committed, and a secret deleted in a later commit is still in the history — it records where the credential lives instead.

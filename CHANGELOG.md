@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.25.0] - 2026-09-14
+
 ### Added — `laravel-security-sweep`
 
 A security review for Laravel 8–13 that costs a fraction of a multi-agent scan. `scripts/barrido_laravel.py` does the mechanical work without tokens: it reads the Laravel version from `composer.lock` (falling back to `composer.json` and to the Laravel 3/4 directory layout), tells the `app/Http/Kernel.php` structure from the `bootstrap/app.php` one, runs `composer audit`, and searches the code for 17 line patterns and 6 project-level checks. The agent reads only the matching lines, confirms or discards each, and reports findings with `file:line`; fixes wait for approval, as in `audit-codebase` and `seo-launch`.
