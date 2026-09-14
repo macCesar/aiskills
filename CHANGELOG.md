@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.26.0] - 2026-09-14
+
 ### Changed — `laravel-security-sweep` after a second production run
 
 A first real run on a second production application — a multi-branch Laravel 12 system — found its most serious issue outside every pattern: a server key printed into a public page's JavaScript. That shape is general, so it became `SECRET-IN-VIEW`, limited to the forms that put a value into the page (`window.X_KEY =`, `@json`/`@js` of a key-named variable, `config()`/`env()` in a view), with the catalog teaching the browser-public keys to discard (Pusher app key, reCAPTCHA site key, publishable payment keys). The same run added `THROTTLE-SHARED` for routes that share one `throttle:N,1` counter, stopped `SECRET-FALLBACK` from flagging the stock `AUTH_PASSWORD_BROKER` and `AUTH_PASSWORD_RESET_TOKEN_TABLE` names every Laravel 11+ project carries, documented the false positives it correctly discarded (tenant-resolving middleware, guards shared by one audience, queued reset notifications, which build their URLs from `APP_URL` because the console kernel's request comes from `config('app.url')`), and gave stage 1 an explicit boundary for live checks: reads only against production, and every live check disclosed in the report.
