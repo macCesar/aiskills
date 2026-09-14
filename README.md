@@ -65,18 +65,19 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 
 ## Available skills
 
-| Skill                 | Domain           | Source                                | Reference Files      |
-| --------------------- | ---------------- | ------------------------------------- | -------------------- |
-| refactoring-ui        | Design           | "Refactoring UI" by Wathan & Schoger  | 7 files              |
-| humaniza              | Writing (es)     | Curated Spanish/es-MX style rules     | 7 files              |
-| audit-codebase        | Auditing         | Evidence-based audit methodology      | 2 files              |
-| vscode-extension-dev  | VS Code          | VS Code Extension API docs            | 14 files             |
-| stitch-showcase       | Design Tools     | Google Stitch export workflow         | 16 files             |
-| session-log           | Project          | Convention + 3 A/B rounds             | 2 files              |
-| technical-demo-videos | Video Production | Reproducible macOS technical demos    | 9 guides + 4 scripts |
-| release               | Publishing       | Portable, confirmation-gated workflow | 1 file               |
-| seo-launch            | Web / SEO        | Head tags, share cards, server files  | 5 files              |
-| npm-supply-chain      | npm / CI         | npm and GitHub changelogs, 2025–2026  | 5 files              |
+| Skill                  | Domain             | Source                                | Reference Files      |
+| ---------------------- | ------------------ | ------------------------------------- | -------------------- |
+| refactoring-ui         | Design             | "Refactoring UI" by Wathan & Schoger  | 7 files              |
+| humaniza               | Writing (es)       | Curated Spanish/es-MX style rules     | 7 files              |
+| audit-codebase         | Auditing           | Evidence-based audit methodology      | 2 files              |
+| laravel-security-sweep | Security (Laravel) | Patterns from confirmed breaches      | 2 files + 1 script   |
+| vscode-extension-dev   | VS Code            | VS Code Extension API docs            | 14 files             |
+| stitch-showcase        | Design Tools       | Google Stitch export workflow         | 16 files             |
+| session-log            | Project            | Convention + 3 A/B rounds             | 2 files              |
+| technical-demo-videos  | Video Production   | Reproducible macOS technical demos    | 9 guides + 4 scripts |
+| release                | Publishing         | Portable, confirmation-gated workflow | 1 file               |
+| seo-launch             | Web / SEO          | Head tags, share cards, server files  | 5 files              |
+| npm-supply-chain       | npm / CI           | npm and GitHub changelogs, 2025–2026  | 5 files              |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -282,6 +283,40 @@ Scope:
 - Every confirmed finding gets an explicit disposition (fix now, later, accept, won't fix)
 - Findings are classified as Confirmed / Conditional risk / Unverified — no pattern-matched "vulnerabilities" without evidence
 - Stage 2 only starts after the user approves the decision matrix, and implements it completely
+
+---
+
+### laravel-security-sweep
+
+A security review for Laravel 8–13 projects that costs a fraction of a full scan. A bundled Python script does the mechanical part without spending tokens — detects the version and project structure, runs `composer audit`, and searches `app/`, `routes/`, `config/`, `resources/views/` and `bootstrap/` for the patterns behind confirmed Laravel breaches. The agent then reads only the matching lines, confirms or discards each one, and reports findings with `file:line` and why they are exploitable. One agent, no subagent swarm. Laravel 3 and 4 are detected and reported as out of scope.
+
+The patterns come from vulnerabilities confirmed by a multi-agent scan of a production Laravel application. The script was checked against that application's pre-fix snapshot — it flagged every confirmed location — and against the fixed tree, where those matches disappeared.
+
+When it activates:
+- Asking for a security check or vulnerability review of a Laravel or Blade project
+- Checking whether a Laravel site is safe to put online
+- Running the same review across several Laravel projects without a large token bill
+
+Example prompts:
+```
+"Revisa la seguridad de este proyecto Laravel"
+"Is this Laravel app safe to launch?"
+"Busca vulnerabilidades en el panel de administración"
+"Run the security sweep on all my Laravel sites"
+```
+
+Reference files:
+| File        | Topics                                                                                  |
+| ----------- | --------------------------------------------------------------------------------------- |
+| patterns.md | Every pattern the script flags: when a match is real, when it is not, and the root fix |
+| versions.md | Where middleware, trusted hosts, CSRF and casts live in Laravel 8–10 versus 11–13      |
+
+Script: `scripts/barrido_laravel.py <project> [--json] [--sin-composer] [--max N]` — Python 3 standard library only; never runs the project's code and reads nothing from `.env` except whether `APP_DEBUG` is true.
+
+Scope:
+- Stage 1 never modifies files; every match is read before it becomes a finding, and discarded matches are listed with their reason
+- Fixes are proposed for the structure the project actually has (`app/Http/Kernel.php` or `bootstrap/app.php`)
+- Every report lists what the sweep does not cover, so a clean result is not read as a clean bill of health
 
 ---
 

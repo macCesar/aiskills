@@ -1,0 +1,4 @@
+interface:
+  display_name: "Laravel Security Sweep"
+  short_description: "Low-cost pattern-based security review for Laravel 8–13 projects"
+  default_prompt: "Run a security sweep of this Laravel project: run the bundled script, read only the matching lines to confirm or discard each one, and deliver the findings report without modifying code."
