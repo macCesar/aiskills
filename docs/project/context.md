@@ -23,7 +23,7 @@ test/                   node:test suites
 
 ## Which assistant built what
 
-One row per stretch of work, not per session. Attribution comes from the `Co-Authored-By` trailer in `git log` (Claude Code sessions carry one; Codex sessions do not) and from the `Session by:` line of past `status.md` revisions. It matters for one reason: transcripts live inside the tool that produced them, so returning to a piece of work means knowing which tool still holds it.
+One row per stretch of work, not per session. Attribution comes from the `Co-Authored-By` trailer in `git log` (Claude Code sessions carry one; Codex sessions do not) and from the `Session by:` line of past `status.md` revisions. A session can edit this repo from another working directory, and its transcript then lives under that directory's project in `~/.claude/projects/`, not this one's — search every project for a phrase the work introduced before writing "not recorded". It matters for one reason: transcripts live inside the tool that produced them, so returning to a piece of work means knowing which tool still holds it.
 
 | When | Assistant · model | What it produced |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ One row per stretch of work, not per session. Attribution comes from the `Co-Aut
 | 2026-07 → 2026-08 | Claude Code · Opus 4.8, Opus 5 | `audit-codebase`, marketplace channel, plugin detection, the `release` skill migration, v1.15.0 → v1.22.0 |
 | 2026-09-03 | Codex | `technical-demo-videos` and its integration audit, v1.23.0 |
 | 2026-09-10 | Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) | `humaniza` weighting, register inference and scoring rubric; v1.24.0 release |
-| 2026-09-14 | Not recorded | `laravel-security-sweep` skill, script, references and tests; the `SECRET-IN-VIEW` / `THROTTLE-SHARED` round from a second production run |
+| 2026-09-14 | Claude Code · Opus 5 (`claude-opus-5`), session `e5b2d76f` run from `~/Developer/Apps/LM - La Baraja` | `laravel-security-sweep` skill, script, references and tests; the `SECRET-IN-VIEW` / `THROTTLE-SHARED` round from a second production run; the `SSRF` address-pinning section |
 | 2026-09-14 | Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) | `laravel-security-sweep` registration and review of both rounds (segment-based `SECRET-FALLBACK` exclusion, CHANGELOG restored); v1.25.0 and v1.26.0 releases |
 
 ## Sibling project — `TiTools`

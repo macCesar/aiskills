@@ -1,7 +1,7 @@
 # Status — 2026-09-14
 
 **Phase:** v1.26.0 shipped and published; one `laravel-security-sweep` catalog change committed on top, unreleased
-**Session by:** Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) — review, fixes and both releases. The two rounds of skill work were written in another session whose assistant is not recorded (see "Known pending").
+**Session by:** Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) — review, fixes and both releases. The skill work was written by another Claude Code · Opus 5 session (`e5b2d76f`) run from the `LM - La Baraja` directory, which is why its transcript is not under this project.
 **Deployed:** `@maccesar/aiskills@1.26.0` is `latest` on npm, published by `publish.yml` over OIDC (run 34876990721, green). Tag `v1.26.0`, the GitHub Release and the release commit all point at `08a9163`. v1.25.0 shipped earlier the same day at `9f0d20f`.
 **Branch:** `main`, level with `origin/main` at the release commit, plus this note's own commit.
 **Sibling:** `../TiTools` — not touched, and no port is owed. Both releases change AISkills payload only (`laravel-security-sweep`, `release`, `session-log`); no shared CLI CORE behavior moved.
@@ -39,7 +39,3 @@ Nothing to refresh on the maintainer's machine: the CLI is `npm link`-ed and the
 - **Not checked from here:** the SNAP figures quoted by the authoring session (3 `SECRET-IN-VIEW` lines, 29 `throttle:N,1` uses, `SECRET-FALLBACK` 3 → 0).
 - **Not checked from here:** the Guzzle 7.9 pinning test the SSRF paragraph cites. Checked against `man curl`: the `host:port:addr` format and bracketed addresses (curl ≥ 7.57.0).
 - **Verified by the maintainer, not from here:** the skill auto-invoked from "Ahora hay que hacer una auditoría de seguridad del proyecto en Laravel". One prompt, not a trigger measurement; no eval against `audit-codebase` was run.
-
-## Known pending
-
-- **Attribution gap:** the session that wrote both rounds of `laravel-security-sweep` left no transcript under this project's Claude Code directory. `context.md` records it as "Not recorded"; if the maintainer knows which tool wrote it, correct that row.
