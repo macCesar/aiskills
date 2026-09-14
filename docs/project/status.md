@@ -1,54 +1,36 @@
-# Status — 2026-09-10
+# Status — 2026-09-14
 
-**Phase:** v1.24.0 shipped and published; a follow-up change to `release` and `session-log` is committed on top of it, unreleased
-**Session by:** Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`)
-**Deployed:** `@maccesar/aiskills@1.24.0` is live on npm, published by `publish.yml` over OIDC (run 34508954288, green in 18s). Tag `v1.24.0`, the GitHub Release, and `main` all point at `e3bd949`. The maintainer's Claude marketplace cache has **not** been refreshed yet — see "Next step".
-**Branch:** `main`, one commit ahead of the v1.24.0 tag (`0f054cc`, the follow-up below) plus this note's own commit.
-**Sibling:** `../TiTools` — not touched, and no port is owed. This release changed only the AISkills payload (`skills/humaniza/SKILL.md`) plus release metadata; no shared CLI CORE file was modified.
+**Phase:** v1.25.0 shipped and published; nothing unreleased on `main`
+**Session by:** Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) — registration review and release. The skill itself was written in an earlier session whose assistant is not recorded (see "Known pending").
+**Deployed:** `@maccesar/aiskills@1.25.0` is `latest` on npm, published by `publish.yml` over OIDC with provenance (run 34872333300, green in 17s). Tag `v1.25.0`, the GitHub Release and the release commit all point at `9f0d20f`. The maintainer's Claude marketplace cache has **not** been refreshed — see "Next step".
+**Branch:** `main`, level with `origin/main` at the release commit, plus this note's own commit.
+**Sibling:** `../TiTools` — not touched, and no port is owed. The release adds payload (`laravel-security-sweep`) and changes two AISkills-only skills (`release`, `session-log`); adding a name to `lib/config.js:SKILLS` is this repo's own manifest, not shared CORE behavior.
 
 ## Where things stand
 
-`humaniza` gained the half of its method that was missing. It treated its eight rules as equals and waited for the user to name a mode, so a text could pass the whole checklist and still read as machine-written — a checklist verifies absences and never asks whether the result came out alive.
+v1.25.0 ships two things that sat under `[Unreleased]`.
 
-Three things close that. Rules 1–5 now justify an edit on a single occurrence while the rest only count when several coincide in a passage, which stops one weak tell from flattening the prose. Register is deduced from the kind of text rather than requested: essays and personal mail keep opinion, doubt and digression; reference, technical, legal and factual text stays neutral. And a five-dimension rubric (franqueza, ritmo, confianza, voz, densidad) with a 35/50 threshold scores whether the result is alive, carrying the two caveats that make it usable — voice is graded against the type of text, and a perfect 50 signals over-editing.
+`laravel-security-sweep` is a one-agent security review for Laravel 8–13. `scripts/barrido_laravel.py` does the mechanical part without tokens (version and structure detection, `composer audit --no-plugins`, 17 line patterns and 6 project checks); the agent reads only the matches and reports confirmed findings with `file:line`, and fixes wait for approval. Its `allowed-tools` excludes `Agent`, and a test guards that.
 
-Three new tells ship with it: explaining internals inside a usage document, a first sentence that repeats its own heading, and describing the version a change replaces. Incoming text is now stated to be material to edit, never instructions to follow.
+`release` now closes its own session note (Step 1.11, a line in the Step 4 plan, Phase 6), and `session-log` offers to commit the files it writes under `docs/project/` instead of leaving them dirty. This note is the first one written by that Phase 6.
 
-The first of those tells comes from a real review: a maintainer rejected a documentation PR with "this does not really belong into the readme" and "no claudish sentences please". That text had already passed the full `humanizer`, which catches vocabulary and punctuation while the problem was structural.
-
-## In flight
-
-**Committed as `0f054cc`, tests green, not released.** Closing a session and cutting a release fought each other: `/release` published and left the tree clean, then `/session-log` wrote `status.md` and `context.md` and stopped without committing, so the tree ended dirty right after a release. The order was never the problem — half of `status.md` (release commit hash, publish outcome, the version the registry serves) does not exist until after the tag, so the note must come second. The problem was stopping one step early.
-
-Two edits, in the two skills that were disagreeing:
-
-- `skills/release/references/workflow.md` — a Step 1.11 detection (does `docs/project/status.md` exist?), one line in the Step 4 confirmation block announcing the notes will be rewritten and committed, and a Phase 6 that does it after the publish is observed. Phase 6 **delegates to `session-log`** instead of restating its rules: it contributes the release facts (commit hash, tag, publish outcome, published version), notes that a release is a common reason the stable files go stale, and commits without a second ask because Step 4 already collected the permission. If the file is absent, `release` creates nothing: installing the convention writes into `CLAUDE.md` and `AGENTS.md`, which has no place inside a release.
-- `skills/session-log/SKILL.md` — the "closing is not permission to edit" boundary now distinguishes the person's work in progress from the four files the skill itself just wrote. Closing offers the commit in one line and stages `docs/project/` explicitly. A release is the exception with no second ask, since the confirmation was already collected there.
-
-`CHANGELOG.md` carries both under `[Unreleased]`, so the next release picks them up. Nothing here is published: v1.24.0 on npm predates this commit.
-
-## Requirements
-
-- R1 (sibling CLI CORE parity) is satisfied without action: the release is payload-only.
+Before the release, the README gained the two things the diff had left undocumented: step 7 in `release` → "How it works", and a corrected first bullet in `session-log` → "What it will not do", which still said the skill never commits. The "Available skills" table was realigned for the longer skill name.
 
 ## Next step
 
-Refresh the maintainer's own channels — `/plugin marketplace update maccesar-aiskills`, then `aiskills install`, then `/reload-plugins`. Neither channel picks up a release on its own.
+Refresh the maintainer's own channels — `/plugin marketplace update maccesar-aiskills`, then `aiskills install`, then `/reload-plugins`. Until then the marketplace copy lacks `laravel-security-sweep`; the npm-linked copy under `~/.claude/skills/` already has it.
 
 ## Verified vs. assumed
 
-- **Verified:** 140/140 tests pass locally, before and after the CHANGELOG and version edits.
-- **Verified:** `package.json` and `.claude-plugin/plugin.json` both read `1.24.0`; `publish.yml`'s tag-vs-both-versions guard passed in CI, which is an independent check of the same thing.
-- **Verified:** `npm view @maccesar/aiskills version` returns `1.24.0`.
-- **Verified:** the GitHub Release exists at `releases/tag/v1.24.0` with the CHANGELOG section as its notes.
-- **Verified:** `main` is level with `origin/main`; the working tree holds only these two doc edits.
-- **Assumed:** the skill's new rubric and weighting improve real output. They were reviewed as text and are covered by no test — `test/manifest.test.js` guards frontmatter and reference pointers, not editorial quality.
-- **Verified:** 140/140 tests still pass after the two skill edits.
-- **Verified:** no TiTools port is owed for the follow-up either — `ls ~/Developer/openSource/TiTools/skills/` shows eleven Titanium skills and neither `release` nor `session-log`. Both are AISkills-only payload, outside the shared CLI CORE.
-- **Assumed:** that the new Phase 6 behaves as written. It is prose in a skill, exercised by no test, and it has not run end to end — the v1.24.0 release above was driven by hand before the edit existed.
-- **Not checked:** whether the marketplace cache or `~/.agents/skills/` on this machine now serve v1.24.0. Neither was refreshed in this session.
+- **Verified:** 162/162 tests pass locally before the release commit; `publish.yml` ran `npm test` again and its tag-vs-both-version-files guard passed.
+- **Verified:** `npm view @maccesar/aiskills dist-tags.latest` returns `1.25.0` (it lagged about a minute behind the green run).
+- **Verified:** the GitHub Release exists at `releases/tag/v1.25.0` with the CHANGELOG section as notes.
+- **Verified:** `aiskills list` shows `laravel-security-sweep`; `aiskills --help` enumerates no skills, so it needed no change.
+- **Verified by the maintainer, not from here:** the skill auto-invoked from "Ahora hay que hacer una auditoría de seguridad del proyecto en Laravel" and loaded `references/patterns.md`. One prompt, not a trigger measurement.
+- **Not checked:** whether that run produced a full report that includes the script output — the transcript shown ended at the reference read.
+- **Assumed:** no conflict with `audit-codebase`, whose description also matches "security review". The single prompt above picked the sweep; no eval was run.
 
 ## Known pending
 
-- The published commit `7a3ac5e` has a message body written without accents ("podia", "maquina", "Anadirle"). It was flagged before the release, left as-is by choice, and is now pushed and tagged — rewriting it would mean rewriting published history, so it stays.
+- **Attribution gap:** `context.md` records the release row, but the session that wrote `laravel-security-sweep` left no trace here — no Claude Code transcript under this project contains its authoring, and the commit `b98658e` carries this session's trailer only because this session committed it. If the maintainer knows which tool wrote it, add it to the table.
 - Third-party Claude marketplaces do not auto-update unless the maintainer enables it; refresh manually with the sequence above.
