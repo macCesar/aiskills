@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — `laravel-security-sweep` SSRF fix pins the validated address
+
+A second sweep of the first application caught a gap in the catalog's own SSRF fix: it resolved and validated the host but let the HTTP client resolve it again, which DNS rebinding exploits. `SSRF` now says to pin the validated IP with `CURLOPT_RESOLVE`, to disable redirects or follow them by hand re-validating each hop, and why a reused connection makes a pin look broken in a test.
+
 ## [1.26.0] - 2026-09-14
 
 ### Changed — `laravel-security-sweep` after a second production run

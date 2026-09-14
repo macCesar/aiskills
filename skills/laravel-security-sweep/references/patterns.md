@@ -120,7 +120,24 @@ Also check that login, registration and password-reset routes carry a throttle.
 
 **False positive when** the URL is a constant, built from configuration, or a model's own public asset path.
 
-**Fix.** Before fetching: require `http`/`https` via `parse_url` (not a substring test), reject credentials in the URL, resolve the host and reject private, loopback, link-local and reserved IPs (`filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)` over every A and AAAA record). Validate redirects too: with Laravel's HTTP client pass `withOptions(['allow_redirects' => ['max' => 5, 'on_redirect' => fn ($req, $res, $uri) => ...]])` and throw when the target fails the same check; with streams, set `follow_location` to 0. Put the check in one helper and call it from every match. Verify the helper with both an internal URL and a public one — a check that rejects everything also passes a negative test.
+**Fix.** Before fetching: require `http`/`https` via `parse_url` (not a substring test), reject credentials in the URL, resolve the host and reject private, loopback, link-local and reserved IPs (`filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)` over every A and AAAA record). Redirects need the same check on every hop, and checking in an `on_redirect` callback is not enough because the client resolves the new host again (see the pin below): disable redirects or follow them by hand. With streams, set `follow_location` to 0. Put the check in one helper and call it from every match. Verify the helper with both an internal URL and a public one — a check that rejects everything also passes a negative test.
+
+**Validating the IP is not enough on its own: the request must use the IP you validated.** If the check resolves the host and the HTTP client then resolves it again, a domain with a very short TTL can answer a public IP to the check and `127.0.0.1` to the request (DNS rebinding). Resolve once, validate, and pin that address for the connection. With Laravel's HTTP client (Guzzle on cURL) pass `CURLOPT_RESOLVE` (an IPv6 address goes in brackets, `[2001:db8::1]`):
+
+```php
+Http::withOptions([
+    'curl' => [CURLOPT_RESOLVE => ["{$host}:{$port}:{$validatedIp}"]],
+    'allow_redirects' => false,
+])->get($url);
+```
+
+The URL keeps its hostname, so TLS still verifies the certificate against the real domain. Three things undo the pin:
+
+- **Redirects.** `CURLOPT_RESOLVE` covers only the host you pinned; a redirect to another host resolves fresh. For user-supplied URLs disable redirects, or follow them by hand and repeat resolve–validate–pin on every hop.
+- **Reused connections.** A client that already holds an open connection to that host reuses it and ignores the pin. Use a fresh client for pinned requests, and when you test the pin, test it on a fresh client: a first request followed by a pinned one on the same client looks like the pin does nothing.
+- **`file_get_contents` and other stream functions** resolve on their own and cannot be pinned this way. Move those matches to the HTTP client.
+
+Verified on Laravel 10 with Guzzle 7.9: pinning `example.com:443` to `127.0.0.1` on a fresh client connected to the local server (the certificate check then failed, as it should), and `Http::withOptions` behaved the same.
 
 ## UPLOAD-NAME — the client decides the file name or directory
 
