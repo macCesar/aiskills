@@ -34,3 +34,10 @@ docs/*
 
 # la convención de session-log es fuente, no documentación generada
 !docs/project/
+
+# Capturas que César deja en la raíz para señalar algo; nunca se commitean
+/*.png
+/*.jpg
+/*.jpeg
+/screen-capture*
+/Captura*
