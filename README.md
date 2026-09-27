@@ -75,6 +75,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | stitch-showcase        | Design Tools       | Google Stitch export workflow         | 16 files             |
 | store-screenshots      | Store Artwork      | Real device captures, editable SVGs  | 3 guides + 1 script  |
 | session-log            | Project            | Convention + 3 A/B rounds             | 2 files              |
+| handoff                | Project            | Disposable handoff after `/clear`     | 1 file               |
 | technical-demo-videos  | Video Production   | Reproducible macOS technical demos    | 9 guides + 4 scripts |
 | release                | Publishing         | Portable, confirmation-gated workflow | 1 file               |
 | seo-launch             | Web / SEO          | Head tags, share cards, server files  | 5 files              |
@@ -415,6 +416,16 @@ Measured behaviour, across three A/B rounds against a no-skill baseline (18 runs
 | Left the user's broken uncommitted code untouched | yes        | no — fixed it unasked |
 
 Token cost is 3–13% higher per run. **Those rounds graded an earlier layout** — a single status file versus an imported memory index — so what they establish is the split itself, not the four filenames. The paths added since (resuming against a stale file, upgrading an earlier install, monorepos, a gitignored `docs/`) have prompts written for them and have not been run. The grading notes, and an explicit account of what is and isn't measured, are in `skills/session-log/evals/`.
+
+### handoff
+
+For the moment a session has run long enough that `/clear` beats `/compact`. `/handoff` writes a `HANDOFF.md` at the repo root with what the repo can't tell the next session: the goal and what done looks like, the state checked against `git status` and `git diff`, the files in flight, the decisions, what was tried and failed with the error verbatim, what you asked for along the way, and a `Resume here` block with the exact next change and the command that proves it. Then `/clear`, and start the new session with *read HANDOFF.md and continue*.
+
+The file is disposable, which is what separates it from `session-log`: `status.md` is the project's permanent record and gets committed; `HANDOFF.md` is read once and deleted. It carries its own instructions at the top — the `HEAD` it was written at, to check it against the repo, and to delete it after reading — because the session that reads it doesn't have this skill loaded. If the repo has `docs/project/`, the handoff points at those files instead of copying them. If the conversation was compacted before writing, it says so rather than reconstructing the lost stretch.
+
+It runs only when invoked (`/handoff`, `$handoff`, or by name). It doesn't commit, stash or touch `.gitignore`; if `HANDOFF.md` isn't ignored, it tells you to keep it out of any commit.
+
+First eval round, one run per case against a no-skill baseline: 21/21 assertions with the skill, 16/21 without. The difference is concentrated in the reader header: without it, the resuming session left `HANDOFF.md` in the repo; with it, the session checked the recorded `HEAD`, skipped a step that had already landed, and deleted the file. Prompts and assertions are in `skills/handoff/evals/`.
 
 ### stitch-showcase
 

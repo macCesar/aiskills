@@ -52,7 +52,7 @@ For this contract, the shared CLI CORE includes CLI entry behavior, common `lib/
 
 | | aiskills | TiTools |
 |---|---|---|
-| `skills/` | 12 general-purpose skills, including explicit-only `release` | 9 Titanium skills |
+| `skills/` | 13 general-purpose skills, including explicit-only `release` and `handoff` | 9 Titanium skills |
 | `commands/` | none; the former `release` command is now a cross-agent skill | `ti-check`, `ti-new-screen`, `ti-audit` |
 | `agents/` | none | `ti-pro` |
 | Knowledge Index | **does not apply** — see below | yes — `titools sync`, `lib/commands/agents.js`, 9 functions in `utils.js` |

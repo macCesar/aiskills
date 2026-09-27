@@ -1,0 +1,57 @@
+{
+  "skill_name": "handoff",
+  "note": "Fixtures are built from a small Node/Express repo (rutas-api): POST /rutas committed, uncommitted work in src/geocode.js (sequential Nominatim + cache) and src/app.js (GET /rutas/:id/eta with a TODO). Session context is given in the prompt because the eval agent has no real conversation behind it.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "long-session-handoff",
+      "prompt": "el contexto ya está muy cargado, voy a hacer /clear. escríbeme el HANDOFF.md para seguir en una sesión nueva",
+      "session_context": "Three-hour session. User corrected: no new dependencies (native fetch), API error messages in Spanish. Google Geocoding failed with REQUEST_DENIED; parallel Nominatim got HTTP 429 on 7 of 10 (1 req/s). Sequential + cache works with 3 stops by curl, ~10 s with 10 (breaks < 2 s). Agreed next: geocode at POST /rutas and store coordinates; ETA with haversine at 30 km/h. npm test never ran.",
+      "fixture": "rutas-api (with docs/project/ installed)",
+      "expected_output": "HANDOFF.md at the root with the reader header (HEAD sha, check, delete), both errors verbatim, the user's two constraints, per-file in-flight work, [NOT VERIFIED] on untested claims, a specific Resume here, pointers to docs/project/ instead of copies, and a warning that the file is not ignored by git.",
+      "assertions": [
+        "HANDOFF.md exists at the repo root",
+        "Records the HEAD sha so the reader can detect drift",
+        "Tells the reader to check the file against the repo and to delete it after reading",
+        "Records REQUEST_DENIED and HTTP 429 verbatim",
+        "Records the user's constraints: no new dependencies and error messages in Spanish",
+        "Lists src/geocode.js and src/app.js with what is pending in each",
+        "Marks npm test / untested claims as not verified",
+        "Next step is geocoding in POST /rutas with a file and a check to run, not a vague area",
+        "Points at docs/project/ instead of copying its contents",
+        "Does not commit, stash or edit src/, and does not edit .gitignore"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "compacted-handoff",
+      "prompt": "voy a hacer /clear, escríbeme el HANDOFF.md para seguir en una sesión nueva",
+      "session_context": "Compacted. Summary only: Nominatim + cache in src/geocode.js, GET /rutas/:id/eta added, 'earlier geocoding approaches did not work', 'the user gave some instructions about how they want the code', ETA pending.",
+      "fixture": "rutas-plain (no docs/project/)",
+      "expected_output": "HANDOFF.md built from the diff that says the pre-summary history is missing, and does not invent which approaches failed or what the user asked for.",
+      "assertions": [
+        "States that the conversation was compacted and earlier history is not available",
+        "Does not invent specific failed approaches, services or error strings",
+        "Does not invent user preferences or constraints the summary does not state",
+        "Flags that the user's instructions from the lost stretch are unknown and should be re-confirmed",
+        "Files in flight come from the actual diff",
+        "Does not commit, stash or edit src/"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "resume-after-clear",
+      "prompt": "lee HANDOFF.md y sigue",
+      "session_context": "Fresh session, skill not loaded (it is explicit-only). HANDOFF.md was written at c021b86; since then the user committed GET /rutas/:id with the 404, which is exactly the handoff's Resume here step. with_skill = HANDOFF.md carries the reader header; without_skill = same body, no header.",
+      "fixture": "rutas-resume",
+      "expected_output": "Checks the handoff against git, notices the Resume here step already landed, does not re-implement it, moves to the next task, and deletes HANDOFF.md.",
+      "assertions": [
+        "Runs git log / git status to check the handoff against the repo",
+        "Notices that GET /rutas/:id with 404 already landed after the handoff",
+        "Does not re-implement or duplicate the 404 route",
+        "Deletes HANDOFF.md (or says it should be deleted) after reading it",
+        "Respects the handoff's constraints if it writes code (no new dependencies, Spanish error messages)"
+      ]
+    }
+  ]
+}
