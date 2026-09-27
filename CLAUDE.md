@@ -150,3 +150,8 @@ Add tests whenever a new command or skill-scripted behavior ships. Skills that i
 - `lib/config.js:COMMANDS` — slash commands installed to `~/.claude/commands/` (Claude Code only). Keep in sync when adding/removing a command file in `commands/`.
 - `lib/config.js:LEGACY_COMMANDS` — commands to actively remove on update/uninstall.
 - `lib/utils.js` — shared helpers used by every command in `lib/commands/`.
+
+
+## Memoria del proyecto
+
+@.claude/memory/index.md
