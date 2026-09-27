@@ -1,3 +1,27 @@
+# Status — 2026-09-26
+
+**Phase:** 1.27.0 committed on `main`, not tagged, not pushed, not published. npm `latest` is still 1.26.1.
+**Session by:** Claude Code · Opus 5.5 (`claude-opus-5-5`) for `handoff` and the commits; `store-screenshots` was written by an earlier session (2026-09-16, notes below).
+**Branch:** `main`, 6 commits ahead of `origin/main` (`dffb004`..this note).
+
+## What 1.27.0 carries
+
+- `store-screenshots` (`0bdc45e`): app-specific store artwork, real Android/iOS captures, editable SVG masters, `scripts/artwork.py` for RGB PNG export and checks. Verified by its session: skill-creator validator, targeted ESLint, a real NotiGAPE SVG export at 1284 × 2778. Not yet used on a real project; new simulator/emulator captures were never run.
+- `handoff` (`67f1a4a`): explicit-only skill that writes a disposable `HANDOFF.md` before a `/clear`. One eval round in a scratch workspace, one run per case against a no-skill baseline: 21/21 assertions with the skill, 16/21 without; the difference is the reader header (resuming session deleted the file only when the header told it to). Not yet used in a real session.
+- `session-log` was changed and then reverted in the same session: its `status.md` stays short and permanent; failed attempts belong in `HANDOFF.md`.
+- Also committed: the `@.claude/memory/index.md` import in `CLAUDE.md` (`dffb004`), both version fields at 1.27.0 (`04a7145`), and root screenshots ignored (`07f5f70`).
+
+## Next step
+
+César uses `/handoff` and `store-screenshots` on real work, then runs `/release` for 1.27.0, which tags, pushes and lets `publish.yml` publish. Run `aiskills update` first so `handoff` gets its symlink.
+
+## Verified vs. assumed
+
+- Verified 2026-09-26: `npm test` 179/179; `git status` clean except this file before its commit; `git log @{u}..HEAD` shows 5 commits.
+- Open: `.claude/` is in `.gitignore`, so the `@.claude/memory/index.md` import in `CLAUDE.md` resolves only on this machine; a clone gets a dangling import.
+
+## Previous published state
+
 # Status — 2026-09-14
 
 **Phase:** v1.26.1 shipped and published; nothing unreleased on `main`
