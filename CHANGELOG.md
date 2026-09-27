@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `store-screenshots`: app-specific art direction, section selection, Android/iOS capture workflow, editable SVG masters, and verified RGB PNG export for App Store and Google Play. Includes a portable export/check helper and a per-store delivery structure. Prepared version 1.27.0; not yet released.
+
 ## [1.26.1] - 2026-09-14
 
 ### Changed — `laravel-security-sweep` SSRF fix pins the validated address

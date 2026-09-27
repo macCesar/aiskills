@@ -73,6 +73,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | laravel-security-sweep | Security (Laravel) | Patterns from confirmed breaches      | 2 files + 1 script   |
 | vscode-extension-dev   | VS Code            | VS Code Extension API docs            | 14 files             |
 | stitch-showcase        | Design Tools       | Google Stitch export workflow         | 16 files             |
+| store-screenshots      | Store Artwork      | Real device captures, editable SVGs  | 3 guides + 1 script  |
 | session-log            | Project            | Convention + 3 A/B rounds             | 2 files              |
 | technical-demo-videos  | Video Production   | Reproducible macOS technical demos    | 9 guides + 4 scripts |
 | release                | Publishing         | Portable, confirmation-gated workflow | 1 file               |
