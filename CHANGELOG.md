@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.27.0] - 2026-09-26
+
 ### Added
 
-- `store-screenshots`: app-specific art direction, section selection, Android/iOS capture workflow, editable SVG masters, and verified RGB PNG export for App Store and Google Play. Includes a portable export/check helper and a per-store delivery structure. Prepared version 1.27.0; not yet released.
+- `store-screenshots`: app-specific art direction, section selection, Android/iOS capture workflow, editable SVG masters, and verified RGB PNG export for App Store and Google Play. Includes a portable export/check helper and a per-store delivery structure.
 - `handoff`: explicit-only skill that writes a disposable `HANDOFF.md` before a `/clear`, so a fresh session or another assistant resumes the work: goal, state checked against git, files in flight, decisions, failed attempts with the error verbatim, what the user asked for, and a `Resume here` block. The file tells its reader to check it against the recorded `HEAD` and to delete it after reading.
 
 ## [1.26.1] - 2026-09-14
