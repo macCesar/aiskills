@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.27.1] - 2026-09-28
+
+### Fixed
+
+- `handoff`: clarify that a minimal invocation is sufficient, without asking users to repeat session context; update the evaluation prompt.
+
+### Changed
+
+- Remove the stale, machine-local memory import from CLAUDE.md.
+
 ## [1.27.0] - 2026-09-26
 
 ### Added
