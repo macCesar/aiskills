@@ -1,29 +1,31 @@
-# Status — 2026-09-26
+# Status — 2026-09-28
 
-**Phase:** v1.27.0 shipped and published; nothing unreleased on `main`
-**Session by:** Claude Code · Opus 5.5 (`claude-opus-5-5`) — `handoff`, the commits for the pending tree, and the release. `store-screenshots` came from a Codex session (see `context.md`).
-**Deployed:** `@maccesar/aiskills@1.27.0` is `latest` on npm (checked against registry.npmjs.org), published by `publish.yml` over OIDC with provenance (run 36287165067, green). Tag `v1.27.0`, the GitHub Release and the release commit all point at `5b13794`.
-**Branch:** `main`, level with `origin/main` (`39f432c` and this note pushed together).
+**Phase:** v1.27.1 release published; npm download verification is blocked by a registry 404.
+**Session by:** Codex · GPT-6 — applied the supplied handoff patch, committed it, and executed the confirmed release.
+**Publication:** GitHub Release and annotated tag `v1.27.1` point at release commit `65e05ee`. `publish.yml` run [36489047822](https://github.com/macCesar/aiskills/actions/runs/36489047822) succeeded and reported `+ @maccesar/aiskills@1.27.1` with provenance. npm now reports `latest` as `1.27.1`, but repeated tarball downloads, including `npm pack`, returned HTTP 404 after publication. Installation from npm is not verified.
+**Branch:** `main`; the release commit is on origin. This note is committed and pushed after the tag.
 
 ## Where things stand
 
-v1.27.0 adds two skills:
-
-- `store-screenshots`: app-specific store artwork, real Android/iOS captures, editable SVG masters, and `scripts/artwork.py` for opaque RGB PNG export and checks.
-- `handoff`: explicit-only; writes a disposable `HANDOFF.md` before a `/clear`, with a reader header (HEAD sha, check it against the repo, delete it after reading). `session-log` keeps the permanent record; a change that would have put failed attempts into `status.md` was tried and reverted in the same session.
-
-The same release ignores screenshots at the repo root. After it, `39f432c` removed the `@.claude/memory/index.md` import from `CLAUDE.md`: `.claude/` is gitignored and the memory it loaded was stale (manual `npm publish` with 2FA, an April marketplace branch). The local memory was deleted; the one rule still current (don't suggest a new session on low context) now lives in the maintainer's global instructions.
+- `handoff` explicitly accepts `/handoff`, `$handoff`, or a request for `HANDOFF.md` without asking the user to repeat the context. README and the evaluation prompt match. Change commit: `783e19b`.
+- The release also includes removal of the stale machine-local memory import from `CLAUDE.md`.
+- `package.json`, `package-lock.json`, and `.claude-plugin/plugin.json` are synchronized at `1.27.1`. The plugin manifest served from GitHub main was verified at that version.
+- No shared CLI machinery changed, so no TiTools port was required.
 
 ## Next step
 
-César uses `/handoff` and `store-screenshots` on real work; findings from that use are the next round for both skills. Run `aiskills update` so `handoff` gets its symlink under `~/.agents/skills/`.
+Retry `npm pack @maccesar/aiskills@1.27.1 --pack-destination /tmp --registry=https://registry.npmjs.org` to confirm the registry tarball is downloadable. If the 404 persists, investigate npm publication availability; do not reuse or replace the existing tag.
 
 ## Verified vs. assumed
 
-- Verified 2026-09-26: `npm test` 179/179 before the release commit; `publish.yml` run green and its log shows `+ @maccesar/aiskills@1.27.0`; registry `latest` is 1.27.0 (it lagged about 90 s behind the run).
-- `handoff`: one eval round in a scratch workspace, 21/21 assertions with the skill vs 16/21 without, one run per case. Not yet used in a real session.
-- `store-screenshots`: verified by its session with a real NotiGAPE SVG export; new simulator/emulator captures never ran.
+- `npm test`: 179/179 passed after the version bump; release diff passed `git diff --check`.
+- GitHub Release is public, not a draft or prerelease; remote tag resolves to `65e05ee`.
+- npm metadata reports `1.27.1` and preserves `bin.aiskills = bin/aiskills.js`, despite the publish log's bin normalization warning. The downloaded tarball could not be inspected because the registry returned 404.
+- Local `npm pack --dry-run --json` excludes `docs/`; this session note does not change the package contents.
+- The revised minimal-invocation evaluation was not rerun with an assistant. Prior handoff evaluation results describe the earlier prompt.
+- The optional skill validator could not run because the local Python lacks PyYAML.
 
 ## Known pending
 
-- `store-screenshots` has a row in the README table but no section of its own, unlike the other skills.
+- `store-screenshots` has a README table row but no dedicated section.
+- Real-session validation of `handoff` and new simulator/emulator captures for `store-screenshots` remain outside this release's verification.
