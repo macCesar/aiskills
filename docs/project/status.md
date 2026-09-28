@@ -1,8 +1,8 @@
 # Status — 2026-09-28
 
-**Phase:** v1.27.1 release published; npm download verification is blocked by a registry 404.
+**Phase:** v1.27.1 released; npm download and isolated CLI installation verified.
 **Session by:** Codex · GPT-6 — applied the supplied handoff patch, committed it, and executed the confirmed release.
-**Publication:** GitHub Release and annotated tag `v1.27.1` point at release commit `65e05ee`. `publish.yml` run [36489047822](https://github.com/macCesar/aiskills/actions/runs/36489047822) succeeded and reported `+ @maccesar/aiskills@1.27.1` with provenance. npm now reports `latest` as `1.27.1`, but repeated tarball downloads, including `npm pack`, returned HTTP 404 after publication. Installation from npm is not verified.
+**Publication:** GitHub Release and annotated tag `v1.27.1` point at release commit `65e05ee`. `publish.yml` run [36489047822](https://github.com/macCesar/aiskills/actions/runs/36489047822) succeeded and reported `+ @maccesar/aiskills@1.27.1` with provenance. npm reports `latest` as `1.27.1`. Initial tarball downloads returned HTTP 404; a subsequent `npm pack` succeeded, and the registry package was installed in a temporary directory and verified with `aiskills --version` and `aiskills --help`.
 **Branch:** `main`; the release commit is on origin. This note is committed and pushed after the tag.
 
 ## Where things stand
@@ -14,13 +14,13 @@
 
 ## Next step
 
-Retry `npm pack @maccesar/aiskills@1.27.1 --pack-destination /tmp --registry=https://registry.npmjs.org` to confirm the registry tarball is downloadable. If the 404 persists, investigate npm publication availability; do not reuse or replace the existing tag.
+Use `handoff` in real sessions and collect findings for its next evaluation round. No publication blocker remains.
 
 ## Verified vs. assumed
 
 - `npm test`: 179/179 passed after the version bump; release diff passed `git diff --check`.
 - GitHub Release is public, not a draft or prerelease; remote tag resolves to `65e05ee`.
-- npm metadata reports `1.27.1` and preserves `bin.aiskills = bin/aiskills.js`, despite the publish log's bin normalization warning. The downloaded tarball could not be inspected because the registry returned 404.
+- npm metadata reports `1.27.1` and preserves `bin.aiskills = bin/aiskills.js`, despite the publish log's bin normalization warning. The downloaded tarball preserves the CLI entry and contains the minimal-invocation instruction. An isolated installation of that tarball with `--ignore-scripts` succeeded; `aiskills --version` returned `1.27.1` and `--help` exited successfully.
 - Local `npm pack --dry-run --json` excludes `docs/`; this session note does not change the package contents.
 - The revised minimal-invocation evaluation was not rerun with an assistant. Prior handoff evaluation results describe the earlier prompt.
 - The optional skill validator could not run because the local Python lacks PyYAML.
