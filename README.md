@@ -419,6 +419,8 @@ Token cost is 3–13% higher per run. **Those rounds graded an earlier layout** 
 
 ### handoff
 
+Just type `/handoff` (or `$handoff`, or ask for `HANDOFF.md`). You do not need a long prompt or to repeat the context: the assistant inspects the conversation and the repo to assemble the file.
+
 For the moment a session has run long enough that `/clear` beats `/compact`. `/handoff` writes a `HANDOFF.md` at the repo root with what the repo can't tell the next session: the goal and what done looks like, the state checked against `git status` and `git diff`, the files in flight, the decisions, what was tried and failed with the error verbatim, what you asked for along the way, and a `Resume here` block with the exact next change and the command that proves it. Then `/clear`, and start the new session with *read HANDOFF.md and continue*.
 
 The file is disposable, which is what separates it from `session-log`: `status.md` is the project's permanent record and gets committed; `HANDOFF.md` is read once and deleted. It carries its own instructions at the top — the `HEAD` it was written at, to check it against the repo, and to delete it after reading — because the session that reads it doesn't have this skill loaded. If the repo has `docs/project/`, the handoff points at those files instead of copying them. If the conversation was compacted before writing, it says so rather than reconstructing the lost stretch.

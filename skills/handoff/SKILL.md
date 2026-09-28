@@ -5,6 +5,8 @@ description: 'Use only when the user explicitly invokes `$handoff`, `/handoff`, 
 
 # Handoff
 
+The user only needs to invoke `/handoff`, `$handoff`, or ask for `HANDOFF.md`. Do not ask them to write a detailed prompt or repeat the session context; gather it from the conversation and inspect the repo yourself.
+
 A long session accumulates two kinds of knowledge. The repo holds one: the diff, the commits, the files. The conversation holds the other: why this approach and not that one, what already failed and with what error, what the user asked for along the way. `/clear` throws the conversation away, and `/compact` keeps a lossy summary of it. `HANDOFF.md` carries the second kind across the reset, so the next session starts from the work instead of rediscovering it.
 
 The file is disposable. It describes one moment, is read once by the next session, and is deleted. That is what separates it from `session-log`'s `status.md`, which is the project's permanent record and gets committed. A `HANDOFF.md` that lingers turns into a stale second copy of the state, so the file itself tells its reader to delete it.

@@ -5,7 +5,7 @@
     {
       "id": 0,
       "name": "long-session-handoff",
-      "prompt": "el contexto ya está muy cargado, voy a hacer /clear. escríbeme el HANDOFF.md para seguir en una sesión nueva",
+      "prompt": "/handoff",
       "session_context": "Three-hour session. User corrected: no new dependencies (native fetch), API error messages in Spanish. Google Geocoding failed with REQUEST_DENIED; parallel Nominatim got HTTP 429 on 7 of 10 (1 req/s). Sequential + cache works with 3 stops by curl, ~10 s with 10 (breaks < 2 s). Agreed next: geocode at POST /rutas and store coordinates; ETA with haversine at 30 km/h. npm test never ran.",
       "fixture": "rutas-api (with docs/project/ installed)",
       "expected_output": "HANDOFF.md at the root with the reader header (HEAD sha, check, delete), both errors verbatim, the user's two constraints, per-file in-flight work, [NOT VERIFIED] on untested claims, a specific Resume here, pointers to docs/project/ instead of copies, and a warning that the file is not ignored by git.",
