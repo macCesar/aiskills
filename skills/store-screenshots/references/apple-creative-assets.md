@@ -42,6 +42,8 @@ Source: [Creative assets specifications](https://developer.apple.com/help/app-st
 
 In the app version, open Product Page Information → Header and Search Results → choose placement → drag in an asset or Browse Assets → Save. Only universal assets offer **Use header asset in search results**. Preview both destinations before submission.
 
-Asset Library supports standalone review against the latest app version. Approval alone does not select a placement. For a live version, choose an approved asset with Browse Assets → Next → Publish; a new app version is not required for this path. For a new version, creative assets go live with its approved release. Perform upload, submission, and publishing only within the user's authorization; document observed review/placement state separately from local file validation.
+[Asset Library](apple-asset-library.md) supports standalone review once an approved app version exists; first-release assets must accompany the first app submission. Approval alone does not select a placement. For a live version, choose an approved asset with Browse Assets → Next → Publish; a new app version is not required for this path. For a new version, creative assets go live with its approved release. Perform upload, submission, and publishing only within the user's authorization; document observed review/placement state separately from local file validation.
 
 Source: [Manage your App Store assets](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-your-app-store-assets).
+
+For audience-specific creative, read [Custom Product Pages](apple-custom-product-pages.md); for controlled tests of the default page, read [Product Page Optimization](apple-product-page-optimization.md). Configure assets in the correct page/treatment context and inspect its Preview; library reuse does not make every page identical.

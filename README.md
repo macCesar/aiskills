@@ -73,7 +73,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | laravel-security-sweep | Security (Laravel) | Patterns from confirmed breaches      | 2 files + 1 script   |
 | vscode-extension-dev   | VS Code            | VS Code Extension API docs            | 14 files             |
 | stitch-showcase        | Design Tools       | Google Stitch export workflow         | 16 files             |
-| store-screenshots      | Store Artwork      | Apple/Google specs, real captures, SVGs | 6 guides + 1 script  |
+| store-screenshots      | Store Artwork      | Apple/Google specs, real captures, SVGs | 9 guides + 1 script  |
 | session-log            | Project            | Convention + 3 A/B rounds             | 2 files              |
 | handoff                | Project            | Disposable handoff after `/clear`     | 1 file               |
 | technical-demo-videos  | Video Production   | Reproducible macOS technical demos    | 9 guides + 4 scripts |
@@ -86,6 +86,8 @@ Use `aiskills list` to see available skills from the command line. Pull requests
 ### Store screenshots and creative assets
 
 `store-screenshots` covers real Android/iOS screenshots, editable SVG masters and verified PNG exports, Apple Header/Search Results artwork (including the universal image), and Google Play feature graphics. Its platform references distinguish screenshot slots, safe-area templates, required uploads and promotional recommendations. It also specifies and checks Apple App Previews and Google Play YouTube previews; video recording/editing uses an appropriate production workflow. Store rules are checked against current official sources before export.
+
+Apple workflows also cover Custom Product Pages for audiences/campaigns, Asset Library compatibility/reuse/review, and Product Page Optimization treatments, traffic allocation and Analytics interpretation. Google guidance covers custom listings, group inheritance and Asset Library reuse, and links the Store listing experiments counterpart. Page and experiment manifests preserve locale mappings, inherited assets and actual publication/test state.
 
 ### Technical demo videos
 

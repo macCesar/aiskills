@@ -1,6 +1,6 @@
 ---
 name: store-screenshots
-description: Use when creating, auditing, selecting, capturing, or exporting App Store or Google Play listing assets, screenshots, and editable SVG templates; Apple Header and Search Results creative assets; Google Play feature graphics; or checking app preview video specifications. Also triggers on “capturas para las tiendas” or “plantillas de screenshots”. Not for app UI implementation, general video production, or unrelated slide decks.
+description: Use when preparing or auditing App Store/Google Play screenshots, creative assets, editable SVGs, or preview specifications; Apple Header/Search Results, Custom Product Pages, Asset Library, or Product Page Optimization; Google Play feature graphics, custom store listings or asset reuse; or “capturas para las tiendas”. Not for app UI implementation, general video production, or unrelated slide decks.
 ---
 
 # Store screenshots
@@ -15,7 +15,10 @@ Read the references for the requested deliverables before recommending dimension
 | --- | --- |
 | Apple Header, Search Results, universal artwork, safe areas, upload/review | [apple-creative-assets.md](references/apple-creative-assets.md) |
 | Apple screenshots, device slots, App Previews and poster frames | [apple-media.md](references/apple-media.md) |
-| Google Play feature graphic, screenshots, large screens, YouTube preview | [google-play.md](references/google-play.md) |
+| Apple Custom Product Pages, campaign pages, keywords and deep links | [apple-custom-product-pages.md](references/apple-custom-product-pages.md) |
+| Apple Asset Library, compatibility, reuse, review and archiving | [apple-asset-library.md](references/apple-asset-library.md) |
+| Apple Product Page Optimization, treatments, traffic and results | [apple-product-page-optimization.md](references/apple-product-page-optimization.md) |
+| Google Play assets, custom listings/groups, library reuse, Apple/Google counterparts | [google-play.md](references/google-play.md) |
 | Art direction, story, typography, composition | [design.md](references/design.md) |
 | New Android/iOS captures | [capture.md](references/capture.md) |
 | Export, packaging, technical and visual QA | [delivery.md](references/delivery.md) |
@@ -31,6 +34,12 @@ Resolve asset type (screenshot, creative image, or video), platform, upload slot
 Read [design.md](references/design.md) for selection, messaging, typography, and composition. Propose a small set of meaningfully different directions if none is established, recommend one, and produce a representative sample. If no user approval is required, inspect the sample and continue within the authorized scope. Honor explicit review checkpoints.
 
 Read [delivery.md](references/delivery.md) before setting canvas dimensions. Verify current official requirements for the actual destination; do not confuse native capture resolution, accepted upload sizes, and featuring recommendations. Use the real app's orientation, never an orientation inherited from another project.
+
+## Select the Apple page workflow
+
+For audience/campaign destinations, use Custom Product Pages and deliver a page brief with locale/asset mapping, URL and optional keyword/deep-link configuration. For randomized comparison of the default page, use Product Page Optimization and deliver a hypothesis, baseline, treatment assets, traffic/locales and decision criteria; PPO cannot test a CPP. Asset Library supplies compatible reusable resources to either workflow; approval and placement/publication are distinct states. These workflows reuse the existing media specifications, not new canvas sizes. Read the matching references above before configuration or analysis.
+
+Prepare the requested artifacts and reviewable configuration first. Execute console changes only within the user's authorization, including submissions, publishing, test start/stop/application and asset cleanup. When access is missing, finish independent asset preparation and name the specific unverified console state. Do not report a hypothetical experiment outcome as measured conversion lift.
 
 ## Capture and compose
 
@@ -53,6 +62,7 @@ Paths above are relative to this skill. The size is an example, not a store requ
 
 - All requested sections and platforms accounted for; no unreviewed loading, blank, clipped, stale, or incorrect screens passed off as final.
 - Each final matches its recorded destination dimensions, format, count, and content rules.
-- Open rendered PNGs: inspect the entire contact sheet, each slide at useful size, and suspect details at 100%. XML validity and matching dimensions do not prove visual quality.
+- For image deliveries, open rendered PNGs: inspect the entire contact sheet, each slide at useful size, and suspect details at 100%. XML validity and matching dimensions do not prove visual quality.
 - Export commands, fonts/licenses, sources, capture provenance, and final sequence are reproducible from the delivered package.
+- For page/library/test work, identify the page or treatment, locales, asset mapping, inherited items and observed review/placement/test state. Separate proposed traffic, expected outcomes and actual Analytics results.
 - Report actual validation and missing access separately. Do not claim store acceptance or successful device capture unless observed. Store upload, publication, and unrelated app fixes need their own authorization.

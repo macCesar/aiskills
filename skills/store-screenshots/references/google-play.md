@@ -29,3 +29,29 @@ Source: [Preview video requirements and recommendations](https://support.google.
 ## Delivery and console review
 
 Use Grow users → Store presence → Main store listing → Graphics for the chosen device type and locale. Keep feature graphic, screenshots and video URL/poster notes as separate manifest entries. Inspect the rendered listing, not only individual files. Record acceptance/review state only when observed. Preparing files does not authorize publishing a listing or uploading a public YouTube video.
+
+## Apple and Google workflow counterparts
+
+| Goal | Apple | Google Play |
+| --- | --- | --- |
+| Audience/campaign landing page | Custom Product Pages | Custom store listings (fichas personalizadas) |
+| Find and reuse graphics | Asset Library | Asset Library (biblioteca de recursos) |
+| Randomized creative comparison | Product Page Optimization | Store listing experiments |
+
+These are functional counterparts, not interchangeable configurations. Never transfer page limits, targeting, inheritance, approval or experiment rules between stores.
+
+### Custom store listings
+
+Google supports country, URL, ads, keyword and user-segment targeting subject to app eligibility. Listings can customize name, icon, descriptions and graphics; contact details, privacy policy and category are shared. They do not receive automatic translations. Country targeting is not language targeting, and a targeted listing is not an A/B test.
+
+In Grow users → Store presence → Custom store listings, create new, duplicate an existing listing, or create within a group. Duplication copies assets; group membership inherits assets and group updates can affect member listings. Record group/inheritance and individual overrides before editing shared resources. Select targeting, default language/translations, text and graphics; preview and record the review/publication state. Use the console-generated URL with its `listing` parameter, not Apple's CPP identifier.
+
+Source: [Custom store listings and groups](https://support.google.com/googleplay/android-developer/answer/9867158?hl=en).
+
+### Google Asset Library
+
+Add assets in a graphics section opens a side panel for main/custom listings, experiments and events. It supports Upload and Add from Drive, filename/tag search and filters for ratio, language, type and usage. A ratio mismatch can open a crop tool; Save as copy preserves the original. Preserve that derivative's source/crop provenance and inspect text/UI clipping; a crop suggestion is not permission to substitute iOS captures for Android UI. Ready-to-use/crop filters describe asset fit, not Apple-style App Review approval. Do not assume Google's library implements Apple's standalone review or archive lifecycle.
+
+Source: [Manage graphics with Asset Library](https://support.google.com/googleplay/android-developer/answer/16386748?hl=en).
+
+For Google's experiment counterpart, use [Store listing experiments](https://play.google.com/console/about/store-listing-experiments/): A/B tests of graphics and localized text. Consult its current setup before configuring a test; Apple's treatment count, runtime and confidence rules do not apply automatically.
