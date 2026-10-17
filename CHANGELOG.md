@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- `store-screenshots`: audit Apple and Google listing requirements; add dated references for Header/Search Results, universal artwork, safe-area templates, screenshots, App Previews, Play feature graphics and YouTube previews. Separate creative artwork from real UI captures, publication requirements from promotion recommendations, and PNG verification from video/console validation.
+
 ## [1.27.1] - 2026-09-28
 
 ### Fixed

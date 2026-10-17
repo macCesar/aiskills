@@ -1,17 +1,32 @@
 ---
 name: store-screenshots
-description: Use when creating, selecting, capturing, redesigning, or exporting App Store or Google Play screenshots and editable SVG templates. Covers real Android/iOS captures and store artwork tailored to an app's branding. Also triggers on “capturas para las tiendas”, “pantallas de Play Store”, or “plantillas de screenshots”. Not for app UI implementation, video previews, or unrelated slide decks.
+description: Use when creating, auditing, selecting, capturing, or exporting App Store or Google Play listing assets, screenshots, and editable SVG templates; Apple Header and Search Results creative assets; Google Play feature graphics; or checking app preview video specifications. Also triggers on “capturas para las tiendas” or “plantillas de screenshots”. Not for app UI implementation, general video production, or unrelated slide decks.
 ---
 
 # Store screenshots
 
-Produce a coherent store series from real app screens, with editable SVG masters and reproducible PNG exports. Work with ordinary files and command-line tools so Claude Code, Codex, and other agents can use the same sources. An image-generation service is optional for decorative artwork; never require one or use it to redraw the app UI.
+Produce store assets with editable masters and reproducible exports. Screenshots show real app UI; creative artwork can express the brand beyond the UI where the placement permits it. Work with ordinary files and command-line tools across assistants. Image generation is optional for artwork; never use it to manufacture screenshots or gameplay. This skill specifies and checks video deliverables; recording/editing needs an appropriate production workflow.
+
+## Required workflow
+
+Read the references for the requested deliverables before recommending dimensions or composing assets:
+
+| Task involves | Required reading |
+| --- | --- |
+| Apple Header, Search Results, universal artwork, safe areas, upload/review | [apple-creative-assets.md](references/apple-creative-assets.md) |
+| Apple screenshots, device slots, App Previews and poster frames | [apple-media.md](references/apple-media.md) |
+| Google Play feature graphic, screenshots, large screens, YouTube preview | [google-play.md](references/google-play.md) |
+| Art direction, story, typography, composition | [design.md](references/design.md) |
+| New Android/iOS captures | [capture.md](references/capture.md) |
+| Export, packaging, technical and visual QA | [delivery.md](references/delivery.md) |
+
+Cite store rules and values with `[source: references/<file>.md]` and the official URL when reporting requirements. A remembered value looks just as authoritative as a checked one; citations make the distinction visible. Example: `The universal Apple image is 5244 × 2950 px [source: references/apple-creative-assets.md].` Reopen the official sources for the actual destination and record the verification date. If a reference was not read, label the claim `FROM_MEMORY (unverified):`; if live verification fails, disclose it. Do not claim an upload will be accepted from dimensions alone.
 
 ## Establish the deliverable
 
 Inspect existing artwork, app UI, brand assets, project instructions, and the requested release before choosing a direction. Reuse an accepted direction and existing generators when appropriate. Discover similar skills before replacing an established workflow.
 
-Resolve platform, upload slot/device class, locale, app orientation, mandatory sections, and whether the request is selection, one sample, or the complete series. Infer what the project makes clear; ask only for missing decisions that block the work. A request for one sample is not authorization to regenerate all designs.
+Resolve asset type (screenshot, creative image, or video), platform, upload slot/device class, locale, app orientation, mandatory sections, and whether the request is selection, one sample, or the complete series. Infer what the project makes clear; ask only for missing decisions that block the work. A request for one sample is not authorization to regenerate all designs.
 
 Read [design.md](references/design.md) for selection, messaging, typography, and composition. Propose a small set of meaningfully different directions if none is established, recommend one, and produce a representative sample. If no user approval is required, inspect the sample and continue within the authorized scope. Honor explicit review checkpoints.
 
@@ -19,7 +34,7 @@ Read [delivery.md](references/delivery.md) before setting canvas dimensions. Ver
 
 ## Capture and compose
 
-Read [capture.md](references/capture.md) when obtaining new screenshots. Capture each platform's real UI. An iPhone capture does not become Android artwork by changing its dimensions or frame. Tablets need the actual tablet layout.
+Read [capture.md](references/capture.md) when obtaining new screenshots. Capture each platform's real UI. An iPhone capture does not become Android artwork by changing its dimensions or frame. Tablets need the actual tablet layout. Creative images need not contain a screenshot; follow their placement's content rules and safe-area templates instead. Do not bake storefront controls, device shells, or template guides into creative exports.
 
 Number final slides in reading order. Name captures sharing a slide with subnumbers (`06`, `07.1`, `07.2`). Keep required screens; group related benefits only when both remain legible. Store a mapping of slide → source captures → copy, including exclusions and the reason for them.
 

@@ -14,7 +14,9 @@ Offer directions that change hierarchy and mood, not just hue. Examples to adapt
 | Children, creative learning | Playful geometry, warm accents, expressive type used sparingly | Actual activity and age-appropriate interactions |
 | Productivity, business | Calm surfaces, precise spacing, benefit-led copy | A task completed with little friction |
 | Wellness, lifestyle | Spacious composition, gentle palette, authentic imagery | The actual tracking, guidance, or routine |
-| Games, media | Gameplay/content dominant, energetic framing | Real gameplay or catalog; artwork does not replace it |
+| Games, media screenshots | Gameplay/content dominant, energetic framing | Real gameplay or catalog; artwork does not replace it |
+
+For Apple creative Header/Search images and Play feature graphics, a branded illustration may be the main content. Keep it faithful to the app's actual offering and use the platform reference for placement rules. This allowance does not turn an illustration into a screenshot or an App Preview. Prefer unframed Android listing captures; Google advises against device imagery. [source: references/apple-creative-assets.md] [source: references/google-play.md]
 
 Landscape apps stay landscape where their destination supports it. Apps with mixed orientation need explicit per-screen/destination decisions. Do not rotate a portrait capture and call it a landscape UI.
 
@@ -30,7 +32,7 @@ Write one concrete headline per slide in the user's locale, usually one or two s
 
 Choose a small type palette from existing brand fonts or properly licensed alternatives with locale coverage. Confirm accented letters and punctuation. Keep font files, weights, internal family names, and license provenance together. Never assume a fallback looks close enough.
 
-Define canvas-relative margins, type sizes, background, logo position, and screenshot treatment. Use these consistently while allowing a hero slide, a single-screen slide, and a paired-screen slide. A frame is optional; if used, match the platform and do not obscure content. Avoid decorative mockups that make the real interface too small.
+Define canvas-relative margins, type sizes, background, logo position, and screenshot treatment. Use these consistently while allowing a hero slide, a single-screen slide, and a paired-screen slide. Where the destination permits a frame, match the platform and do not obscure content. Avoid decorative mockups that make the real interface too small. Template safe areas and storefront previews take precedence over aesthetic margins for creative artwork.
 
 For a screenshot of size `sw × sh` inside a box `bw × bh`, use `s = min(bw/sw, bh/sh)` and place it at `sw*s × sh*s`. SVG `preserveAspectRatio="xMidYMid meet"` provides containment. Do not stretch or crop meaningful UI to make a ratio fit. Full screenshots are the default; a deliberate detail crop needs context and accurate representation.
 
