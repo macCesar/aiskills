@@ -51,3 +51,9 @@ Sources verified on 2026-10-17:
 - [Google custom listings/groups](https://support.google.com/googleplay/android-developer/answer/9867158?hl=en), [Asset Library](https://support.google.com/googleplay/android-developer/answer/16386748?hl=en), and [Store listing experiments](https://play.google.com/console/about/store-listing-experiments/). The canonical library request failed once; its indexed English regional URL returned the official full article.
 
 Follow-up checks: 179 tests passed, none failed/skipped; Skill Creator validator passed; all 29 relative links resolve; npm pack dry run includes all nine reference guides. This is reference/configuration guidance: no live page, library, group or experiment was changed, and no statistical outcome or independent assistant evaluation is claimed.
+
+## Follow-up: constrained capture workstations
+
+The user reported that a project indexer processing large SVGs consumed more than three CPU cores while iPad control stalled, and requested sequential execution on machines such as an M1 with 16 GB RAM. The entry point now requires one virtual device total and one heavy job at a time on constrained machines, with serial device transitions, SVG generation, PNG export and contact sheets. Capture/export references carry the same policy. Temporary project-indexing pauses preserve their prior state, cover the heavy pipeline, and are restored at completion/interrupted handoff without persistent configuration changes. This is a workflow rule, not a claim that a specific chip cannot handle parallel work.
+
+Verification: existing 179 tests pass; no code/helper changed. No local performance benchmark or process-control experiment was performed; the operational incident is user-provided evidence.

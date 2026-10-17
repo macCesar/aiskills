@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- `store-screenshots`: require sequential capture/generation/export on constrained machines (including 16 GB systems), with one virtual device total, task-owned device shutdown, contention checks and restoration of temporary indexer pauses.
 - `store-screenshots`: add Apple Custom Product Pages, Asset Library and Product Page Optimization workflows, including page/locale mappings, asset review and reuse, randomized test configuration, Analytics interpretation and documented lifecycle limits. Document Google custom listings, group inheritance and Asset Library, with explicit Apple/Google counterparts.
 - `store-screenshots`: audit Apple and Google listing requirements; add dated references for Header/Search Results, universal artwork, safe-area templates, screenshots, App Previews, Play feature graphics and YouTube previews. Separate creative artwork from real UI captures, publication requirements from promotion recommendations, and PNG verification from video/console validation.
 

@@ -2,6 +2,12 @@
 
 ## Establish a reproducible session
 
+Follow the entry point's sequential-execution policy on constrained machines. Inventory already-running virtual devices before booting one. Reuse the authorized target where suitable; do not shut down someone else's unrelated device to enforce a task limit. If that device causes contention, report it and use a suitable authorized target or request the missing authority before stopping it.
+
+For task-owned targets, complete one build before booting; then install, navigate, capture and inspect one device/locale at a time. Shut down that device and confirm it stopped before moving to another form factor/platform or starting exports. Closing a Simulator window is not proof that the virtual device stopped. Discover shutdown commands from installed help (typically `xcrun simctl shutdown UDID` or `adb -s SERIAL emu kill` for a task-owned Android emulator). Preserve app data; never erase/reset devices as a resource-management shortcut.
+
+Do not leave an idle iPhone running while capturing an iPad, or an Android emulator running during iOS capture. Defer image rendering until navigation/capture completes. When control stalls, inspect contention before treating the app as broken; a project indexer ingesting large generated SVGs can remain busy across stages. Record any temporary pause, keep indexing deferred through the subsequent heavy exports, and restore its previous state after heavy work or when handing off an interrupted session. Use the indexer's supported controls; do not guess process IDs or permanently edit project configuration as a substitute.
+
 Inventory installed tools, devices, runtimes, app IDs, and compatible builds. Record device ID/model, OS/runtime, native pixels, logical size/density, orientation, app version/build, locale/theme, capture time, and navigation steps. Use an explicit serial/UDID throughout. Keep actual account information, credentials, and private content out of published screenshots; use an authorized demo account when needed.
 
 Prefer an available simulator/emulator that matches the app's supported platform and selected upload slot. Do not prescribe one permanent device model. Check official store requirements first. Native resolution may differ from final canvas resolution; preserve the original and compose it proportionally later.

@@ -27,6 +27,17 @@ Cite store rules and values with `[source: references/<file>.md]` and the offici
 
 ## Establish the deliverable
 
+### Resource-constrained machines: sequential execution
+
+On machines with 16 GB RAM or less, reported slowness/memory pressure, or an explicit user request, execute resource-heavy work **sequentially, never in parallel**. Treat an M1 with 16 GB as a sequential-workflow target, not a reason to assume capture is impossible. If capacity is unknown, default to sequential execution for capture and rendering.
+
+- Use one booted virtual device total for this task: one iOS Simulator **or** one Android emulator, never both or multiple phone/tablet instances. Finish and shut down the task-owned device before starting the next.
+- Build first, then boot/install/navigate/capture one target. Save and inspect its captures, shut it down, then generate SVGs, export PNGs and assemble review sheets as separate stages. Process one image/job at a time and wait for completion before launching the next; apply this across locales, variants and agent/tool calls too.
+- Do not overlap device control with SVG generation, PNG rendering, image generation, video encoding, another build, or a contact-sheet job. Disable worker pools/batch parallelism in task-owned generators where configurable. A serial shell loop alone is insufficient if its child tool starts concurrent workers.
+- Check active task jobs before starting more work. If a device becomes unresponsive, stop adding work, inspect CPU/memory pressure and competing processes, and reduce contention before retrying. An indexer can compete for resources, particularly while ingesting large generated SVGs; record observed CPU/process activity rather than diagnosing from its presence alone. Temporarily pause/defer indexing associated with this task's project via supported controls when contention is observed. Record its prior state, keep it paused through capture and heavy artwork export, then restore that state once heavy work finishes or at an interrupted handoff. If it was already paused, leave it paused. Do not change app files or persistent indexer exclusions to achieve a temporary pause, kill unrelated user processes, or disable indexing permanently.
+
+Record the execution mode and completed target/stage so interrupted work resumes from verified outputs. See [capture.md](references/capture.md) for device transitions and [delivery.md](references/delivery.md) for serial export. This is an execution policy, not a store upload requirement. Lightweight reads can be grouped; they must not launch additional heavy jobs.
+
 Inspect existing artwork, app UI, brand assets, project instructions, and the requested release before choosing a direction. Reuse an accepted direction and existing generators when appropriate. Discover similar skills before replacing an established workflow.
 
 Resolve asset type (screenshot, creative image, or video), platform, upload slot/device class, locale, app orientation, mandatory sections, and whether the request is selection, one sample, or the complete series. Infer what the project makes clear; ask only for missing decisions that block the work. A request for one sample is not authorization to regenerate all designs.

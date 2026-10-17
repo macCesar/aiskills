@@ -60,6 +60,8 @@ Generate each canvas at its final pixel dimensions. For new dimensions, reflow t
 
 ## Included helper
 
+On constrained machines, finish capture and shut down the task-owned virtual device before generating/exporting artwork. Generate one SVG, export and validate its PNG, then continue to the next item; do not run generators, exports or locale/device batches concurrently. Wait for the current process to exit, including child workers. Build contact sheets afterward, in small sequential batches if necessary. Avoid `Promise.all`, background `&`, parallel agents, `xargs -P` and process pools for these heavy stages. Keep completed outputs and resume from them rather than restarting the whole series after a stall. Do not reduce required upload dimensions or stretch screenshots to save memory.
+
 `scripts/artwork.py` requires Python 3, `rsvg-convert` (librsvg), and ImageMagick 7 (`magick`) on PATH. On macOS these are commonly supplied by Homebrew's `librsvg` and `imagemagick`; use the environment's package manager only within installation permissions. Python uses its standard library. No AI image service or paid design application is required.
 
 ```bash
