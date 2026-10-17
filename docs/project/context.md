@@ -21,6 +21,12 @@ test/                   node:test suites
 
 `~/.agents/skills/` is the canonical install path. A published npm package copies skills there; when the CLI resolves to a development checkout containing `.git`, it symlinks each whole skill directory instead. After one `aiskills install`, an `npm link` maintainer sees edits and new reference files immediately. Claude Code's platform mirror then points at the same canonical entry.
 
+## Documentation map
+
+- `requirements.md` defines the shared CLI parity contract; read it before changing common machinery.
+- `status.md` records current progress, validation and publication state; read on resume, never import at startup.
+- `store-screenshots-audit.md` records the Apple/Google asset audit, official sources, corrections and verification limits; consult before revising store asset guidance.
+
 ## Which assistant built what
 
 One row per stretch of work, not per session. Attribution comes from the `Co-Authored-By` trailer in `git log` (Claude Code sessions carry one; Codex sessions do not) and from the `Session by:` line of past `status.md` revisions. A session can edit this repo from another working directory, and its transcript then lives under that directory's project in `~/.claude/projects/`, not this one's — search every project for a phrase the work introduced before writing "not recorded". It matters for one reason: transcripts live inside the tool that produced them, so returning to a piece of work means knowing which tool still holds it.
@@ -35,6 +41,7 @@ One row per stretch of work, not per session. Attribution comes from the `Co-Aut
 | 2026-09-14 | Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) | `laravel-security-sweep` registration and review of both rounds (segment-based `SECRET-FALLBACK` exclusion, CHANGELOG restored); v1.25.0, v1.26.0 and v1.26.1 releases |
 | 2026-09-15 → 2026-09-16 | Codex · `gpt-6-astra`, session `01a0a674` run from `~/Developer/Apps/notiGAPE` | `store-screenshots` skill, `scripts/artwork.py` and its tests |
 | 2026-09-26 | Claude Code · Opus 5.5 (`claude-opus-5-5`) | `handoff` skill and its evals; commits for the uncommitted 1.27.0 work; v1.27.0 release |
+| 2026-10-17 | Codex | `store-screenshots` audit and Apple/Google platform references, creative-versus-capture distinction, video specifications and console verification guidance |
 
 ## Sibling project — `TiTools`
 

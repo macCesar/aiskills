@@ -1,31 +1,34 @@
-# Status — 2026-09-28
+# Status — 2026-10-17
 
-**Phase:** v1.27.1 released; npm download and isolated CLI installation verified.
-**Session by:** Codex · GPT-6 — applied the supplied handoff patch, committed it, and executed the confirmed release.
-**Publication:** GitHub Release and annotated tag `v1.27.1` point at release commit `65e05ee`. `publish.yml` run [36489047822](https://github.com/macCesar/aiskills/actions/runs/36489047822) succeeded and reported `+ @maccesar/aiskills@1.27.1` with provenance. npm reports `latest` as `1.27.1`. Initial tarball downloads returned HTTP 404; a subsequent `npm pack` succeeded, and the registry package was installed in a temporary directory and verified with `aiskills --version` and `aiskills --help`.
-**Branch:** `main`; the release commit is on origin. This note is committed and pushed after the tag.
+**Phase:** store-screenshots audit implemented, verified and committed; not released.
+**Session by:** Codex — researched official Apple/Google asset requirements, updated the skill, and completed the requested semantic commits and session documentation.
+**Branch:** `main`.
 
 ## Where things stand
 
-- `handoff` explicitly accepts `/handoff`, `$handoff`, or a request for `HANDOFF.md` without asking the user to repeat the context. README and the evaluation prompt match. Change commit: `783e19b`.
-- The release also includes removal of the stale machine-local memory import from `CLAUDE.md`.
-- `package.json`, `package-lock.json`, and `.claude-plugin/plugin.json` are synchronized at `1.27.1`. The plugin manifest served from GitHub main was verified at that version.
-- No shared CLI machinery changed, so no TiTools port was required.
+- `60b8b02` — `feat(store-screenshots): cover Apple creative assets and Play listing requirements`. Adds three platform references, required reference routing/citations, creative artwork versus real-UI capture guidance, and distinct image/video delivery requirements.
+- Covers Apple Header, Search Results and universal images, safe-area templates, current screenshot targets, App Preview specifications, Google Play feature graphics, large screens and YouTube previews.
+- README, Codex sidecar and CHANGELOG reflect the expanded scope. Changes remain under Unreleased; package, lockfile and plugin versions remain at `1.27.1`.
+- Session documentation is committed separately as `docs(project): close store screenshots audit session`. The audit report records evidence and limits; context maps it and records authorship.
+- No shared CLI machinery changed; no TiTools port is required.
 
-## Next step
+## Verification
 
-Use `handoff` in real sessions and collect findings for its next evaluation round. No publication blocker remains.
+- Fresh `npm test` before committing: 179 passed, 0 failed, 0 skipped.
+- Skill Creator validator passed using PyYAML in a temporary environment; no project dependencies changed.
+- Export/check passed for 3840 × 1646, 3840 × 2560, 5244 × 2950 and 1024 × 500 RGB PNGs.
+- All 13 relative skill-reference links resolve; npm pack dry run includes all three new platform references; `git diff --check` passed.
+- Context files point to status on demand and contain no startup imports of it.
+- See [audit evidence and limits](store-screenshots-audit.md) for sources and the exact scope of verification.
 
-## Verified vs. assumed
+## Availability and publication
 
-- `npm test`: 179/179 passed after the version bump; release diff passed `git diff --check`.
-- GitHub Release is public, not a draft or prerelease; remote tag resolves to `65e05ee`.
-- npm metadata reports `1.27.1` and preserves `bin.aiskills = bin/aiskills.js`, despite the publish log's bin normalization warning. The downloaded tarball preserves the CLI entry and contains the minimal-invocation instruction. An isolated installation of that tarball with `--ignore-scripts` succeeded; `aiskills --version` returned `1.27.1` and `--help` exited successfully.
-- Local `npm pack --dry-run --json` excludes `docs/`; this session note does not change the package contents.
-- The revised minimal-invocation evaluation was not rerun with an assistant. Prior handoff evaluation results describe the earlier prompt.
-- The optional skill validator could not run because the local Python lacks PyYAML.
+- The maintainer's `npm link` / skill-directory symlinks use the edited skill immediately.
+- Latest publication verified in the previous session: v1.27.1, release commit `65e05ee`, successful [publish workflow](https://github.com/macCesar/aiskills/actions/runs/36489047822). Registry state was not rechecked this session.
+- This session creates commits only. No push, tag, version bump or new npm/marketplace release was requested or performed.
 
-## Known pending
+## Next step and remaining limits
 
-- `store-screenshots` has a README table row but no dedicated section.
-- Real-session validation of `handoff` and new simulator/emulator captures for `store-screenshots` remain outside this release's verification.
+- When a new release is requested, follow the release checklist: synchronize package/plugin versions, update CHANGELOG, verify, tag and publish through GitHub Actions.
+- Numeric safe-area geometry and actual app cropping still require opening Apple's current templates and reviewing App Store Connect Preview. No live console upload, store approval, full video production or new device capture was performed.
+- Real-session validation of `handoff` and new simulator/emulator captures for `store-screenshots` remain outside this session's verification. No known blocker to the completed documentation/skill changes.
