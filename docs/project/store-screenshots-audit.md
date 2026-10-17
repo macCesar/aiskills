@@ -29,7 +29,25 @@ Scope: skill entry point, all three original references, exporter, existing test
 - `npm test`: 179 passed, 0 failed, 0 skipped; includes real SVG rendering, RGB/no-alpha checks, dimension mismatch, corrupt-image rejection and overwrite protection.
 - Skill Creator `quick_validate.py`: passed using a temporary venv with PyYAML; no project dependencies changed.
 - Export/check smoke run passed with temporary plain-color SVGs at 3840 × 1646, 3840 × 2560, 5244 × 2950, and 1024 × 500; each decoded as RGB at its exact size. This verifies exporter compatibility, not actual artwork quality or store acceptance.
-- All 13 relative Markdown reference links resolve. `npm pack --dry-run --json` includes all three new platform references. `git diff --check` passed.
+- Initial pass: all 13 relative Markdown reference links resolved. `npm pack --dry-run --json` included the three initial platform references. `git diff --check` passed.
 - Existing exporter inspected through the knowledge graph; no implementation defect requiring a code change was identified within this task. No shared CLI machinery changed, so no TiTools port is needed.
 - No new app captures, full video production, live console upload, store review, or independent assistant evaluation was performed. Safe-area placement still requires opening the current template and reviewing the actual app in console Preview.
 - Changes are recorded under Unreleased and committed as `60b8b02` (`feat(store-screenshots): cover Apple creative assets and Play listing requirements`); session documentation is committed separately at the user's request. No tag, push, npm release or marketplace version change was requested or performed.
+
+## Follow-up: page workflows and Google equivalents
+
+The user identified missing Apple CPP/PPO workflows and partial Asset Library coverage, then asked how they compare with Google custom listings and its resource library. Implemented as `f0b6030` (`feat(store-screenshots): add page workflows and asset library guidance`).
+
+- Added three focused Apple references for audience/campaign pages, library reuse/review/lifecycle, and randomized default-page testing. Required routing, triggers, delivery manifests, README and Codex metadata now cover them.
+- Added Google custom listings, group inheritance, library search/filter/crop/reuse and an Apple/Google counterpart table. Google's Store listing experiments is identified and linked, not presented as a complete operational guide.
+- Clarified that CPP is not a PPO treatment, five downloads is a reporting threshold rather than proof of a winner, approval is separate from placement, and copying a listing differs from inheriting group assets.
+- Recorded conflicts between Apple's operational PPO instructions and its Analytics FAQ. The skill does not promise simultaneous tests, duration extensions, description tests or automatic Header/Search treatment transfer without checking actual capability.
+
+Sources verified on 2026-10-17:
+
+- [Apple CPP setup/lifecycle](https://developer.apple.com/help/app-store-connect/create-custom-product-pages/configure-multiple-product-page-versions/) and [CPP overview](https://developer.apple.com/app-store/custom-product-pages/).
+- [Apple asset management](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-your-app-store-assets) and [standalone submission constraints](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-assets-from-asset-library).
+- [PPO creation](https://developer.apple.com/help/app-store-connect/create-product-page-optimization-tests/create-a-test/), [treatments](https://developer.apple.com/help/app-store-connect/create-product-page-optimization-tests/configure-test-treatments/), [run/stop](https://developer.apple.com/help/app-store-connect/create-product-page-optimization-tests/run-a-test), [Analytics](https://developer.apple.com/help/app-store-connect-analytics/acquisition/product-page-optimization), and [application limits](https://developer.apple.com/help/app-store-connect/create-product-page-optimization-tests/apply-a-test-treatment-to-your-product-page/).
+- [Google custom listings/groups](https://support.google.com/googleplay/android-developer/answer/9867158?hl=en), [Asset Library](https://support.google.com/googleplay/android-developer/answer/16386748?hl=en), and [Store listing experiments](https://play.google.com/console/about/store-listing-experiments/). The canonical library request failed once; its indexed English regional URL returned the official full article.
+
+Follow-up checks: 179 tests passed, none failed/skipped; Skill Creator validator passed; all 29 relative links resolve; npm pack dry run includes all nine reference guides. This is reference/configuration guidance: no live page, library, group or experiment was changed, and no statistical outcome or independent assistant evaluation is claimed.
