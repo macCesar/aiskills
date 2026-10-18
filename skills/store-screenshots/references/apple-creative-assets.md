@@ -50,6 +50,8 @@ The dedicated Header video target is **3840 × 1646 pixels (Apple's 21:9 label)*
 
 A 10–15 second sample can be a useful first composition test, not an Apple duration requirement. Buttons may be part of authentic Demo Mode footage, but judge whether they obscure the core experience. Do not pretend the storefront controls or template guides belong in the uploaded video. Reuse footage for App Previews or Search only through separate compositions/exports that meet those destinations' requirements; the universal PNG dimensions are not a universal video preset. On constrained machines, capture, composition and encoding must follow the skill's sequential-execution policy.
 
+Read [video-production.md](video-production.md) for capture/edit/export recipes and technical/visual QA; [promotion-and-events.md](promotion-and-events.md) covers the different event-card/details formats. The best-practices page is a creative overview, while each destination's specification and status references govern its technical/lifecycle checks.
+
 ## Console workflow and verification
 
 In the app version, open Product Page Information → Header and Search Results → choose placement → drag in an asset or Browse Assets → Save. Only universal assets offer **Use header asset in search results**. Preview both destinations before submission.

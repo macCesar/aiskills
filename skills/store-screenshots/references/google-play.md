@@ -46,6 +46,8 @@ Google supports country, URL, ads, keyword and user-segment targeting subject to
 
 In Grow users → Store presence → Custom store listings, create new, duplicate an existing listing, or create within a group. Duplication copies assets; group membership inherits assets and group updates can affect member listings. Record group/inheritance and individual overrides before editing shared resources. Select targeting, default language/translations, text and graphics; preview and record the review/publication state. Use the console-generated URL with its `listing` parameter, not Apple's CPP identifier.
 
+The user's Spanish console exposes Fichas de Play Store → Crear una ficha de Play Store personalizada. Follow the actual console labels when menus differ from the English guide; this is the same Custom store listings workflow, not a separate asset type.
+
 Source: [Custom store listings and groups](https://support.google.com/googleplay/android-developer/answer/9867158?hl=en).
 
 ### Google Asset Library
@@ -54,4 +56,6 @@ Add assets in a graphics section opens a side panel for main/custom listings, ex
 
 Source: [Manage graphics with Asset Library](https://support.google.com/googleplay/android-developer/answer/16386748?hl=en).
 
-For Google's experiment counterpart, use [Store listing experiments](https://play.google.com/console/about/store-listing-experiments/): A/B tests of graphics and localized text. Consult its current setup before configuring a test; Apple's treatment count, runtime and confidence rules do not apply automatically.
+For Google's experiment counterpart, read [google-experiments.md](google-experiments.md): it covers configuration, review, metrics and applying results for default/custom listings. Apple's treatment count, runtime and confidence rules do not apply automatically.
+
+For icons, TV banners, Wear/Automotive/XR, Play Shorts and per-asset AI declarations, read [google-additional-assets.md](google-additional-assets.md). For Promotional Content, use [promotion-and-events.md](promotion-and-events.md). Their rules differ from ordinary phone listing assets, including video orientation and graphic text/alpha requirements. Preview videos should also be localized and captioned where useful; avoid black side bars around portrait video, keep muted-playback copy legible, and check the full official preview guide before final delivery.

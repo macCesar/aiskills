@@ -8,6 +8,7 @@ Open the current official documentation for every requested store and record the
 - [Apple media](apple-media.md) for screenshots and App Preview video requirements.
 - [Custom Product Pages](apple-custom-product-pages.md), [Asset Library](apple-asset-library.md) and [Product Page Optimization](apple-product-page-optimization.md) for page, reuse and experiment workflows.
 - [Google Play](google-play.md) for feature graphics, screenshots, large screens and YouTube previews.
+- [Video production](video-production.md), [Google experiments](google-experiments.md), [events/promotions](promotion-and-events.md) and [additional Google assets](google-additional-assets.md) for those requested deliverables.
 
 Do not apply a rule for one asset type or device class to another. Use the dated platform references and reopen their official sources. A newer simulator's native screenshot is not necessarily accepted by a different slot. Distinguish baseline upload constraints from recommendation and large-screen guidance. Do not bake dated requirements into a generator without explicit target/version metadata.
 
@@ -49,6 +50,8 @@ A simple series manifest should identify each final's ID, destination, canvas pi
 For creative assets also record placement type, universal versus dedicated, original artwork source/license, template URL/date and safe-area review. Capture paths can be empty for illustration-only creative art. Keep storefront mockups and template overlays in review, never upload folders. For video record duration, codec, frame rate, audio, poster timestamp, probe result and editable project; for Play record the intended YouTube URL/visibility when available. Keep locale and review/publication state explicit.
 
 For CPP/PPO deliveries, group sources and finals by stable page/test/treatment identifier and locale so variants cannot overwrite the default set. Record inherited assets, ordered overrides, library IDs/hashes and compatibility. CPP needs audience/channel, URL, keyword and deep-link notes; PPO needs hypothesis, baseline snapshot, allocation, selected locales, decision criteria and measured results when available. Library management needs usage and processing/review/archive state. Create only the records required by the requested workflow; do not force screenshots or exports into a configuration-only task.
+
+For video retain raw captures, the cut/project/recipe, tool versions, rights/access disclosures, captions/localized overlays, poster and probe/decode/visual QA. For events retain both placement compositions, schedule/timezone, region/locale mapping and tested deep link. For generated/edited assets record per-item provenance and observed declaration state. Keep restricted-feature eligibility and actual review/publication evidence explicit rather than assuming every app has every uploader.
 
 ## SVG and typography
 

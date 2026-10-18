@@ -17,9 +17,21 @@ These are accepted choices, not a mandate to export every listed size. Capture t
 
 Source: [Screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications).
 
-Screenshots must show the app in use. Creative artwork belongs to its own slot; it must not replace all screenshot content. Keep the real UI legible when composing captions. App Previews use captured app footage; do not present concept art or generated animation as real gameplay.
+More than half of each device's screenshot set must show the actual app in use; assess each localization too. For three screenshots, at least two show real use; for four, at least three. Remaining slides may explain benefits with marketing material, but a series of splash/login/title art is insufficient. Overlays and even UI spanning multiple slides are allowed when actual functionality remains visible. Avoid letting decorative frames or captions obscure the app.
+
+Source: [App Review screenshot guidance 2.3.3](https://developer.apple.com/help/app-review/guideline-reference/2-3-3-screenshots/).
+
+Creative artwork belongs to its own slot and does not replace required screenshot sets. App Previews use captured app footage; do not present concept art or generated animation as real gameplay.
 
 Sources: [Creating your product page](https://developer.apple.com/app-store/product-page/), [App Previews guidance](https://developer.apple.com/app-store/app-previews/).
+
+## Content review before production
+
+App Previews stay within the app experience rather than filming hands/devices. Prefer real gameplay over cutscenes; overlays/transitions must not imply nonexistent functionality. Disclose shown features requiring an In-App Purchase, subscription or login. Verify marketing rights for music, footage, characters, brands and other protected material across intended territories. Plan legible localized copy for muted playback, appropriate all-ages content, and a representative poster; do not assume an in-app music license covers advertising use. Record rights/provenance and any necessary access disclosures in the delivery manifest.
+
+Source: [Apple App Preview creative guidance](https://developer.apple.com/app-store/app-previews/).
+
+For production/export recipes, read [video-production.md](video-production.md). For macOS, tvOS, watchOS, iMessage, visionOS or newly introduced devices, reopen the full screenshot/preview tables for that exact platform and eligibility rather than reusing iPhone presets. This reference's compact table is deliberately not an exhaustive device catalog. App icons are a separate build/asset-catalog workflow: consult [Add an app icon](https://developer.apple.com/help/app-store-connect/manage-app-information/add-an-app-icon) and the current platform design guidance before changing them; screenshot canvas rules are not icon rules.
 
 ## App Preview video requirements
 

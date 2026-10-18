@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- `store-screenshots`: close documented coverage gaps with Apple asset statuses and screenshot/preview content rules, reproducible video recipes, Google listing experiments, icons/device-specific assets, event/promotional media, Play Shorts eligibility/lifecycle and per-asset AI declarations. Add four focused references and preserve the Spanish custom-listing console terminology.
 - `store-screenshots`: explain native video capture versus Header upload resolution, proportional cover/contain composition, a worked 1920 × 1080 crop example, Demo Mode footage, upscaling limits and video/placement QA.
 - `store-screenshots`: require sequential capture/generation/export on constrained machines (including 16 GB systems), with one virtual device total, task-owned device shutdown, contention checks and restoration of temporary indexer pauses.
 - `store-screenshots`: add Apple Custom Product Pages, Asset Library and Product Page Optimization workflows, including page/locale mappings, asset review and reuse, randomized test configuration, Analytics interpretation and documented lifecycle limits. Document Google custom listings, group inheritance and Asset Library, with explicit Apple/Google counterparts.

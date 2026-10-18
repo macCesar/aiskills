@@ -1,11 +1,11 @@
 ---
 name: store-screenshots
-description: Use when preparing or auditing App Store/Google Play screenshots, creative assets, editable SVGs, or preview specifications; Apple Header/Search Results, Custom Product Pages, Asset Library, or Product Page Optimization; Google Play feature graphics, custom store listings or asset reuse; or “capturas para las tiendas”. Not for app UI implementation, general video production, or unrelated slide decks.
+description: Use when preparing or auditing App Store/Google Play screenshots, videos, Headers/Search Results, store icons/banners, or editable artwork; configuring custom pages, Asset Library or listing experiments; preparing In-App Events, Promotional Content or Play Shorts; or checking asset review states and AI provenance. Also triggers on “capturas para las tiendas”. Not for app UI implementation or unrelated video production.
 ---
 
 # Store screenshots
 
-Produce store assets with editable masters and reproducible exports. Screenshots show real app UI; creative artwork can express the brand beyond the UI where the placement permits it. Work with ordinary files and command-line tools across assistants. Image generation is optional for artwork; never use it to manufacture screenshots or gameplay. This skill specifies and checks video deliverables; recording/editing needs an appropriate production workflow.
+Produce store assets with editable masters and reproducible exports. Screenshots show real app UI; creative artwork can express the brand beyond the UI where the placement permits it. Work with ordinary files and command-line tools across assistants. Image generation is optional for artwork; never use it to manufacture screenshots or gameplay. Store-video preparation includes capture/edit/export guidance and FFmpeg recipes; complex recording, animation or editing still needs the appropriate available production tools.
 
 ## Required workflow
 
@@ -16,9 +16,13 @@ Read the references for the requested deliverables before recommending dimension
 | Apple Header, Search Results, universal artwork, safe areas, upload/review | [apple-creative-assets.md](references/apple-creative-assets.md) |
 | Apple screenshots, device slots, App Previews and poster frames | [apple-media.md](references/apple-media.md) |
 | Apple Custom Product Pages, campaign pages, keywords and deep links | [apple-custom-product-pages.md](references/apple-custom-product-pages.md) |
-| Apple Asset Library, compatibility, reuse, review and archiving | [apple-asset-library.md](references/apple-asset-library.md) |
+| Apple Asset Library, statuses, compatibility, reuse, review and archiving | [apple-asset-library.md](references/apple-asset-library.md) |
 | Apple Product Page Optimization, treatments, traffic and results | [apple-product-page-optimization.md](references/apple-product-page-optimization.md) |
 | Google Play assets, custom listings/groups, library reuse, Apple/Google counterparts | [google-play.md](references/google-play.md) |
+| Google listing experiments, variants, metrics and applying results | [google-experiments.md](references/google-experiments.md) |
+| Recording/editing/exporting store video, FFmpeg recipes and video QA | [video-production.md](references/video-production.md) |
+| Apple In-App Events or Google Promotional Content images/animation/video | [promotion-and-events.md](references/promotion-and-events.md) |
+| Google icons, TV/Wear/Automotive/XR, Play Shorts or AI declarations | [google-additional-assets.md](references/google-additional-assets.md) |
 | Art direction, story, typography, composition | [design.md](references/design.md) |
 | New Android/iOS captures | [capture.md](references/capture.md) |
 | Export, packaging, technical and visual QA | [delivery.md](references/delivery.md) |
@@ -52,9 +56,13 @@ For audience/campaign destinations, use Custom Product Pages and deliver a page 
 
 Prepare the requested artifacts and reviewable configuration first. Execute console changes only within the user's authorization, including submissions, publishing, test start/stop/application and asset cleanup. When access is missing, finish independent asset preparation and name the specific unverified console state. Do not report a hypothetical experiment outcome as measured conversion lift.
 
+Google uses Fichas de Play Store → Crear una ficha de Play Store personalizada (Custom store listings); its experiments can target default or custom listings. Use its own configuration and result rules. Distinguish ordinary listing assets, event/promotion media and restricted-access features such as Play Shorts before generating files. Confirm actual console eligibility for conditional destinations.
+
 ## Capture and compose
 
 Read [capture.md](references/capture.md) when obtaining new screenshots. Capture each platform's real UI. An iPhone capture does not become Android artwork by changing its dimensions or frame. Tablets need the actual tablet layout. Creative images need not contain a screenshot; follow their placement's content rules and safe-area templates instead. Do not bake storefront controls, device shells, or template guides into creative exports.
+
+For videos, follow [video-production.md](references/video-production.md) and the destination's content/access-disclosure rules. For generated/edited Google artwork, record per-asset provenance and inspect applicable AI declarations using [google-additional-assets.md](references/google-additional-assets.md). Do not flatten every asset to RGB: Play listing icons have different alpha requirements from screenshots and feature graphics.
 
 Number final slides in reading order. Name captures sharing a slide with subnumbers (`06`, `07.1`, `07.2`). Keep required screens; group related benefits only when both remain legible. Store a mapping of slide → source captures → copy, including exclusions and the reason for them.
 
@@ -76,4 +84,5 @@ Paths above are relative to this skill. The size is an example, not a store requ
 - For image deliveries, open rendered PNGs: inspect the entire contact sheet, each slide at useful size, and suspect details at 100%. XML validity and matching dimensions do not prove visual quality.
 - Export commands, fonts/licenses, sources, capture provenance, and final sequence are reproducible from the delivered package.
 - For page/library/test work, identify the page or treatment, locales, asset mapping, inherited items and observed review/placement/test state. Separate proposed traffic, expected outcomes and actual Analytics results.
+- For video, events or conditional assets, verify the actual slot, technical output, content rights/disclosures, eligibility and applicable processing/review/publication state; do not claim uploader support from a recipe alone.
 - Report actual validation and missing access separately. Do not claim store acceptance or successful device capture unless observed. Store upload, publication, and unrelated app fixes need their own authorization.
