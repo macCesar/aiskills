@@ -41,7 +41,7 @@ One row per stretch of work, not per session. Attribution comes from the `Co-Aut
 | 2026-09-14 | Claude Code · Opus 5 (1M context) (`claude-opus-5[1m]`) | `laravel-security-sweep` registration and review of both rounds (segment-based `SECRET-FALLBACK` exclusion, CHANGELOG restored); v1.25.0, v1.26.0 and v1.26.1 releases |
 | 2026-09-15 → 2026-09-16 | Codex · `gpt-6-astra`, session `01a0a674` run from `~/Developer/Apps/notiGAPE` | `store-screenshots` skill, `scripts/artwork.py` and its tests |
 | 2026-09-26 | Claude Code · Opus 5.5 (`claude-opus-5-5`) | `handoff` skill and its evals; commits for the uncommitted 1.27.0 work; v1.27.0 release |
-| 2026-10-17 | Codex | `store-screenshots` audit and Apple/Google platform references, creative-versus-capture distinction, video specifications, Apple CPP/Asset Library/PPO workflows, Google custom listings/groups/library counterparts and console verification guidance |
+| 2026-10-17 | Codex | `store-screenshots` audit and Apple/Google platform references, creative-versus-capture distinction, video specifications, Apple CPP/Asset Library/PPO workflows, Google custom listings/groups/library counterparts, full Google experiments, asset statuses, tested video recipes, events/conditional assets and console verification guidance |
 
 ## Sibling project — `TiTools`
 
