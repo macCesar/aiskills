@@ -9,6 +9,7 @@
 - `60b8b02` — `feat(store-screenshots): cover Apple creative assets and Play listing requirements`. Adds three platform references, required reference routing/citations, creative artwork versus real-UI capture guidance, and distinct image/video delivery requirements.
 - `f0b6030` — `feat(store-screenshots): add page workflows and asset library guidance`. Adds Apple CPP, Asset Library and PPO references, plus Google custom listings/groups/library guidance and a cross-store comparison. The skill now has nine reference guides.
 - Sequential-execution follow-up: on 16 GB or constrained systems, one task-owned virtual device total, serial builds/captures/SVG generation/PNG exports/contact sheets, and no competing heavy jobs. Indexing of large generated SVGs can be paused temporarily through the pipeline when contention is observed, then restored to its prior state. No permanent project/indexer configuration change is implied.
+- Header-video follow-up: the creative-assets reference now explains native recording versus final 3840 × 1646 upload, real Demo Mode footage, proportional cover/contain composition, a worked crop example, upscaling limits and source/export/console QA. No actual gameplay video was recorded or encoded in this documentation update.
 - Covers Apple Header, Search Results and universal images, safe-area templates, current screenshot targets, App Preview specifications, Google Play feature graphics, large screens and YouTube previews.
 - README, Codex sidecar and CHANGELOG reflect the expanded scope. Changes remain under Unreleased; package, lockfile and plugin versions remain at `1.27.1`.
 - Session documentation is committed separately (`67dd547` for the first audit, plus the workflow follow-up). The audit report records evidence and limits; context maps it and records authorship.
@@ -22,6 +23,7 @@
 - Follow-up verification: all 29 relative skill-reference links resolve; npm pack dry run includes all nine reference guides; `git diff --check` passed. Fresh tests and Skill Creator validation also passed after the workflow expansion.
 - Context files point to status on demand and contain no startup imports of it.
 - Sequential guidance: fresh `npm test` passed 179/179 and `git diff --check` passed. No simulator/indexer performance benchmark or live process pause was performed in this repository; the contention example came from the user's capture session.
+- Header-video guidance: fresh `npm test` passed 179/179; all 32 relative reference links resolve, crop arithmetic checks out and `git diff --check` passed. No video encoding or store acceptance is claimed.
 - See [audit evidence and limits](store-screenshots-audit.md) for sources and the exact scope of verification.
 
 ## Availability and publication

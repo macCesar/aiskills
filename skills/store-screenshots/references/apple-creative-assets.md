@@ -38,6 +38,18 @@ Dedicated Header video: 3840 × 1646. Search video: 3:2, from 1920 × 1280 to 38
 
 Source: [Creative assets specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications).
 
+### From native recording to the Header video
+
+The dedicated Header video target is **3840 × 1646 pixels (Apple's 21:9 label)**. This is the final upload resolution, not a requirement that the app run or the recording originate at that size. Static images and videos have separate tables even when this particular target matches. The following is production guidance, not an additional Apple capture requirement.
+
+1. Record a short sample of the real app at the device/simulator's native capture resolution and inspect its actual dimensions, orientation, frame rate and sharpness. A genuine gameplay Demo Mode/autopilot can provide reproducible footage; do not manufacture gameplay or assume the mode's menu is the best framing for the Header.
+2. Create a 3840 × 1646 composition in an available video editor or FFmpeg workflow. Place the recording proportionally. **Cover** fills the canvas but crops edges; **contain** preserves the frame and leaves space that can be composed with suitable background artwork. Choose after inspecting the real footage, not from an assumed device size. Do not stretch the game or distort its UI to force the target ratio.
+3. For a 1920 × 1080 source, uniform 2× scaling produces 3840 × 2160. A centered crop to 3840 × 1646 removes 514 output pixels vertically (257 top and bottom). This is an illustrative calculation, not a recommended crop for every game. Check ships, enemies, menus, HUD and text throughout the clip; shift the framing or use a contained composition if essential content would be lost.
+4. Upscaling adds pixels, not captured detail. Prefer a sufficiently detailed native source; if it looks soft, obtain a better recording when feasible instead of claiming that a 3840-wide export is native 4K footage. Do not change the game's rendering resolution or device configuration without a task-specific reason and appropriate authorization.
+5. Export at the Header's accepted duration, fps and format, then probe the output using the approach in [apple-media.md](apple-media.md). Watch the full file at useful size, inspect the opening/poster and loop transition, and check muted playback. Keep the native source plus editable project or reproducible export recipe. Inspect the actual console Preview across devices/orientations; file dimensions alone cannot prove safe framing.
+
+A 10–15 second sample can be a useful first composition test, not an Apple duration requirement. Buttons may be part of authentic Demo Mode footage, but judge whether they obscure the core experience. Do not pretend the storefront controls or template guides belong in the uploaded video. Reuse footage for App Previews or Search only through separate compositions/exports that meet those destinations' requirements; the universal PNG dimensions are not a universal video preset. On constrained machines, capture, composition and encoding must follow the skill's sequential-execution policy.
+
 ## Console workflow and verification
 
 In the app version, open Product Page Information → Header and Search Results → choose placement → drag in an asset or Browse Assets → Save. Only universal assets offer **Use header asset in search results**. Preview both destinations before submission.
