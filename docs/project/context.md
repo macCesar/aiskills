@@ -42,7 +42,7 @@ One row per stretch of work, not per session. Attribution comes from the `Co-Aut
 | 2026-09-15 → 2026-09-16 | Codex · `gpt-6-astra`, session `01a0a674` run from `~/Developer/Apps/notiGAPE` | `store-screenshots` skill, `scripts/artwork.py` and its tests |
 | 2026-09-26 | Claude Code · Opus 5.5 (`claude-opus-5-5`) | `handoff` skill and its evals; commits for the uncommitted 1.27.0 work; v1.27.0 release |
 | 2026-10-17 | Codex | `store-screenshots` audit and Apple/Google platform references, creative-versus-capture distinction, video specifications, Apple CPP/Asset Library/PPO workflows, Google custom listings/groups/library counterparts, full Google experiments, asset statuses, tested video recipes, events/conditional assets and console verification guidance |
-| 2026-10-22 | Codex | `app-compliance` skill with six official-source references, automatic Codex discovery, CLI/catalog integration and conditional audit routing; independent temporary forward-test of applicability, authorized corrections and concrete blockers |
+| 2026-10-22 | Codex | `app-compliance` skill with six official-source references, automatic Codex discovery, CLI/catalog integration and conditional audit routing; independent temporary forward-test of applicability, authorized corrections and concrete blockers; v1.28.0 release including the previously unreleased store-screenshots expansion |
 
 ## Sibling project — `TiTools`
 
