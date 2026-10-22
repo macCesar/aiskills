@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.28.0] - 2026-10-22
+
 ### Added
 
 - `app-compliance`: independent, automatically discoverable skill for technical controls concerning children/age, external fonts, session recording, marketing email, subscriptions and user content/DMCA. Includes six dated official-source references, applicability checks, evidence before edits, authorized implementation and behavioral verification. Register it in the CLI and conditionally route relevant codebase audit findings to it.
