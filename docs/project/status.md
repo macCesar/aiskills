@@ -1,36 +1,48 @@
-# Status — 2026-10-17
+# Status — 2026-10-22
 
-**Phase:** store-screenshots coverage expansion implemented, verified and committed; not released.
-**Session by:** Codex — audited official Apple/Google asset documentation, expanded the skill, and completed semantic commits and session notes at the user's request.
+**Phase:** `app-compliance` implemented, verified and committed; recorded under Unreleased.
+**Session by:** Codex — used Skill Creator, checked official sources, ran an independent isolated forward-test and closed the session with semantic commits at the user's request.
 **Branch:** `main`.
 
 ## Where things stand
 
-- `17b3204` — `feat(store-screenshots): complete asset review and production workflows`. Closes the latest identified gaps: Apple asset statuses and screenshot/preview content rules; store-video production; Google listing experiments; icons/device-specific banners; events/promotions; Play Shorts; per-asset AI provenance/declarations. The skill now has 13 reference guides and one unchanged PNG helper.
-- Earlier implementation commits: `60b8b02` (Apple/Google asset specifications), `f0b6030` (CPP/library/PPO and Google counterparts), `4871cf1` (sequential heavy work on constrained machines), and `192a644` (native capture versus Header-video delivery). Their session documentation is also committed.
-- Spanish console terminology is recorded: Fichas de Play Store → Crear una ficha de Play Store personalizada. Google experiments cover default and custom listings; Apple PPO does not test CPP.
-- README, Codex metadata and CHANGELOG reflect the expanded scope. Changes remain under Unreleased; package, lockfile and plugin versions remain at `1.27.1`.
-- No shared CLI machinery changed, so no TiTools port is required. Session notes and the audit report are committed separately from the latest skill changes.
+- `4df4b5f` — `feat(app-compliance): add evidence-based controls and catalog integration`. Session state and attribution are recorded in a separate `docs(project)` commit.
+- Added `skills/app-compliance/SKILL.md`, six topic references and `agents/openai.yaml` with normal implicit discovery. All skill content is English; responses follow the user's language.
+- Scope: children/age, external fonts, session recording, marketing email, subscriptions and user content/DMCA. Requires current official sources, applicability evidence and findings before edits; review mode remains read-only, implementation continues within existing authorization without a generic second approval.
+- Requires completion of authorized technical work, precise blockers requested when detected, and continuation of independent work. No invented identities, addresses, agents or business policies. Actual provider/data-flow verification is distinguished from source checks and mocks.
+- Registered the skill in `lib/config.js`; added README entry/example, CHANGELOG Unreleased entry and conditional routing in `audit-codebase`. Updated current catalog counts in CLAUDE.md and context.md to 14.
+- CLI engine, dependencies and TiTools are unchanged: this is AISkills-specific catalog content. Package/plugin versions remain synchronized at `1.27.1`; semantic commits were explicitly requested and created. No tag, push, publication or external filing was requested or performed.
+- Previous `store-screenshots` work remains in Unreleased; latest implementation commit recorded by the prior session is `17b3204`. See [its audit evidence](store-screenshots-audit.md) for verification and limits.
 
 ## Verification
 
-- Fresh `npm test`: 179 passed, 0 failed, 0 skipped. `git diff --check` passed.
-- Skill Creator validator passed using PyYAML in a temporary environment; no project dependencies changed.
-- All 58 relative skill-reference links resolve. npm pack dry run includes all 13 reference guides.
-- FFmpeg 9.0.2 smoke test executed the documented recipes sequentially with a temporary synthetic 1920 × 1080 source: cropped and contained Headers both 3840 × 1646, 12 seconds, 30 fps/H.264; App Preview 1920 × 886, 15 seconds, 30 fps/H.264 High Level 4.0 plus AAC stereo/48 kHz. Probe assertions and full decoding passed, including the documented probe/decode commands.
-- Earlier PNG export/check smoke tests passed for Header, Search, universal and Play feature-graphic sizes. The PNG helper was not changed by the later documentation expansion.
-- See [audit evidence and limits](store-screenshots-audit.md) for sources and the exact scope of verification. Startup context files do not import status.md.
+- `node --test test/manifest.test.js test/list.test.js`: 96 passed, zero failures.
+- ESLint on `lib/config.js` and `git diff --check` passed.
+- Skill Creator `quick_validate.py` passed. PyYAML was installed only in a temporary validation environment; no repository dependency changed. Universal frontmatter and Codex UI metadata were also parsed and checked, including enabled implicit invocation.
+- Six relative reference links resolve. `npm pack --dry-run --json` includes all eight new skill files: entry point, six references and Codex metadata. `aiskills list` renders the new catalog entry.
+- Independent agent used a copied skill and synthetic app in a temporary directory, with no real services or external mutations. Actual corrections and seven behavior tests covered replay refusal/acceptance/revocation, marketing guards and persistent suppression, transactional-message preservation, provider-confirmed period-end cancellation, provider failures and unconfirmed state. The primary agent inspected the artifacts and independently reran those seven tests: all passed.
 
-## Availability and publication
+## Forward-test cases and observed decisions
 
-- The maintainer's npm link / skill-directory symlinks use the edited source immediately.
-- Latest publication verified in a previous session: v1.27.1, release commit `65e05ee`, successful [publish workflow](https://github.com/macCesar/aiskills/actions/runs/36489047822). Registry state was not rechecked in this session.
-- No push, tag, version bump, npm release or marketplace release was requested or performed.
+| Case | Observed result |
+| --- | --- |
+| General audience, no accounts or actual knowledge of children | No unnecessary age gate or birth-date collection; applicability based on product facts. |
+| SDK collects before consent | Deferred collection until opt-in and stopped on revocation; verified fake SDK state/events. |
+| Marketing email without a known address | Requested real address in the evaluation report; prepared campaign guard, opt-out and persistent suppression while preserving security sends. |
+| Cancellation changes only local state | Called fake billing authority, checked provider confirmation and retained access through the paid period; tested failure paths. |
+| DMCA preparation without agent details | Prepared an internal draft and identified missing identity, contacts, policy decision and filing authority; no invented agent or filing. |
 
-## Next step and remaining limits
+The evaluator identified ambiguous scope when future subsystems do not yet exist. The final skill now explicitly distinguishes future plans from existing features, avoids unrequested subsystem construction and requires completing necessary authorized wiring when architecture/authority are available. This wording clarification received static review, not a second independent behavioral run.
 
-- If a release is requested, synchronize package/plugin versions, finalize CHANGELOG, verify, tag and publish through the documented GitHub Actions workflow.
-- Synthetic encoding checks do not prove gameplay quality or store acceptance. No app recording, live console mutation, review submission, Lottie production, AI declaration or public upload was performed. Feature eligibility and current destination rules must be checked when used.
-- Numeric Apple safe-area geometry still requires opening the current template; actual crop/placement behavior needs console Preview. Apple operational/Analytics PPO documentation conflicts remain explicitly documented.
-- The 16 GB sequential policy and temporary indexer pause/restoration instructions are implemented; no workstation performance benchmark or live process-control experiment was performed here.
-- Real-session validation of handoff and fresh simulator/emulator captures remain outside this session's verification. No known blocker to the completed skill/documentation work.
+## Session close
+
+- Reviewed and committed only the implementation and documentation from this session using explicit paths. The initial dirty tree consisted of these already reviewed changes.
+- Updated `context.md` attribution and catalog count, and this status with commit/verification evidence. Existing test results were retained without rerunning suites for a documentation/Git-only close.
+- Confirmed the existing AGENTS.md/CLAUDE.md pointers do not import `status.md`; session notes remain tracked and read on demand.
+
+## Limits and next steps
+
+- Official sources were consulted on 2026-10-22. CNIL session-replay material consulted was a draft; the references require checking for a final version. California §17602 retrieval returned HTTP 403 and is explicitly marked Pending verification rather than used to assert deadlines.
+- The ROSCA official URL returned Page Not Found on direct fetch; official search returned the statute text. The final reference links that official result and still requires checking current statutory scope at use time. The evaluator independently marked its failed statute fetch unverified and relied on the fixture's explicit cancellation policy for the technical correction.
+- Forward-testing used local fake providers and synthetic data, not browser/network capture, live replay masking, real campaign delivery, billing renewals or a real DMCA procedure. Missing HTTP/authentication, uploads and provider dashboards in the fixture were reported as concrete integration limits. The evaluation instruction substituted recorded questions for actual user interaction.
+- No known blocker remains to this skill implementation. A requested release must follow the repository checklist, including full release checks and synchronized package/plugin version bumps.
