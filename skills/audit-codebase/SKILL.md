@@ -26,6 +26,8 @@ Read `references/comprehensive-audit.md`. It holds the mandatory principles, the
 
 Before writing any deliverable (diagnosis, decision matrix, or implementation report), read `references/report-format.md` and use those exact structures. A stable format lets audits be compared across projects and guarantees that no finding is left without a disposition.
 
+When discovery finds children/age controls, external fonts, session recording, marketing email, recurring subscriptions or user content/DMCA, consult `app-compliance` if available and load only its relevant references. Use it for current official sources, applicability and technical verification; do not infer a legal obligation from a pattern alone. Keep this audit's requested scope and authorization boundary. `app-compliance` also works independently and does not require a whole-codebase audit.
+
 ## Stage 1 — Audit (no modifications)
 
 Do not modify the project during this stage. This covers the whole project tree, not just source files: don't leave build output, compiled bytecode (`__pycache__`, `.pyc`), caches, lockfiles, `node_modules`, coverage reports, or any generated artifact behind. Verification tools often write into the tree as a side effect — `python -m py_compile` drops `__pycache__`, test runners and bundlers create caches, `npm install` writes `node_modules`. When you need to run such a tool, run it so its output lands outside the project (e.g. set `PYTHONPYCACHEPREFIX` to a temp dir, use a flag that disables writes, or copy the file elsewhere first); if you can't, skip it and record the check as unverified with the reason. A clean read-only pass is what lets the user trust that the diagnosis changed nothing.

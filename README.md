@@ -69,6 +69,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | ---------------------- | ------------------ | ------------------------------------- | -------------------- |
 | refactoring-ui         | Design             | "Refactoring UI" by Wathan & Schoger  | 7 files              |
 | humaniza               | Writing (es)       | Curated Spanish/es-MX style rules     | 7 files              |
+| app-compliance         | App Controls       | Current official legal/provider sources | 6 files            |
 | audit-codebase         | Auditing           | Evidence-based audit methodology      | 2 files              |
 | laravel-security-sweep | Security (Laravel) | Patterns from confirmed breaches      | 2 files + 1 script   |
 | vscode-extension-dev   | VS Code            | VS Code Extension API docs            | 14 files             |
@@ -82,6 +83,12 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | npm-supply-chain       | npm / CI           | npm and GitHub changelogs, 2025–2026  | 5 files              |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
+
+### App compliance controls
+
+`app-compliance` reviews and fixes technical controls for children and age, external fonts, session recording, marketing email, recurring subscriptions, and user content/DMCA. It checks applicability and current official sources, shows evidence before editing, and verifies data flow and provider behavior. It works across stacks and responds in your language; these six areas do not constitute a complete legal audit.
+
+For example: “Use app-compliance to inspect our session replay and subscription cancellation, then fix the applicable controls and verify them.” Review-only requests produce findings without edits. Implementation requests continue within existing authorization and identify concrete missing facts, access or decisions.
 
 ### Store screenshots and creative assets
 

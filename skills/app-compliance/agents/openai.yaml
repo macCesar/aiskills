@@ -1,0 +1,6 @@
+interface:
+  display_name: "App Compliance"
+  short_description: "Review and fix six areas of app compliance controls"
+  default_prompt: "Use $app-compliance to inspect this app and fix applicable technical controls, showing evidence and verifying the results."
+policy:
+  allow_implicit_invocation: true
