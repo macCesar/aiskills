@@ -740,6 +740,9 @@ What it does:
 - Prompts you to select what to remove:
   - Skills from global (`~/.agents/skills/`) or project directory
   - Platform symlinks from global or project directory
+  - Current or retired slash commands, selected separately for home and project
+- Home and project mirror selections always target their named directory, including with `--local`
+- Mirror removal is not preselected
 
 ### Verify installation
 

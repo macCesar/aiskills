@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.28.1] - 2026-10-24
+
+### Fixed
+
+- Read `AISKILLS_CACHE_TTL_MS` for update-cache expiry instead of the sibling CLI's variable.
+- Keep home and project mirror removal scopes independent with `remove --local`, require mirror selection and tolerate noncritical cache-removal errors, matching TiTools behavior.
+
+### Changed
+
+- Port TiTools core regressions for cache, auto-update, hooks and install/update behavior. Add shared cleanup/removal-scope checks and validate package/plugin/hook JSON alongside skill evaluation fixtures.
+
+- Enforce bidirectional engine parity through agent instructions and explicit completion/release acceptance criteria.
+
 ## [1.28.0] - 2026-10-22
 
 ### Added
@@ -273,7 +286,6 @@ The list printed "No skills installed yet." and stopped, so the one moment you m
 
 - fix(test): `npm test` ran zero tests and passed. The script was `node --test test/**/*.test.js`, and npm runs scripts through `sh`, where `**` collapses to a single `*` — so the pattern looked in `test/<subdir>/` and matched nothing, reporting `1..0` as success. Now `node --test test/*.test.js`, with test files kept flat.
 - fix(marketplace): `marketplace.json` described four skills and omitted `audit-codebase`, which `plugin.json` already listed. Both descriptions now name every shipped skill.
-
 
 ## [1.15.0] - 2026-07-12
 
