@@ -52,6 +52,16 @@ The two repos are the **same tool shipped twice with different payloads.** What 
 
 ### The parity contract
 
+**Completion gate:** AGENTS.md § "Shared engine parity — mandatory completion
+gate" is the operational rule. Every affected behavior needs corresponding
+implementation AND regression-test paths and independent check results in both
+status files. Already equivalent behavior needs inspected evidence; unported or
+unverified work remains incomplete and blocks the affected release. This includes
+shared test-only and release/documentation changes. Stable exceptions need a
+technical reason; versions, publication authority and privacy policies remain
+separate. Do not duplicate volatile progress into this file.
+
+
 **A change to shared machinery belongs in both repos, in the same session.** Not "eventually" — the divergence is invisible until someone hits a bug in one that was fixed in the other months earlier. That is exactly what happened with plugin detection: this repo found both failure modes by hand on 2026-08-01, and TiTools carried the same latent bug for months until it was ported there on 2026-08-02.
 
 Port the *behavior*, not the bytes. Names, paths and marketing strings are supposed to differ.
@@ -101,6 +111,49 @@ Long-term intent is to merge them into one CLI with skill categories (`aiskills 
 
 ## Traffic between the two repos
 
-- `test/manifest.test.js` lives here and guards registration wiring. TiTools gained a narrower equivalent for commands only (`test/commands.test.js`) on 2026-08-02; this repo's version is broader and is the better of the two.
+- `test/manifest.test.js` guards registration in both repositories. TiTools now also validates agent/audit routing and its public privacy boundary; AISkills preserves its explicit-only release and skill evaluation checks. Shared package/plugin/hook JSON validation and core regressions are aligned by the 2026-10-24 audit below.
 - Plugin detection went the other way: found here by hand during the v1.16.0 rollout, ported to TiTools on 2026-08-02.
 - The Knowledge Index is **not** pending traffic. See the section above for why it belongs to TiTools' problem and not to this repo's.
+
+
+## Shared CLI parity audit — 2026-10-24
+
+Compared both CLI entry points, all common lib/ and lib/commands/ files,
+prompt wrappers, hooks, publish workflows and regression/manifest tests, with
+product names normalized. Historical behavior ports were traced in both logs:
+
+| Shared behavior | TiTools | AISkills |
+| --- | --- | --- |
+| Development-checkout skill links | bacfd7d | 228b2a8 |
+| Catalog without installed skills | e87dcf2 | eddca8b |
+| Marketplace diagnostics alignment | 1c3dabf | eb22c69 |
+| Downloader default API alignment | 5faaa80 | equivalent export already present |
+| Command-to-skill plugin migration | 9ca8798 | 349d1e1 |
+
+Those earlier runtime corrections were already present on both sides. The
+regression coverage was incomplete on AISkills: cache, auto-update, hook and
+CLI install/update tests had not been ported. They now run against temporary
+homes with deterministic npm-version fixtures, preserving the consumer's context
+files. Shared cleanup tests preserve selected/foreign skills and remove only
+managed obsolete Codex/Gemini mirrors.
+
+Current corrections: AISkills cache override is AISKILLS_CACHE_TTL_MS;
+TiTools reinstall guidance uses @maccesar/titools, and its default utility
+export now includes the same description helpers as AISkills. Both uninstallers resolve
+home mirrors independently of --local, use explicit command scopes, leave
+mirror removal unselected and tolerate noncritical cache cleanup errors.
+Real CLI subprocess tests replace only the checkbox prompt, seed both scopes
+and assert actual deletion/preservation; the failing cases were reproduced
+before correction. The loader is confined to child test processes.
+
+Preserved product boundaries: skill catalogs/legacy names, Titanium detection,
+ti-pro installation and Knowledge Index sync/cleanup, plus Titanium asset CI
+requirements. AISkills' release workflow is skill content, not CLI engine code.
+TiTools' private-workspace Git boundary differs from AISkills' currently tracked
+maintainer documentation; no history or tracking migration was applied to AISkills.
+Do not copy product-specific privacy allowlists or Titanium source-audit suites.
+
+For future core edits, compare the corresponding behavior and regression tests
+in the sibling in the same session and record a concrete exemption for anything
+not ported. Separate version numbers, release commits and publication states
+remain independent. This audit did not authorize a new release.

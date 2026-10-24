@@ -1,3 +1,82 @@
+# Engine parity instructions strengthened — 2026-10-24
+
+Added the same mandatory parity gate to AGENTS.md in both projects, a direct
+CLAUDE.md pointer and release prerequisite, and matching requirements/context
+acceptance criteria. The rule covers shared behavior AND regression coverage,
+independent verification in each repo, corresponding implementation/test paths,
+explicit exceptions and incomplete/blocker reporting. Unverified shared changes
+cannot be closed or included in an affected release. No automatic commit or
+publication authority is added; existing privacy boundaries remain intact.
+
+This instruction-only follow-up uses static consistency/link/privacy checks;
+previous successful core tests were not repeated. Earlier core audit changes
+remain uncommitted. No commit, tag, push or publication in this follow-up.
+
+
+## Parity evidence for the current engine correction
+
+Parity status: **verified** for the corrected behaviors below. Changes remain
+uncommitted and each product release remains separately authorized.
+
+| Behavior | TiTools implementation / tests | AISkills implementation / tests | Evidence |
+| --- | --- | --- | --- |
+| Cache TTL and deterministic auto-update | lib/cache.js; test/cache.test.js; test/auto-update.test.js | lib/cache.js; test/cache.test.js; test/auto-update.test.js | TiTools cache/auto-update/CLI subset 17 passed; AISkills ported subset 21 passed; AISkills TTL regression failed before correction |
+| Install/update and canonical mirrors | lib/installer.js; lib/symlink.js; lib/commands/update.js; test/cli.test.js | lib/installer.js; lib/symlink.js; lib/commands/update.js; test/cli.test.js | Independent temporary-home CLI cases included in 17/21 results above |
+| Hook preservation | lib/hooks.js; test/hooks.test.js | lib/hooks.js; test/hooks.test.js | Implementation comparison equivalent after command-name adaptation; AISkills ported hook cases included in 21-pass subset; TiTools hooks unchanged |
+| Selection/foreign-skill cleanup | lib/cleanup.js; test/core-cleanup.test.js | lib/cleanup.js; test/core-cleanup.test.js | 2 passed independently in each repo |
+| Removal scope and defaults | lib/commands/uninstall.js; test/uninstall.test.js | lib/commands/uninstall.js; test/uninstall.test.js | Reproduced failures; final real-CLI subprocess checks 3 passed independently in each repo |
+| Manifest JSON guard | test/manifest.test.js | test/manifest.test.js | AISkills filtered bundled JSON checks 8 passed; TiTools existing guard inspected |
+| Description helper default exports | lib/utils.js | lib/utils.js | TiTools export identity assertions passed; AISkills equivalent default exports inspected |
+
+Changed-code lint and git diff --check passed in each repo. Product exceptions:
+Titanium detection/agent/index paths, asset dependencies and catalog-specific
+fixtures; private instruction tracking differs by repository. No successful core
+suite was repeated for the subsequent instruction-only edits.
+
+Instruction mapping: TiTools and AISkills each use AGENTS.md (mandatory gate),
+CLAUDE.md (entry-point and release pointer), docs/project/requirements.md
+(acceptance) and docs/project/context.md (contract). Static validation compares
+the two gate blocks exactly, checks their pointers and local targets, preserves
+existing ignored paths and confirms no status import was introduced. TiTools'
+public CONTRIBUTING.md carries the corresponding neutral contributor rule.
+
+---
+
+# Shared CLI parity correction — 2026-10-24
+
+**Phase:** Shared behavior corrected and focused validation passed; uncommitted.
+**Session:** Codex / GPT-6. **Branch:** main. Manifests remain 1.28.0.
+
+Compared the shared CLI to TiTools, including prior core commits. Earlier
+plugin/migration/dev-link/catalog corrections were already present. Ported
+missing cache, auto-update, hook and CLI install/update regressions. Added the
+same selection/mirror cleanup and removal-scope cases to both repos. Manifest
+JSON parsing now includes package, plugin, marketplace and hook metadata while
+preserving existing skill evaluation checks.
+
+Fixed AISkills cache TTL override to read AISKILLS_CACHE_TTL_MS. Both uninstallers
+now resolve home mirrors independently of --local. AISkills no longer preselects
+mirror removal and tolerates noncritical cache cleanup failures like TiTools.
+TiTools adopts AISkills' separate command scopes, scoped reinstall guidance and
+description-helper default exports. Product catalogs, ti-pro, project detection,
+Knowledge Index and asset CI requirements remain separate.
+
+Verification: ported cache/hooks/auto-update/CLI 21/21, cleanup 2/2, removal CLI
+3/3 and filtered bundled JSON checks 8/8. The cache and removal scope regressions
+failed before the fixes. Fixtures use temporary HOME/USERPROFILE and deterministic
+npm versions; only the interactive prompt is substituted in removal subprocesses.
+TiTools counterpart checks passed (17+2+3); changed JavaScript lint and whitespace
+checks pass in both repositories. No complete product suite was needed.
+
+README, Unreleased changelog and context parity ledger updated. Existing session
+tracking policy is preserved; no history or privacy migration was performed.
+No commit, push, version bump or publication was performed for this follow-up.
+Next step: review/commit and explicitly release each package when requested.
+
+Previous public release facts and skill verification remain below.
+
+---
+
 # Status — 2026-10-22
 
 **Phase:** v1.28.0 published to npm and GitHub; publication verified and session documented.

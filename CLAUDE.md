@@ -20,6 +20,8 @@ Read `status.md` when resuming work. Do not import it at startup: it changes con
 
 ## Release checklist (mandatory)
 
+First satisfy the shared engine parity gate in AGENTS.md for affected core changes. Do not prepare or publish an affected release with an incomplete sibling port.
+
 Every release that ships code or skill changes must bump **BOTH** version files and keep them in sync:
 
 1. Code + tests green.
@@ -123,6 +125,17 @@ If a third advisory skill arrives, copy from one of these and keep the contract 
 **A change to shared machinery belongs in both repos, in the same session.** Port the *behavior*, not the bytes — names and paths are supposed to differ.
 
 `docs/project/context.md` § "Sibling project" carries the full contract: the table of what legitimately diverges (TiTools additionally has the `ti-pro` agent, the Knowledge Index / `sync`, and a `tiapp.xml` SessionStart hook — this repo has none of those), plus a measured per-file comparison. Read it before assuming two files should match.
+
+### Required engine parity check
+
+Follow `AGENTS.md` § "Shared engine parity — mandatory completion gate" before
+engine edits and before completion or release. Compare BOTH implementations,
+port behavior AND regression tests, verify each repo independently, and record
+corresponding paths/check results/exceptions in each status file. An unported or
+unverified shared change is incomplete and blocks the affected release. This
+applies to test-only and shared release/documentation changes too. Do not treat
+one green suite, a prior note, or a product label as proof of parity. Preserve
+separate release authorization and each repo's private-file tracking policy.
 
 ### Long-term direction
 

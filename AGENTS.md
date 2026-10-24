@@ -25,6 +25,59 @@ Sibling project: **`@maccesar/titools`** at `~/Developer/openSource/TiTools` —
 
 **When you change shared machinery, port it there in the same session.** The full contract, including the table of what legitimately diverges and a measured per-file comparison, is in [docs/project/context.md](docs/project/context.md) § "Sibling project".
 
+## Shared engine parity — mandatory completion gate
+
+TiTools and AISkills share one CLI engine with different product payloads.
+This is a delivery requirement, not a suggestion to consider the sibling later.
+It applies in both directions, including fixes, refactors and test-only changes.
+
+**Scope:** CLI entry points, shared `lib/` and `lib/commands/` behavior, prompts,
+installation/copy/symlink/cleanup, cache and auto-update, marketplace detection,
+common hooks, package/manifest validation, shared regression tests and release
+mechanics. A change to tests or documentation for shared behavior still counts.
+A product-specific catalog change does not exempt a shared helper changed with it.
+
+Before changing the engine:
+
+1. Locate both sibling checkouts (`../TiTools` and `../AISkills`). Read each repo's instructions,
+   current status and parity contract; inspect each working tree. Preserve
+   unrelated edits. Do not infer synchronization from a past session note.
+2. Identify the corresponding behavior and regression tests in the sibling.
+   Compare implementation, callers and observable behavior before choosing a
+   direction. Either repo may contain the correction the other needs.
+
+Before declaring the work complete, preparing a release or publishing:
+
+3. Review every changed shared file/hunk and port the behavior AND its relevant
+   regression coverage in the same session. Include CLI-facing help, configuration
+   names, package wiring and publishing guidance when affected. Adapt product
+   names and payloads; do not blindly copy whole files.
+4. Run the focused checks independently in BOTH repos and lint the changed code.
+   Use isolated homes and deterministic fixtures for installer/updater/remover
+   tests. A passing suite in one repo is not evidence for the other. Expand tests
+   only for a concrete affected dependency or a mandatory release requirement.
+5. Record evidence in each repo's existing `docs/project/status.md`: changed
+   behavior, corresponding paths in BOTH repos, checks/results for EACH repo,
+   and any exception with its technical reason. If already equivalent, record
+   the inspected paths and verification; "already synchronized" alone is not
+   evidence. Keep stable product exceptions in `context.md`.
+6. Report parity as **verified**, **product-specific exception**, or **incomplete**.
+   Only verified behavior and justified product exceptions satisfy this gate.
+   Missing sibling access, an unported test or failed verification means the
+   shared task remains incomplete: continue safe work and report the concrete
+   blocker. Do not silently defer the port, claim completion, or ship the affected
+   release. Request information only when it is genuinely unavailable.
+
+Legitimate product boundaries include catalogs/legacy names, Titanium skills and
+commands, `ti-pro`, `tiapp.xml` detection, Knowledge Index/sync, and dependencies
+required only by a product's assets. Tests for those capabilities stay with that
+product; shared test infrastructure and equivalent core cases must still match.
+New exceptions require a technical explanation, not a label invented to avoid a port.
+
+This gate does not authorize commits, pushes, tags, releases or history changes.
+Keep each repo's version/release state and private-file tracking policy intact.
+Do not force-add ignored instructions or session evidence to prove compliance.
+
 ## Layout
 
 ```
@@ -153,6 +206,8 @@ node --test test/list.test.js   # single file
 Add tests whenever a new command or skill-scripted behavior ships. Skills with executable scripts should have tests covering: frontmatter validity, CLI help output, argument validation, shell syntax of any bash scripts.
 
 ## Release checklist (mandatory)
+
+Before preparing or publishing a release, satisfy [the shared engine parity gate](#shared-engine-parity--mandatory-completion-gate) for every affected core change; an incomplete sibling port blocks the affected release.
 
 Every release that ships code or skill changes must bump **BOTH** version files and keep them in sync. Anthropic's marketplace caches plugins by `version` in `plugin.json`; if code changes without the bump, marketplace users keep stale code.
 
