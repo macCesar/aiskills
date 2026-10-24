@@ -290,7 +290,8 @@ describe('release manifests stay in sync', () => {
 });
 
 describe('bundled JSON parses', () => {
-  const jsonFiles = [];
+  const jsonFiles = ['package.json', '.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'hooks/hooks.json']
+    .map(file => path.join(ROOT, file));
   for (const skill of skillDirs) {
     const evalsDir = path.join(SKILLS_DIR, skill, 'evals');
     if (!existsSync(evalsDir)) continue;
