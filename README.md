@@ -74,6 +74,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 | laravel-security-sweep | Security (Laravel) | Patterns from confirmed breaches        | 2 files + 1 script   |
 | vscode-extension-dev   | VS Code            | VS Code Extension API docs              | 14 files             |
 | stitch-showcase        | Design Tools       | Google Stitch export workflow           | 16 files             |
+| store-listing-optimization | Store Copy / ASO | Verified app behavior and Apple/Google guidance | 4 files |
 | store-screenshots      | Store Artwork      | Apple/Google specs, real captures, SVGs | 13 guides + 1 script |
 | session-log            | Project            | Convention + 3 A/B rounds               | 2 files              |
 | handoff                | Project            | Disposable handoff after `/clear`       | 1 file               |
@@ -89,6 +90,10 @@ Use `aiskills list` to see available skills from the command line. Pull requests
 `app-compliance` reviews and fixes technical controls for children and age, external fonts, session recording, marketing email, recurring subscriptions, and user content/DMCA. It checks applicability and current official sources, shows evidence before editing, and verifies data flow and provider behavior. It works across stacks and responds in your language; these six areas do not constitute a complete legal audit.
 
 For example: “Use app-compliance to inspect our session replay and subscription cancellation, then fix the applicable controls and verify them.” Review-only requests produce findings without edits. Implementation requests continue within existing authorization and identify concrete missing facts, access or decisions.
+
+### Store listing text and acquisition
+
+`store-listing-optimization` reviews App Store and Google Play copy against the actual app, localizations and acquisition evidence. Full audits also inventory storefront/media coverage and available growth/promotion tools, with eligibility, current use, prerequisites and priorities. It distinguishes clicks from acquisitions, installed base from activity, and saved drafts from submitted or public changes. English copy uses Humanizer when available; Spanish uses Humaniza, including its scanner. It completes authorized console changes, preserves unrelated drafts, and hands visual production/experiments to `store-screenshots`. Forecasts remain explicit proportional scenarios; paid campaigns require separate scope and budget.
 
 ### Store screenshots and creative assets
 

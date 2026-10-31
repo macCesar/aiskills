@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.29.0] - 2026-10-30
+
+### Added
+
+- Add store-listing-optimization for evidence-based App Store and Google Play copy, localization, acquisition analysis, and growth-tool audits.
+- Include measurement guidance, official sources, evaluation scenarios, and English/Spanish editing with Humanizer and Humaniza.
+
+### Changed
+
+- Connect store-screenshots with listing optimization while keeping visual production in its existing workflow.
+
 ## [1.28.1] - 2026-10-24
 
 ### Fixed
