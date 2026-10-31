@@ -25,6 +25,7 @@ test/                   node:test suites
 
 - `requirements.md` defines the shared CLI parity contract; read it before changing common machinery.
 - `status.md` records current progress, validation and publication state; read on resume, never import at startup.
+- `skill-creator-review.md` records the verified creator comparison/removal, store-listing skill design and simulation checks; runtime instructions live in `skills/store-listing-optimization/`.
 - `store-screenshots-audit.md` records the Apple/Google asset audit, official sources, corrections and verification limits; consult before revising store asset guidance.
 
 ## Which assistant built what
@@ -43,6 +44,7 @@ One row per stretch of work, not per session. Attribution comes from the `Co-Aut
 | 2026-09-26 | Claude Code · Opus 5.5 (`claude-opus-5-5`) | `handoff` skill and its evals; commits for the uncommitted 1.27.0 work; v1.27.0 release |
 | 2026-10-17 | Codex | `store-screenshots` audit and Apple/Google platform references, creative-versus-capture distinction, video specifications, Apple CPP/Asset Library/PPO workflows, Google custom listings/groups/library counterparts, full Google experiments, asset statuses, tested video recipes, events/conditional assets and console verification guidance |
 | 2026-10-22 | Codex | `app-compliance` skill with six official-source references, automatic Codex discovery, CLI/catalog integration and conditional audit routing; independent temporary forward-test of applicability, authorized corrections and concrete blockers; v1.28.0 release including the previously unreleased store-screenshots expansion |
+| 2026-10-30 | Codex · GPT-6 | Store-listing text/acquisition skill, Humanizer/Humaniza routing, product catalog and independent simulated forward-test; comparison and removal of redundant Skill Creator variants at the maintainer’s request |
 
 ## Sibling project — `TiTools`
 
@@ -72,7 +74,7 @@ For this contract, the shared CLI CORE includes CLI entry behavior, common `lib/
 
 | | aiskills | TiTools |
 |---|---|---|
-| `skills/` | 14 general-purpose skills, including explicit-only `release` and `handoff` | 9 Titanium skills |
+| `skills/` | 15 general-purpose skills, including explicit-only `release` and `handoff` | 9 Titanium skills |
 | `commands/` | none; the former `release` command is now a cross-agent skill | `ti-check`, `ti-new-screen`, `ti-audit` |
 | `agents/` | none | `ti-pro` |
 | Knowledge Index | **does not apply** — see below | yes — `titools sync`, `lib/commands/agents.js`, 9 functions in `utils.js` |

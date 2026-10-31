@@ -1,4 +1,28 @@
-# Status — 2026-10-24
+# Status — 2026-10-30
+
+**Phase:** new store-listing skill implemented and validated, unreleased. **Session:** Codex · GPT-6. **Branch:** main. Tree was clean before this work; changes remain uncommitted. Current published version remains 1.28.1.
+
+## Current result
+
+- Added `store-listing-optimization` with four dated official-source references, automatic UI metadata and six synthetic evaluation cases; registered in `lib/config.js`/README/Unreleased changelog. English copy uses Humanizer; Spanish uses Humaniza and its scanner. Saved/submitted/public states, locale parity, supported product claims and metric windows are explicit.
+- Kept `store-screenshots` focused on media and experiment/page configuration; added its routing link to the new skill. New skill linked from the existing universal/Claude development install paths.
+- Removed the two redundant Skill Creator variants at César's explicit request, using official plugin uninstallers for Anthropic and removing imported synchronized folders. The OpenAI integrated creator remains. Source/version comparison, exact removal verification, design decision and test evidence: [review](skill-creator-review.md).
+- Focused manifest checks: 11/11; changed-config ESLint passed; official creator validation passed with isolated PyYAML via uv. Four independent simulation cases found no substantive workflow failure; they exercised both language editors and corrected an over-limit draft before delivery. Evaluation JSON parse: 1/1 additional focused check. npm dry run includes all seven skill files and excludes private notes/bytecode. Session links/imports and whitespace checks passed.
+- Shared engine parity: **product-specific exception**. Only the skill catalog entry changes in config; no common CLI behavior/test changes. TiTools' Titanium catalog does not need this skill.
+
+## Expansion after the first review
+
+César requested stronger statistics-led decisions, inspection of the full Apple/Google toolset and explicit reuse of the screenshot specialist. The skill now has a full-presence inventory, source/locale/version/cohort and coverage analysis, intervention-to-measurement decisions, Apple CPP/PPO/Asset Library routing and Google custom listings/experiments/promotion/attribution opportunities. A dedicated early companion section invokes `store-screenshots` before visual/page production and prevents reimplementing its generators/specifications.
+
+Current official Apple Analytics/usage/acquisition and Google statistics/peer/growth/change guidance were checked. The fifth independent simulation correctly separated Apple impression-based conversion, traffic mix and opt-in coverage; its minor recommendation-only closing ambiguity was corrected. The sixth independent case passed: it covered full-presence scope with incomplete account access, retained unknown tool states and handed a concrete brief to the screenshot specialist without duplicating production. Updated focused manifest checks: 5/5; creator validator, all seven packaged skill files/private exclusions and references passed. No shared-engine code or live-store configuration changed in this expansion.
+
+## Next step
+
+Use the skill on the next authorized listing task and record observed outcome. A future publication needs its coordinated package/plugin/lock version bump and normal release checks; no release, commit, push or tag was requested here. Console mutations during the forward-test were prohibited and none occurred.
+
+## Previous release record — 2026-10-24
+
+The following describes the already published 1.28.1 release and its earlier parity evidence, not publication of the new skill.
 
 **Phase:** v1.28.1 published and verified; shared engine parity complete.
 **Session:** Codex / GPT-6. **Branch:** main.
