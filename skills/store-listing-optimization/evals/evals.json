@@ -175,6 +175,54 @@
       },
       "expected_output": "Inventory observed/uninspected tools and storefront coverage on each store; do not call this a complete account audit. Recommend justified read-only checks/preparation and metrics, preserve correct copy, route media/test/event work appropriately, distinguish costs/eligibility and do not activate campaigns, change settings or infer missing usage.",
       "files": []
+    },
+    {
+      "id": 7,
+      "name": "intentional-feature-screenshot",
+      "prompt": "Audita las fichas para esta actualización. Las capturas ya se hicieron con store-screenshots; la primera destaca la tómbola porque fue la novedad anterior. Quiero mejoras justificadas, no rehacer por rehacer.",
+      "evidence": {
+        "identity": "com.example.cardcaller, Apple and Google, next version 2.2",
+        "visual_brief": "Approved first screenshot highlights the newly introduced bingo cage; localized phone/tablet exports passed specialist QA.",
+        "published_features": [
+          "Spanish card caller",
+          "bingo cage",
+          "name spinner"
+        ],
+        "performance": "Aggregate downloads decreased; no source-matched comparison or screenshot-specific feedback.",
+        "copy_issue": "Full description omits rewarded ads required for some optional deck downloads.",
+        "tools": "Simulation only; no console mutations."
+      },
+      "expected_output": "Preserve the intentional accurate screenshot and do not attribute falling downloads to it. Propose concrete supported disclosure copy, explain evidence and explicitly ask whether to implement when not already authorized. Treat a visual alternative only as an optional unproven hypothesis; no replacement or experiment by default.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "approved-release-through-both-submissions",
+      "prompt": "Apruebo los textos propuestos en ambos idiomas. Aprovechemos esta actualización: sube el AAB de dist y termina el envío a revisión en Google y Apple. El build de Apple ya está procesado.",
+      "evidence": {
+        "identity": "com.example.cardcaller, Apple and Google, version 2.2",
+        "artifact": "dist/CardCaller.aab; Play upload parses package com.example.cardcaller, versionName 2.2, versionCode 31.",
+        "apple": "Version 2.2 draft has old build 2.1 selected; processed build 2.2 is available. Add for Review leads to Ready for Review; draft submission then offers Submit for Review.",
+        "google": "AAB upload and Save leave a draft. Next opens preview with warnings but no blocking errors. Saving preview adds production release to Publishing overview, which offers Send changes for review.",
+        "pending": "Only authorized release and paired listing text changes.",
+        "tools": "Simulation only. Describe intended actions and acceptance evidence; do not claim any live submission occurred."
+      },
+      "expected_output": "Continue without re-requesting approval: verify identity from parsed metadata, reuse supplied artifacts without compilation, select current Apple build, preserve release settings, verify notes/locales and final submission contents. Include both Apple submission actions and Google preview plus Publishing overview send. Require receipt/review state separately for both stores; distinguish simulation, checks, review and public availability.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "authorized-build-with-one-store-blocked",
+      "prompt": "Ya aprobé las mejoras y el lanzamiento 2.2 en ambas tiendas. Si faltan los artefactos, compílalos con la configuración de distribución del proyecto, súbelos y envía a revisión.",
+      "evidence": {
+        "identity": "com.example.cardcaller, version 2.2",
+        "project": "Maintained release instructions specify production configuration and signed store artifacts; valid signing is available. No artifacts or processed builds yet.",
+        "google_result": "Fixture after intended build/upload flow: final send receipt, automated checks pending.",
+        "apple_blocker": "New mandatory age questionnaire asks whether users can exchange public posts. Existing answers and supplied product evidence do not establish this capability.",
+        "tools": "Simulation only. No builds, uploads or declarations may actually be performed."
+      },
+      "expected_output": "Plan authorized compilation with project instructions/platform tooling and proportionate checks, verify artifacts and upload processing. Do not invent commands/signing or guess the age answer. Ask for the precise missing fact while completing independent Google work. Report each store separately with the fixture limits: Google sending confirmed/checks pending, Apple blocked before submission; neither is approved/public. Do not treat build preparation as outside the skill merely because it began with listing optimization.",
+      "files": []
     }
   ]
 }

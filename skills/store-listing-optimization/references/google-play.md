@@ -16,3 +16,11 @@ Sources:
 - [Metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842).
 - [Preview assets and short description](https://support.google.com/googleplay/android-developer/answer/9866151).
 - [Listing performance definitions](https://support.google.com/googleplay/android-developer/answer/9859173).
+
+## Submit a release alongside listing changes
+
+Release workflow checked 2026-10-31 against [Prepare and roll out a release](https://support.google.com/googleplay/android-developer/answer/9859348). Follow current console labels rather than assuming a saved editor submits changes.
+
+For an authorized app update, upload the intended signed AAB or select its existing library entry in the intended track. Verify the versionName/versionCode parsed by Play and complete localized release notes. Continue through Next to preview/confirmation, inspect blocking errors and material warnings, and preserve the intended rollout settings.
+
+A Save action can leave the release in Changes ready to send for review in Publishing overview. Inspect that overview and send the authorized release and listing changes; exclude unrelated drafts. Verify the sending receipt and resulting automated-check/review state. An uploaded AAB or saved release alone is incomplete. If the current control would publish immediately rather than submit for review, check that publication is within the user's authorization before using it.

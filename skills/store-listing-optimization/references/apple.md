@@ -30,3 +30,11 @@ Sources:
 Read `store-screenshots` and its corresponding Apple CPP, PPO or Asset Library reference before configuration. Check live eligibility and testable fields; do not assume that text, keywords or every creative slot can be randomized. Choose these tools from the diagnosed problem, not a “New” label. With very low traffic, first estimate whether a test can answer the question.
 
 Current official starting points: [Custom Product Pages](https://developer.apple.com/app-store/custom-product-pages/), [Product Page Optimization](https://developer.apple.com/app-store/product-page-optimization/), [Asset Library](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-your-app-store-assets).
+
+## Submit the version, not only its text
+
+Submission workflow checked 2026-10-31 against [Submit an app](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-app/). Recheck current controls and state when operating.
+
+When a release is authorized, edit the next version's localizations and verify its selected build; uploading a newer build does not prove the draft uses it. Include localized What's New and current review notes. Resolve mandatory metadata questions from verified facts, preserving unrelated declarations.
+
+Add for Review creates/adds to a draft submission and changes the version to Ready for Review. Review the included items, then use Submit for Review to send it. Verify the submission receipt and resulting state, such as Waiting for Review or In Review; do not stop at Ready for Review. Preserve existing manual/automatic release settings unless the user authorized a change. Approval and public availability remain separate from submission.
