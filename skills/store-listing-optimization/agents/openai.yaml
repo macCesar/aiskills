@@ -1,0 +1,4 @@
+interface:
+  display_name: "Store listing optimization"
+  short_description: "Review app store copy and acquisition metrics"
+  default_prompt: "Use $store-listing-optimization to review my app’s store listings and acquisition data, improve the copy, and verify authorized changes."

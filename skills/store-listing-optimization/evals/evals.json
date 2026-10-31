@@ -1,0 +1,180 @@
+{
+  "skill_name": "store-listing-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "name": "paired-copy",
+      "prompt": "Mejora y aplica la ficha de Sketch Trails en Google Play en español e inglés. Ya autorizo guardar y enviar esos textos.",
+      "evidence": {
+        "identity": "mx.example.sketchtrails; production 2.0",
+        "locales": [
+          "es-419",
+          "en-US"
+        ],
+        "published_features": [
+          "coloring collections",
+          "adjustable stroke width",
+          "eraser",
+          "undo",
+          "save and reopen on same device",
+          "download needed before offline use"
+        ],
+        "old_claims": [
+          "learn letters and numbers",
+          "share drawings",
+          "completely safe for children"
+        ],
+        "license": "Illustrations: Example Art",
+        "pending": [
+          "unrelated test-track binary"
+        ],
+        "tools": "No live tools: simulate the proposed actions and copy only."
+      },
+      "expected_output": "Produce equivalent supported Spanish/English copy within field limits; invoke appropriate editors; preserve attribution and offline prerequisite; exclude unsupported claims. Check whether text can be separated from an unrelated binary before submission; never claim a simulated action happened.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "apple-live",
+      "prompt": "Actualiza lo que puedas hoy en Apple, español e inglés; deja preparada la descripción y palabras clave para la próxima versión.",
+      "evidence": {
+        "identity": "app 987654; Ready for Distribution 1.4",
+        "promotional_text": {
+          "es-MX": "",
+          "en-US": ""
+        },
+        "description": "locked",
+        "keywords": "locked",
+        "published_features": [
+          "calls numbered balls in Spanish",
+          "manual and automatic pacing"
+        ],
+        "locale_pair": [
+          "es-MX",
+          "en-US"
+        ],
+        "tools": "No live tools. Simulate values/actions and the result the available evidence permits."
+      },
+      "expected_output": "Prepare both promotional strings and next-version description/keywords, count characters/UTF-8 bytes, verify missing identity/title as needed. Do not invent English voice support, create a release or claim saved/public state without evidence.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "metrics",
+      "prompt": "Tengo 20 mil+ descargas y gano 2,400 pesos en promedio. Con 500 mil, ¿cuántos activos e ingreso calculas? Revisa también qué está fallando en la ficha.",
+      "evidence": {
+        "monthly_active_devices": 3000,
+        "retained_day7": {
+          "count": 24,
+          "dates": "Oct 2–22"
+        },
+        "first_opens": {
+          "count": 400,
+          "dates": "Oct 2–29"
+        },
+        "listing": {
+          "visitors": 900,
+          "unique_install_clicks": 270,
+          "dates": "Sep 29–Oct 26"
+        },
+        "acquisition": {
+          "device_acquisitions": 220,
+          "dates": "Oct 2–29",
+          "paid_and_direct": 30
+        },
+        "revenue_period": "not supplied",
+        "tools": "No live tools; use only the fixture."
+      },
+      "expected_output": "Use aligned metric definitions/windows. Proportional scenario from a 20,000 baseline is 75,000 monthly active devices and 60,000 pesos for the original income period; monthly income remains conditional. Do not call retained count a rate, clicks installs or paid/direct ads.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "save-not-public",
+      "prompt": "Ya autoricé guardar y enviar los textos de una sola ficha en español. ¿Ya quedaron publicados?",
+      "evidence": {
+        "expected_changes": [
+          "es-419 short description",
+          "es-419 full description"
+        ],
+        "response": "Se enviaron 2 cambios a revisión; verificaciones automáticas pendientes",
+        "new_public_text": "not observed",
+        "tools": "No live tools; answer from evidence."
+      },
+      "expected_output": "Report two submitted Spanish text changes with automated checks pending, not approval/publication; no repeated mutation or invented public date.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "traffic-mix-and-coverage",
+      "prompt": "Analiza estos datos de Apple y dime si debemos reescribir toda la ficha. También veo Custom Product Pages, Asset Library y Product Page Optimization como New: dime qué conviene y cómo medirlo. No hagas cambios en la consola.",
+      "evidence": {
+        "same_app": "com.example.trailpaint, published 2.1",
+        "windows": "two consecutive complete 28-day windows, same territory/device filters; no pre-orders",
+        "previous": {
+          "unique_impressions": 2000,
+          "page_visitors_by_source": {
+            "search": 100,
+            "browse": 100
+          },
+          "total_downloads_by_source": {
+            "search": 50,
+            "browse": 10
+          },
+          "observed_active_devices": 80,
+          "usage_opt_in_percent": 40
+        },
+        "current": {
+          "unique_impressions": 10000,
+          "page_visitors_by_source": {
+            "search": 100,
+            "browse": 900
+          },
+          "total_downloads_by_source": {
+            "search": 50,
+            "browse": 90
+          },
+          "observed_active_devices": 40,
+          "usage_opt_in_percent": 10
+        },
+        "feature_events": "not available",
+        "tools": "Simulation only; use supplied evidence and skill references. No console/API access."
+      },
+      "expected_output": "Distinguish Apple conversion (3% then 1.4%) from page response (30% then 14%); within-source ratios stay 50% search/10% browse, so traffic mix matters and does not prove copy failure. Observed activity cannot establish a population halving with changed opt-in; no per-feature claims. Prioritize source/coverage investigation, conditionally choose CPP/PPO/library by purpose and volume, supply a measured hypothesis/guardrail and no mutation.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "full-presence-partial-access",
+      "prompt": "Quiero una revisión completa de la presencia de Color Trails en Apple y Google, no sólo de sus textos. Revisa también las herramientas que ofrecen para conseguir usuarios. No actives nada ni gastes dinero.",
+      "evidence": {
+        "identity": "com.example.colortrails, published app, two stores",
+        "access": "public listing and Google Grow overview only; no Apple account login",
+        "public_listing": {
+          "locales": [
+            "es",
+            "en"
+          ],
+          "description": "accurately describes coloring and saving",
+          "phone_screenshots": 3,
+          "preview_video": "absent",
+          "ratings": "few written reviews"
+        },
+        "google_observed": {
+          "default_listing": "live",
+          "custom_listings": "none",
+          "experiments": "none running",
+          "promotional_content": "not inspected",
+          "deep_links": "not inspected",
+          "play_shorts": "not inspected",
+          "tool_usage_window": "last 90 days"
+        },
+        "apple_public": "listing visible; CPP/PPO/Asset Library states unknown",
+        "statistics": "acquisition and matched retention data not supplied",
+        "tools": "Simulation only; no console actions and no live accounts."
+      },
+      "expected_output": "Inventory observed/uninspected tools and storefront coverage on each store; do not call this a complete account audit. Recommend justified read-only checks/preparation and metrics, preserve correct copy, route media/test/event work appropriately, distinguish costs/eligibility and do not activate campaigns, change settings or infer missing usage.",
+      "files": []
+    }
+  ]
+}

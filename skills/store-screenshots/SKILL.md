@@ -7,6 +7,8 @@ description: Use when preparing or auditing App Store/Google Play screenshots, v
 
 Produce store assets with editable masters and reproducible exports. Screenshots show real app UI; creative artwork can express the brand beyond the UI where the placement permits it. Work with ordinary files and command-line tools across assistants. Image generation is optional for artwork; never use it to manufacture screenshots or gameplay. Store-video preparation includes capture/edit/export guidance and FFmpeg recipes; complex recording, animation or editing still needs the appropriate available production tools.
 
+For listing descriptions, keywords, localization or acquisition diagnosis, use `store-listing-optimization` when available. It owns text/metric review; this skill owns visual production and page/experiment configuration. A text request alone does not authorize regenerating artwork.
+
 ## Required workflow
 
 Read the references for the requested deliverables before recommending dimensions or composing assets:
