@@ -1,4 +1,18 @@
-# Status — 2026-10-30
+# Store workflow correction — 2026-10-31
+
+César requested corrections to `store-listing-optimization` after real use exposed three failures: unjustified screenshot replacement suggestions, an audit delivered without an implementation decision, and release workflows stopped before final review submission.
+
+- Updated the skill to inspect existing visual intent and specialist QA, preserve suitable assets, and distinguish demonstrated problems from optional conversion hypotheses. A release-feature screenshot can intentionally lead the listing.
+- Findings now include concrete proposed copy and an explicit implementation question when authorization is missing. Existing authorization carries through the agreed outcome.
+- Follow-up: language editing explicitly covers all final prose in scope, including release/review notes already pasted, inherited or previously drafted by the agent. Verify the exact final wording per locale before submission; preserve sound copy and report actual review coverage rather than claiming all fields were checked.
+- A release includes coordinated production compilation when needed and authorized, artifact reuse/upload/selection, localized notes and final submission verification independently for each store. Apple and Google references now cover their separate final submission steps, checked against official guidance on 2026-10-31.
+- Updated README and extended existing evaluation fixtures from six to nine. One independent simulated pass of the three new situations followed the intended behavior with no operational contradiction; this is not a full repeated behavioral experiment. Its frontmatter observation was corrected.
+- Validation: 60 focused existing frontmatter/reference checks passed; official creator validator passed using isolated PyYAML via `uv` (system Python lacked it); nine evaluation fixtures parsed with unique IDs and required fields; whitespace check passed. Active universal and Claude skill links resolve to this checkout, so they use the corrected source.
+- Shared engine parity: **product-specific exception**. Only skill content, references, fixtures and explanatory docs changed; no shared engine or test infrastructure changes. César explicitly requested semantic commits, session documentation and release; the exact v1.29.1 plan was confirmed. Publication remains pending until its workflow and registry checks finish.
+
+- Release preparation verification in this session: mandatory `npm test` passed 218 tests with zero failures/skips; `git diff --check` passed; npm dry run excludes docs/project/ and includes the skill payload. No executable source changed, so changed-code lint is not applicable. Earlier simulation/validator results above are carried-forward evidence, not rerun claims.
+
+# Previous status — 2026-10-30
 
 **Phase:** v1.29.0 published and verified. **Session:** Codex · GPT-6. **Branch:** main. The new store-listing skill and session documentation are committed; publication was explicitly confirmed by César.
 
