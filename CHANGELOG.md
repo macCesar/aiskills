@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.29.1] - 2026-10-31
+
+### Fixed
+
+- Preserve intentional store visuals unless evidence justifies changes.
+- Present actionable listing improvements and carry existing authorization through the agreed outcome.
+- Review all final localized prose, including inherited release and review notes.
+- Complete authorized build preparation and final review submission independently for Apple and Google Play.
+
 ## [1.29.0] - 2026-10-30
 
 ### Added
