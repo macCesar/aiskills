@@ -44,7 +44,7 @@ One row per stretch of work, not per session. Attribution comes from the `Co-Aut
 | 2026-09-26 | Claude Code · Opus 5.5 (`claude-opus-5-5`) | `handoff` skill and its evals; commits for the uncommitted 1.27.0 work; v1.27.0 release |
 | 2026-10-17 | Codex | `store-screenshots` audit and Apple/Google platform references, creative-versus-capture distinction, video specifications, Apple CPP/Asset Library/PPO workflows, Google custom listings/groups/library counterparts, full Google experiments, asset statuses, tested video recipes, events/conditional assets and console verification guidance |
 | 2026-10-22 | Codex | `app-compliance` skill with six official-source references, automatic Codex discovery, CLI/catalog integration and conditional audit routing; independent temporary forward-test of applicability, authorized corrections and concrete blockers; v1.28.0 release including the previously unreleased store-screenshots expansion |
-| 2026-10-30 | Codex · GPT-6 | Store-listing text/acquisition skill, Humanizer/Humaniza routing, product catalog and independent simulated forward-test; comparison and removal of redundant Skill Creator variants at the maintainer’s request |
+| 2026-10-30 → 2026-10-31 | Codex · GPT-6 | Store-listing text/acquisition skill, Humanizer/Humaniza routing, product catalog and independent simulated forward-test; follow-up preservation of intentional visuals, complete final-copy review and authorized release submission workflows; comparison and removal of redundant Skill Creator variants at the maintainer’s request |
 
 ## Sibling project — `TiTools`
 
