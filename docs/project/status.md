@@ -1,10 +1,21 @@
 # Status — 2026-10-30
 
-**Phase:** new store-listing skill implemented and validated, unreleased. **Session:** Codex · GPT-6. **Branch:** main. Tree was clean before this work; changes remain uncommitted. Current published version remains 1.28.1.
+**Phase:** v1.29.0 published and verified. **Session:** Codex · GPT-6. **Branch:** main. The new store-listing skill and session documentation are committed; publication was explicitly confirmed by César.
+
+## Verified release — v1.29.0
+
+- 5954382 — feat(store): add evidence-based listing optimization skill.
+- 501a244 — docs(project): record store optimization workflow and validation.
+- 6feddf7d5e9c2f22411d1d6edc84a854fff98d30 — chore(release): v1.29.0.
+- GitHub release: https://github.com/macCesar/aiskills/releases/tag/v1.29.0. Annotated tag and main pushed without force.
+- OIDC publication workflow succeeded: https://github.com/macCesar/aiskills/actions/runs/41159349131. Local mandatory release suite: 218 passed, zero failures. CI install, tests, version guard and publish all succeeded.
+- Registry verified @maccesar/aiskills@1.29.0 and latest=1.29.0; publication time 2026-10-31T02:20:30.427Z (2026-10-30 in the session timezone). Registry initially lagged the successful workflow; verification continued until it served the new version.
+- Downloaded registry tarball: SHA-512 integrity verified, package version 1.29.0, all seven new skill files present, docs/project/ excluded. Public main plugin.json independently verified at 1.29.0; package, lockfile and plugin versions agree.
+- This session note is committed after the tag as announced in the approved release plan. Stable context/requirements were checked; the feature documentation and product-specific parity exception already cover this release, so no additional stable change was needed.
 
 ## Current result
 
-- Added `store-listing-optimization` with four dated official-source references, automatic UI metadata and six synthetic evaluation cases; registered in `lib/config.js`/README/Unreleased changelog. English copy uses Humanizer; Spanish uses Humaniza and its scanner. Saved/submitted/public states, locale parity, supported product claims and metric windows are explicit.
+- Added `store-listing-optimization` with four dated official-source references, automatic UI metadata and six synthetic evaluation cases; registered in `lib/config.js`/README and the 1.29.0 changelog. English copy uses Humanizer; Spanish uses Humaniza and its scanner. Saved/submitted/public states, locale parity, supported product claims and metric windows are explicit.
 - Kept `store-screenshots` focused on media and experiment/page configuration; added its routing link to the new skill. New skill linked from the existing universal/Claude development install paths.
 - Removed the two redundant Skill Creator variants at César's explicit request, using official plugin uninstallers for Anthropic and removing imported synchronized folders. The OpenAI integrated creator remains. Source/version comparison, exact removal verification, design decision and test evidence: [review](skill-creator-review.md).
 - Focused manifest checks: 11/11; changed-config ESLint passed; official creator validation passed with isolated PyYAML via uv. Four independent simulation cases found no substantive workflow failure; they exercised both language editors and corrected an over-limit draft before delivery. Evaluation JSON parse: 1/1 additional focused check. npm dry run includes all seven skill files and excludes private notes/bytecode. Session links/imports and whitespace checks passed.
@@ -18,7 +29,7 @@ Current official Apple Analytics/usage/acquisition and Google statistics/peer/gr
 
 ## Next step
 
-Use the skill on the next authorized listing task and record observed outcome. A future publication needs its coordinated package/plugin/lock version bump and normal release checks; no release, commit, push or tag was requested here. Console mutations during the forward-test were prohibited and none occurred.
+The release is complete. Use the published skill on authorized listing tasks and record outcomes in each app project. Console mutations during the synthetic forward-test were prohibited and none occurred. The maintainer uses development symlinks; no marketplace refresh is needed.
 
 ## Previous release record — 2026-10-24
 
