@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.30.1] - 2026-11-20
+
+### Fixed
+
+- When setting up or reconnecting session docs in Codex, `session-log` now creates a root `AGENTS.md` if it is missing. The file points to the existing docs in `docs/project/` and can be created before running `/init`.
+- If `AGENTS.md` already exists, the skill updates the links and preserves the other project instructions.
+
 ## [1.30.0] - 2026-11-20
 
 ### Added
