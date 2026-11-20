@@ -78,7 +78,9 @@ The same arithmetic catches `decisions.md` eventually. Append-only *and* importe
 
 Write the same block into **every** context file the repo has. Not one; all of them. Different people and different tools read different files, and a note only one assistant can find is a note that disappears the day someone switches.
 
-The usual ones are `CLAUDE.md`, `AGENTS.md` and `GEMINI.md`, but the list keeps growing: `.github/copilot-instructions.md`, `.cursorrules` or `.cursor/rules/`, `.windsurfrules`, `CONVENTIONS.md`. Write into the ones that exist rather than creating new ones — a `GEMINI.md` invented for a repo where nobody uses Gemini is a file that will rot unread, and the point is to reach the readers who are already there.
+The usual ones are `CLAUDE.md`, `AGENTS.md` and `GEMINI.md`, but the list keeps growing: `.github/copilot-instructions.md`, `.cursorrules` or `.cursor/rules/`, `.windsurfrules`, `CONVENTIONS.md`.
+
+**When setting up or repairing the convention from Codex, ensure the project root has an `AGENTS.md` with the pointer block.** If it is missing, create it with just that block, even when there are only preliminary files, when another context file already exists, or when the session docs were created earlier. `/init` is optional. If `AGENTS.md` exists, add or update the block in place and preserve its other instructions. Update the other context files that already exist.
 
 Keep the block short. Duplicated text drifts out of sync — three lines that say the same thing survive that; three paragraphs don't.
 
@@ -94,7 +96,7 @@ Read `status.md` when resuming work. Do not import it at startup: it changes
 constantly, and loading it invalidates the cached prefix behind it.
 ```
 
-Import `requirements.md`, `context.md` and `decisions.md` if the tool supports imports; leave `status.md` out of every import chain. Then create the files with real content read from the repo, never placeholders — a template nobody filled in is worse than nothing, because it looks maintained.
+Create the files with real content from the project. List only files that exist, and import the stable files among them if the tool supports imports. Leave `status.md` out of every import chain.
 
 **Write the content in the language the project is already documented in.** The templates here are in English because the skill is; the files are for whoever opens the repo next. A `status.md` in English in a project whose README, commits and client conversations are in Spanish is a small tax on every future read, and the acceptance criteria are the part that suffers most — they're quoting what someone actually agreed to, and translating that loses the words the agreement was made in. File and section names stay fixed regardless; that's what makes them findable.
 
@@ -203,9 +205,11 @@ find docs -name "*.md" -not -path "docs/project/*"; ls README.md CONTRIBUTING.md
 
 Read the output, not the exit status. These lines report "No such file" for whatever is absent, and that *is* the answer — but a command that failed on a missing path looks a lot like one that found nothing, and mistaking the two here is how you end up installing on top of a setup that already existed.
 
-**Nothing under `docs/project/`** — install the convention. Create the files that have content, fill them from what you actually read in the repo, add the pointer block to every context file found. If the third line turned something up, migrate it in and delete the old location; two places is the problem this solves. Say exactly what moved where, so the person can audit it.
+**Nothing under `docs/project/`** — install the convention. Create the files that have content and wire them into the context files as described in [Installing it](#installing-it). If the third line turned something up, migrate it in and delete the old location; two places is the problem this solves. Say exactly what moved where, so the person can audit it.
 
-**Something that is almost this convention** — a single `docs/status/current.md`, or three of the four files under names someone chose by hand. That's an upgrade, not a fresh install: rename into the fixed names, fold the content into the right file, and update the pointer blocks that referenced the old paths. Treat the existing content as correct until the repo says otherwise — it was written by someone who was there.
+**Something that is almost this convention** — a single `docs/status/current.md`, or three of the four files under names someone chose by hand. That's an upgrade, not a fresh install: rename into the fixed names, fold the content into the right file, and wire the new paths as described in [Installing it](#installing-it). Treat the existing content as correct until the repo says otherwise — it was written by someone who was there.
+
+**Already there and the person asks to set up or repair the docs** — check the pointers using [Installing it](#installing-it), even if the docs themselves need no changes.
 
 **Already there and the person is arriving** — resume. That's the next section, and it writes nothing unless they ask.
 
@@ -300,7 +304,7 @@ The same boundary holds in the other direction. `status.md` records that an audi
 
 Resolve the import chain from each context file and confirm `status.md` isn't in it. This is worth checking every time rather than assuming, because it breaks quietly: someone adds an `@` line meaning well, and from then on every progress update throws away the cached prefix behind it — the one failure this convention exists to prevent.
 
-Check it, don't eyeball it — and check the files the inventory actually found, not a fixed list:
+Check the context files found during inventory and any `AGENTS.md` created during setup or repair. Confirm that the pointer paths resolve:
 
 ```bash
 grep -n 'status\.md' CLAUDE.md AGENTS.md   # add whichever others exist

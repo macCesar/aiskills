@@ -400,6 +400,8 @@ Reference files:
 
 Gives a project one predictable place for its working state, so both you and any assistant know where to look instead of hunting through scattered notes. It installs a fixed four-file convention under `docs/project/` and writes a short pointer into every context file the repo has — `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` — so the notes stay findable no matter which assistant opens the project next.
 
+When you set up or reconnect these docs from Codex, the skill creates a root `AGENTS.md` with the pointer if the file is missing. This also works for projects with only preliminary files and requires no `/init` step.
+
 The convention:
 
 | File              | Holds                                                                                                                | Loaded at startup |

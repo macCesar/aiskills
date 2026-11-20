@@ -36,7 +36,7 @@ Same names in every project. That's what makes them findable without asking.
 
 ## The pointer block
 
-Identical in every context file. Keep it this short — duplicated prose drifts, three lines don't.
+Use the same short block in each existing context file. During setup or repair in Codex, create the root `AGENTS.md` with this block if the file is missing. Keep any existing instructions when updating the block.
 
 ```markdown
 ## Project state
@@ -50,7 +50,7 @@ Read `status.md` when resuming work. Do not import it at startup: it changes
 constantly, and loading it invalidates the cached prefix behind it.
 ```
 
-Where the tool supports imports, import the three stable files:
+Where the tool supports imports, import the stable files that exist:
 
 ```markdown
 @docs/project/requirements.md
@@ -291,7 +291,7 @@ Projects that already keep notes somewhere — `.claude/memory/`, a roadmap unde
 1. **Read what's there** and sort it: is this line status, a decision, or context? Most existing notes are a mix, and that's exactly why they're hard to use.
 2. **Split it into the four files.** Status goes to `status.md` even if it was living in an imported file — especially then.
 3. **Delete the old location** and update anything that referenced it, including `@import` lines in context files.
-4. **Add the pointer block** to every context file.
+4. **Add the pointer block** following [the setup rules](../SKILL.md#installing-it).
 5. **Tell the person what moved where**, concretely. They need to be able to check that nothing was lost, and a migration they can't audit is one they won't trust.
 
 If the project has a planning doc with real structure — a numbered checklist, a PRD — don't flatten it into `status.md`. Leave it where it is and reference it from `status.md`. The convention is about knowing where to look, not about destroying work that already has a shape.
