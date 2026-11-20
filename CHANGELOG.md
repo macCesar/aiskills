@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.30.0] - 2026-11-20
+
+### Added
+
+- Add `articulos-de-blog` to plan, research, write, and review articles for technology company blogs. It writes in Mexican Spanish by default, supports English and bilingual editions, and reviews each version with Humaniza or Humanizer.
+- Save each article as Markdown with an italicized summary. Include the suggested blog section, keywords, tags, and cover prompt in one companion file per article. In Codex, use `imagegen` to generate and save the cover alongside it.
+
 ## [1.29.1] - 2026-10-31
 
 ### Fixed
