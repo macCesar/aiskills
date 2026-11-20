@@ -65,23 +65,24 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 
 ## Available skills
 
-| Skill                  | Domain             | Source                                  | Reference Files      |
-| ---------------------- | ------------------ | --------------------------------------- | -------------------- |
-| refactoring-ui         | Design             | "Refactoring UI" by Wathan & Schoger    | 7 files              |
-| humaniza               | Writing (es)       | Curated Spanish/es-MX style rules       | 7 files              |
-| app-compliance         | App Controls       | Current official legal/provider sources | 6 files              |
-| audit-codebase         | Auditing           | Evidence-based audit methodology        | 2 files              |
-| laravel-security-sweep | Security (Laravel) | Patterns from confirmed breaches        | 2 files + 1 script   |
-| vscode-extension-dev   | VS Code            | VS Code Extension API docs              | 14 files             |
-| stitch-showcase        | Design Tools       | Google Stitch export workflow           | 16 files             |
-| store-listing-optimization | Store Copy / ASO | Verified app behavior and Apple/Google guidance | 4 files |
-| store-screenshots      | Store Artwork      | Apple/Google specs, real captures, SVGs | 13 guides + 1 script |
-| session-log            | Project            | Convention + 3 A/B rounds               | 2 files              |
-| handoff                | Project            | Disposable handoff after `/clear`       | 1 file               |
-| technical-demo-videos  | Video Production   | Reproducible macOS technical demos      | 9 guides + 4 scripts |
-| release                | Publishing         | Portable, confirmation-gated workflow   | 1 file               |
-| seo-launch             | Web / SEO          | Head tags, share cards, server files    | 5 files              |
-| npm-supply-chain       | npm / CI           | npm and GitHub changelogs, 2025–2026    | 5 files              |
+| Skill                      | Domain             | Source                                          | Reference Files      |
+| -------------------------- | ------------------ | ----------------------------------------------- | -------------------- |
+| refactoring-ui             | Design             | "Refactoring UI" by Wathan & Schoger            | 7 files              |
+| humaniza                   | Writing (es)       | Curated Spanish/es-MX style rules               | 7 files              |
+| articulos-de-blog          | Writing (es-MX/en) | Editorial guide for technology company blogs    | 5 files              |
+| app-compliance             | App Controls       | Current official legal/provider sources         | 6 files              |
+| audit-codebase             | Auditing           | Evidence-based audit methodology                | 2 files              |
+| laravel-security-sweep     | Security (Laravel) | Patterns from confirmed breaches                | 2 files + 1 script   |
+| vscode-extension-dev       | VS Code            | VS Code Extension API docs                      | 14 files             |
+| stitch-showcase            | Design Tools       | Google Stitch export workflow                   | 16 files             |
+| store-listing-optimization | Store Copy / ASO   | Verified app behavior and Apple/Google guidance | 4 files              |
+| store-screenshots          | Store Artwork      | Apple/Google specs, real captures, SVGs         | 13 guides + 1 script |
+| session-log                | Project            | Convention + 3 A/B rounds                       | 2 files              |
+| handoff                    | Project            | Disposable handoff after `/clear`               | 1 file               |
+| technical-demo-videos      | Video Production   | Reproducible macOS technical demos              | 9 guides + 4 scripts |
+| release                    | Publishing         | Portable, confirmation-gated workflow           | 1 file               |
+| seo-launch                 | Web / SEO          | Head tags, share cards, server files            | 5 files              |
+| npm-supply-chain           | npm / CI           | npm and GitHub changelogs, 2025–2026            | 5 files              |
 
 Use `aiskills list` to see available skills from the command line. Pull requests are welcome.
 
@@ -224,6 +225,14 @@ Reference files:
 | 07-component-patterns.md | Modals (focus, layout), forms (labels, validation), tables (density, alignment)          |
 
 ---
+
+### articulos-de-blog
+
+Helps technology companies choose a writing style, organize blog sections, find topics, and draft or review articles. The guide uses Código Móvil as a case study, including its sections and topic ideas for websites, custom software, and mobile apps. It drafts in Mexican Spanish by default or in English on request. For bilingual articles, it reviews the source before translating it into the other language. Each version goes through its own final review with `aiskills:humaniza` for Spanish or `humanizer:humanizer` for English.
+
+The workflow calls for researching factual claims before drafting, citing the sources that support them, and checking the title, summary, and body against those sources before delivery.
+
+The skill includes four practical references on choosing an approach, organizing the blog, developing topics by service, and drafting and reviewing an article. Every article includes a labeled, italicized summary below its title, usually 25 to 45 words. It saves each language version as a Markdown file and shares file links in the conversation. One companion Markdown file per article contains the suggested blog section, keywords, tags, and a detailed cover image prompt for each language. The prompts also appear in the conversation. In Codex, it uses `imagegen` to generate and save the cover image alongside those files. The original editorial guide is also included.
 
 ### humaniza
 
