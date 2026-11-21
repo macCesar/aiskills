@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.30.2] - 2026-11-20
+
+### Fixed
+
+- `articulos-de-blog` now provides one comma-separated list for `meta keywords`, with at most two words per entry. Blog tags use no spaces, and the `#` prefix is reserved for channels that use hashtags.
+- Spanish articles use curly double quotation marks (“ ”) in prose. The final check runs after Humaniza and preserves literal characters in code and the exact text of quotations.
+
 ## [1.30.1] - 2026-11-20
 
 ### Fixed
