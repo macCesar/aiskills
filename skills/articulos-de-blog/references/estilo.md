@@ -1,6 +1,6 @@
 # Estilo de redacción
 
-Formula el propósito en una frase antes de redactar. «Al terminar, un supervisor podrá identificar qué rondines quedaron pendientes» permite elegir ejemplos, detalle y vocabulario. «Hablar sobre un sistema de rondines» deja abierta la pregunta que el artículo debe resolver.
+Formula el propósito en una frase antes de redactar. “Al terminar, un supervisor podrá identificar qué rondines quedaron pendientes” permite elegir ejemplos, detalle y vocabulario. “Hablar sobre un sistema de rondines” deja abierta la pregunta que el artículo debe resolver.
 
 | Si el lector necesita… | Enfoque | Cómo desarrollarlo |
 | --- | --- | --- |

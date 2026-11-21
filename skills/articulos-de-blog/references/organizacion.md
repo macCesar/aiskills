@@ -1,6 +1,6 @@
 # Organización del blog
 
-La categoría general describe el territorio del blog. Las secciones ayudan al lector a encontrar artículos que responden preguntas parecidas. Usa nombres que reconozca el público. «Software para empresas» dice qué puede encontrar un cliente. «Soluciones» requiere que adivine qué temas incluye.
+La categoría general describe el territorio del blog. Las secciones ayudan al lector a encontrar artículos que responden preguntas parecidas. Usa nombres que reconozca el público. “Software para empresas” dice qué puede encontrar un cliente. “Soluciones” requiere que adivine qué temas incluye.
 
 1. Reúne los artículos existentes o los temas propuestos y escribe en una frase qué pregunta responde cada uno.
 2. Agrupa las preguntas por el tipo de ayuda que busca el lector. Da a cada sección un nombre y una frase que indique qué artículos entran en ella.

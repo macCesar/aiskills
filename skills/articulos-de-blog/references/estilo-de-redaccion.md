@@ -32,11 +32,11 @@ Elige una categoría que abarque lo que publicas y define las secciones según l
 | **Inteligencia artificial** | Cómo funciona, qué puedes hacer con ella y cómo está cambiando la programación o el trabajo.                                               |
 | **Ideas y reflexiones**     | Temas ajenos al desarrollo de software, como Freud y Adler.                                                                                |
 
-Da más visibilidad a la sección donde tus clientes pueden encontrar respuestas sobre su trabajo. En Código Móvil, esa sección sería **Software para empresas**. *«¿Cómo saber qué rondines quedaron incompletos al cierre del turno?»* responde a la duda de un supervisor. El mismo proyecto da pie a *«Cómo agrupé los reportes por sección y turno en Laravel»*, un artículo para **Desarrollo web y móvil** que explica la implementación.
+Da más visibilidad a la sección donde tus clientes pueden encontrar respuestas sobre su trabajo. En Código Móvil, esa sección sería **Software para empresas**. *“¿Cómo saber qué rondines quedaron incompletos al cierre del turno?”* responde a la duda de un supervisor. El mismo proyecto da pie a *“Cómo agrupé los reportes por sección y turno en Laravel”*, un artículo para **Desarrollo web y móvil** que explica la implementación.
 
 ## Ideas de artículos por servicio
 
-Para proponer temas, anota las dudas que aparecen antes de que un cliente sepa qué contratar. Si alguien busca «cómo evitar capturar el mismo pedido tres veces», sigue el recorrido de un pedido y muestra en qué pasos se repite el trabajo. Ese artículo complementaría las guías que Código Móvil ya tiene para quienes están evaluando o cotizando un sistema. Los temas siguientes aplican el mismo criterio a tres servicios de la empresa. [Código Móvil](https://codigomovil.mx/blog?utm_source=chatgpt.com)
+Para proponer temas, anota las dudas que aparecen antes de que un cliente sepa qué contratar. Si alguien busca “cómo evitar capturar el mismo pedido tres veces”, sigue el recorrido de un pedido y muestra en qué pasos se repite el trabajo. Ese artículo complementaría las guías que Código Móvil ya tiene para quienes están evaluando o cotizando un sistema. Los temas siguientes aplican el mismo criterio a tres servicios de la empresa. [Código Móvil](https://codigomovil.mx/blog?utm_source=chatgpt.com)
 
 ### Sitios web
 
@@ -79,11 +79,11 @@ Abre el artículo con una situación que el lector reconozca y responde su pregu
 
 | Sugerencia                                               | Cómo aplicarla                                                                                                                                                            |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Haz que el título prometa algo concreto.**             | «¿Mi negocio necesita una app o basta con una página web?» le dice al lector qué podrá decidir al terminar.                                                               |
+| **Haz que el título prometa algo concreto.**             | “¿Mi negocio necesita una app o basta con una página web?” le dice al lector qué podrá decidir al terminar.                                                               |
 | **Responde pronto.**                                     | En los primeros párrafos, explica de qué depende la respuesta. Usa el resto del artículo para desarrollar los casos y los matices.                                        |
 | **Dedica cada párrafo a una idea.**                      | Si pasas de explicar un problema a comparar soluciones, abre otro párrafo. En el celular se agradece poder retomar la lectura de un vistazo.                              |
-| **Escribe subtítulos que orienten.**                     | «Cuándo basta una página web» ayuda más que «Consideraciones generales». Si alguien solo lee los subtítulos, debería entender el recorrido del artículo.                  |
-| **Usa ejemplos que muestren qué cambia.**                | «Capturar un pedido tres veces» es más fácil de visualizar que «duplicar tareas administrativas». Cuenta quién lo hace y qué pasa cuando hay un error.                    |
+| **Escribe subtítulos que orienten.**                     | “Cuándo basta una página web” ayuda más que “Consideraciones generales”. Si alguien solo lee los subtítulos, debería entender el recorrido del artículo.                  |
+| **Usa ejemplos que muestren qué cambia.**                | “Capturar un pedido tres veces” es más fácil de visualizar que “duplicar tareas administrativas”. Cuenta quién lo hace y qué pasa cuando hay un error.                    |
 | **Explica los términos técnicos cuando aparecen.**       | Si necesitas mencionar una API, puedes decir que es la conexión que permite que la tienda envíe el pedido al sistema de inventario. En ese artículo, quizá con eso baste. |
 | **Termina con un criterio que el lector pueda aplicar.** | Una pregunta para revisar su operación, una comparación breve o una prueba sencilla suelen ser mejores cierres que volver a resumir el artículo.                          |
 
