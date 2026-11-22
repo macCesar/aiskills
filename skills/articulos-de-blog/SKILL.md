@@ -5,7 +5,7 @@ description: Úsalo cuando se pida elegir el estilo, organizar secciones, propon
 
 # Artículos para blogs de empresas tecnológicas
 
-Escribe divulgación tecnológica con un estilo expositivo y práctico. Parte de lo que el lector necesita resolver o entender. Explica qué problema resuelve la tecnología, cómo se usa y cuándo le conviene a alguien sin experiencia en programación. Añade el detalle técnico cuando ayude a entender el problema o cuando el lector lo necesite para implementar la solución.
+Escribe divulgación tecnológica para el público y el propósito de cada pieza. Si el artículo apoya un servicio, muestra qué problema afecta al negocio, qué cambia al resolverlo y cuándo conviene la solución. Explica cómo se usa la tecnología con el detalle que necesita el lector. Los pasos de implementación corresponden al tutorial que promete enseñar una tarea.
 
 ## Flujo de trabajo
 
@@ -18,17 +18,23 @@ Identifica quién leerá el artículo, qué necesita resolver y qué ejemplos o 
 | Proponer títulos, priorizar temas o preparar un calendario | [Ideas por servicio](references/temas.md) |
 | Redactar, revisar o preparar la versión final de una traducción | [Redacción y revisión de artículos](references/redaccion-y-revision.md) |
 
-Para Código Móvil, consulta también [la guía original](references/estilo-de-redaccion.md). Ahí están sus categorías, los ejemplos de rondines y de web frente a app, las doce ideas por servicio y el orden inicial sugerido. Para ejemplos de código, consulta sus [tecnologías habituales](references/estilo-de-redaccion.md#tecnologías-para-los-ejemplos-de-código-móvil). Adapta los criterios a los lectores y servicios de cada empresa.
+Para Código Móvil, consulta también [la guía original](references/estilo-de-redaccion.md). Ahí están sus categorías, los ejemplos de rondines y de web frente a app, las doce ideas por servicio y el orden inicial sugerido. Para ejemplos de código, consulta sus [tecnologías habituales](references/estilo-de-redaccion.md#tecnologías-para-los-ejemplos-de-código-móvil). Adapta los criterios a los lectores y servicios de cada empresa. Usa las listas de temas y los ejemplos como inspiración. Cada artículo puede tomar otro ángulo, título, escena y orden si sirven mejor al objetivo editorial.
 
 ## Investigación y verificación
 
 Antes de redactar un artículo, identifica sus afirmaciones verificables e investiga las que sostienen la explicación o la recomendación. Consulta fuentes pertinentes y cita los enlaces directos en el Markdown, cerca de las afirmaciones que respaldan. En una revisión, contrasta también las afirmaciones del borrador recibido. Si falta evidencia, omite el dato prescindible, acota la afirmación a lo que puedas sostener o señala qué quedó sin verificar cuando afecte la conclusión. Sigue el [flujo de investigación](references/redaccion-y-revision.md#investigación-antes-del-borrador).
+
+## Artículos que apoyan un servicio
+
+Antes de redactar, identifica el problema que reconoce un posible cliente, la mejora que le interesa y la oferta real de la empresa que puede producirla. Explica el efecto en su operación desde la apertura. Desarrolla un caso que permita ver cómo trabajarían las personas después del cambio y en qué punto vale la pena invertir. Presenta el servicio por su nombre dentro del cuerpo y explica qué haría la empresa en ese caso. Si existe una página oficial pertinente, verifícala y enlázala en el idioma del artículo cuando esté disponible. Consulta [cómo elegir el enfoque](references/estilo.md).
 
 ## Estructura del artículo
 
 Escribe cada artículo en Markdown, con el título como encabezado `#`. El título debe permitir que el lector reconozca su pregunta de un vistazo. Conserva los detalles que cambien la promesa y lleva el contexto adicional al sumario. Sigue los [criterios para títulos](references/redaccion-y-revision.md#títulos).
 
 Debajo del título, coloca la etiqueta `**Sumario**` en español o `**Summary**` en inglés y el texto del sumario en su propio párrafo, entre asteriscos simples (`*texto*`). Después empieza el cuerpo. Sigue las pautas de [redacción del sumario](references/redaccion-y-revision.md#sumario-del-artículo).
+
+El último párrafo debe cumplir la promesa del título. En un artículo de servicios, cierra con una recomendación, la condición que la justifica y, cuando corresponda, una forma concreta de consultar al proveedor. Si una prueba ayuda al lector a decidir, explica cómo interpretar el resultado. Sigue las [pautas de cierre](references/redaccion-y-revision.md#cierre-del-artículo).
 
 ## Entrega en archivos
 
@@ -52,6 +58,8 @@ Cuando corresponda generar una portada en Codex, abre la skill `imagegen` y úsa
 - Traduce el título, el sumario y el cuerpo a partir de la versión revisada. Conserva la estructura, la voz, los ejemplos, los datos, los matices y las referencias. Escribe con naturalidad en el idioma de destino y mantén los nombres propios, el código y los destinos de los enlaces.
 
 ## Revisión final obligatoria
+
+Lee juntos el título y el último párrafo del cuerpo de cada versión final. Comprueba que el cierre sostenga la respuesta, el consejo o la decisión. En artículos de servicios, comprueba también que el cuerpo explique el beneficio, cuándo aplica la solución y qué puede aportar el proveedor. Cuando un encargo incluya varios artículos, comprueba cada pieza por separado antes de entregar el conjunto, aunque los temas vengan de la misma lista de ejemplos.
 
 Abre la skill que corresponda y sigue su procedimiento para el título, el sumario y el cuerpo de cada versión que vayas a entregar, incluso si el usuario ya proporcionó el borrador. Usa los nombres registrados en la sesión y sus alias sin depender de rutas de instalación fijas.
 

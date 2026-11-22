@@ -4,11 +4,11 @@
 
 Si tu empresa ofrece servicios tecnológicos, escribe para quien necesita resolver un problema o tomar una decisión, aunque nunca haya programado. La **divulgación tecnológica**, con una **redacción expositiva y práctica**, ayuda a explicar qué problema resuelve una tecnología, cómo se usa y cuándo le conviene al lector.
 
-En Código Móvil, las guías sobre **software a medida frente a una solución comercial** y **qué preparar para cotizar un sistema** ya siguen ese enfoque. Cada una parte de una decisión del lector y le da criterios para tomarla. Aplica ese mismo enfoque cuando escribas sobre un sistema de rondines, una app multiplataforma o inteligencia artificial. [Código Móvil](https://codigomovil.mx/guias/software-a-medida-o-solucion-comercial)
+En Código Móvil, las guías sobre **software a medida frente a una solución comercial** y **qué preparar para cotizar un sistema** ya siguen ese enfoque. Cada una parte de una decisión del lector y le da criterios para tomarla. Esa misma claridad puede servir para un artículo sobre un sistema de rondines, una app multiplataforma o inteligencia artificial. Si la pieza está ligada a un servicio, muestra qué cambia para el negocio y explica en el cuerpo qué puede aportar Código Móvil cuando la solución encaja. [Código Móvil](https://codigomovil.mx/guias/software-a-medida-o-solucion-comercial)
 
 | Cuando publiques sobre…                                      | Tipo de redacción                                                                                                                           |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Software para empresas, sitios web y apps**                | **Divulgación práctica.** Parte de una situación reconocible y explica qué opciones tiene el lector.                                        |
+| **Software para empresas, sitios web y apps**                | **Divulgación para empresas.** Muestra qué está en juego, cómo cambiaría el trabajo y en qué condiciones conviene la solución.                                        |
 | **IA, lenguajes y herramientas**                             | **Explicativa.** Define el concepto en lenguaje cotidiano y muestra un ejemplo que permita entenderlo.                                      |
 | **Titanium, Laravel o APIs**                                 | **Técnica o instructiva.** Abre con el problema que resuelve el artículo y después entra en código o implementación para quien lo necesite. |
 | **Freud y Adler, o reflexiones sobre el futuro del trabajo** | **Opinión o ensayo.** Presenta la pregunta y deja clara tu postura.                                                                         |
@@ -46,46 +46,46 @@ Da más visibilidad a la sección donde tus clientes pueden encontrar respuestas
 
 ## Ideas de artículos por servicio
 
-Para proponer temas, anota las dudas que aparecen antes de que un cliente sepa qué contratar. Si alguien busca “cómo evitar capturar el mismo pedido tres veces”, sigue el recorrido de un pedido y muestra en qué pasos se repite el trabajo. Ese artículo complementaría las guías que Código Móvil ya tiene para quienes están evaluando o cotizando un sistema. Los temas siguientes aplican el mismo criterio a tres servicios de la empresa. [Código Móvil](https://codigomovil.mx/blog?utm_source=chatgpt.com)
+Para proponer temas, anota las dudas que aparecen antes de que un cliente sepa qué contratar. Una consulta sobre capturar el mismo pedido tres veces puede inspirar un artículo sobre lo que pasa cuando ventas y almacén se quedan con cantidades distintas. Esa pieza complementaría las guías que Código Móvil ofrece para evaluar o cotizar un sistema. Los títulos y ángulos siguientes son ideas abiertas para tres servicios. Cada tema puede convertirse en una comparación, una escena de trabajo, un caso documentado u otra pieza según el material disponible. [Código Móvil](https://codigomovil.mx/blog?utm_source=chatgpt.com)
 
 ### Sitios web
 
-| Título propuesto                                                                                          | Qué cubrir                                                                                                                                                                                                                  |
-| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **¿Necesito una página web si ya consigo clientes por WhatsApp e Instagram?**                             | Qué puede consultar el cliente por su cuenta antes de escribirte y cuándo tus canales actuales ya cubren lo que necesitas.                                                                                                  |
-| **¿Por qué mi negocio aparece en Google Maps cuando busco su nombre, pero no cuando busco lo que vende?** | Cómo comprobar qué ve alguien que todavía no conoce el negocio y qué papel cumplen el perfil de Google y el sitio web.                                                                                                      |
-| **¿Puede aparecer mi negocio en las respuestas con IA de Google?**                                        | Cómo hacer una prueba documentada con búsquedas de negocios y qué se puede aprender de las páginas que aparecen como fuentes.                                                                                               |
-| **Cómo crear un catálogo en línea para recibir cotizaciones sin montar una tienda**                       | Qué conviene mostrar cuando el precio depende del volumen, la medida o la disponibilidad. Para proveedores industriales de Reynosa, usa el caso de un comprador que busca una pieza y necesita enviar sus especificaciones. |
+| Título propuesto | Ángulo posible |
+| --- | --- |
+| **¿Necesito una página web si ya consigo clientes por WhatsApp e Instagram?** | Una pastelería descubre qué información le hace falta al comprador antes de escribir. Una página propia tiene sentido cuando esa información ya no cabe bien en sus perfiles. |
+| **¿Por qué mi negocio aparece en Google Maps cuando busco su nombre, pero no cuando busco lo que vende?** | Un cliente busca el servicio sin conocer al proveedor. Su búsqueda muestra el papel del perfil y de la página donde puede confirmar la cobertura. |
+| **¿Puede aparecer mi negocio en las respuestas con IA de Google?** | Una respuesta menciona a un proveedor de lotes pequeños. Las fuentes permiten comprobar qué página respalda ese dato y qué puede aportar un sitio propio. |
+| **Cómo crear un catálogo en línea para recibir cotizaciones sin montar una tienda** | Un comprador de Reynosa necesita una pieza cuyo precio cambia con el volumen, la medida o la disponibilidad. Un catálogo puede reunir sus especificaciones para que ventas pueda cotizar. |
 
 Para el artículo sobre WhatsApp, hay un dato de partida en la *Radiografía del Emprendimiento en México 2026*. El 62.8 % de las empresas encuestadas reportó usar WhatsApp para difundir sus productos o servicios, y el 36.1 % reportó usar un sitio web. Para los artículos sobre Maps y las respuestas con IA, Google documenta cómo funcionan ambas superficies. [asem.mx](https://asem.mx/wp-content/uploads/2026/11/Informe_REM_2026_final_11.pdf?utm_source=chatgpt.com)
 
 ### Sistemas a medida
 
-| Título propuesto                                                                          | Qué cubrir                                                                                                                                               |
-| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Cómo dejar de capturar el mismo pedido en WhatsApp, Excel y facturación**               | Seguir un pedido de principio a fin y mostrar qué datos se pueden reutilizar y dónde hace falta una revisión humana.                                     |
-| **¿En qué momento Excel deja de ser suficiente para controlar el inventario?**            | Usar ejemplos de dos personas editando existencias, movimientos sin historial y diferencias entre sucursales. Explicar cuándo basta con mejorar la hoja. |
-| **¿Puedo conectar mi tienda, mi inventario y mi facturación sin cambiar de sistema?**     | Qué revisar antes de una integración y cómo elegir qué sistema será responsable de cada dato.                                                            |
-| **Probé la IA para capturar pedidos de WhatsApp. ¿Cuándo hace falta que alguien revise?** | Hacer una prueba con pedidos ficticios que incluyan cambios de cantidad, claves ambiguas y datos faltantes. Publicar los errores junto con los aciertos. |
+| Título propuesto | Ángulo posible |
+| --- | --- |
+| **Cómo dejar de capturar el mismo pedido en WhatsApp, Excel y facturación** | Ventas confirma una cantidad nueva mientras almacén conserva la anterior. Un pedido compartido puede llevar el cambio a facturación y dejar las dudas a quien conoce al cliente. |
+| **¿En qué momento Excel deja de ser suficiente para controlar el inventario?** | Dos personas comprometen las mismas existencias y una sucursal espera mercancía. El caso permite explicar cuándo basta un registro de movimientos y cuándo se necesitan controles de inventario. |
+| **¿Puedo conectar mi tienda, mi inventario y mi facturación sin cambiar de sistema?** | Un pedido pagado cambia antes de surtirse. La integración puede aprovechar los sistemas existentes si intercambian los datos y cada corrección tiene un responsable. |
+| **Probé la IA para capturar pedidos de WhatsApp. ¿Cuándo hace falta que alguien revise?** | Un experimento con claves ambiguas, cambios de cantidad y datos faltantes puede mostrar cuándo un borrador ahorra captura y qué errores requieren confirmación. |
 
-Para el artículo sobre pedidos, haz la prueba con IA antes de publicar y muestra los ejemplos y resultados. El estudio de emprendimiento de ASEM de 2026 incluye la adopción de IA para automatizar procesos. [asem.mx](https://asem.mx/wp-content/uploads/2026/11/Informe_REM_2026_final_11.pdf?utm_source=chatgpt.com)
+Si eliges el enfoque de experimento para los pedidos, documenta la prueba realizada y muestra ejemplos de los aciertos y errores. El estudio de emprendimiento de ASEM de 2026 incluye la adopción de IA para automatizar procesos. [asem.mx](https://asem.mx/wp-content/uploads/2026/11/Informe_REM_2026_final_11.pdf?utm_source=chatgpt.com)
 
 ### Aplicaciones móviles
 
-| Título propuesto                                                                              | Qué cubrir                                                                                                                                                  |
-| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **¿Mi negocio necesita una app o basta con una web que funcione bien en el celular?**         | Comparar tres situaciones: consultar un catálogo, hacer pedidos recurrentes y registrar trabajo durante una visita.                                         |
-| **¿Qué pasa con las fotos y los reportes de una app cuando el equipo se queda sin internet?** | Explicar qué debe poder guardar la app, cómo se entera el usuario de que algo quedó pendiente y qué pasa al recuperar la conexión.                          |
-| **¿Se puede tener una app interna solo para empleados?**                                      | Comparar el acceso desde el navegador y la instalación privada desde la perspectiva de quien tendrá que dar accesos, actualizar equipos y retirar permisos. |
-| **¿Qué gastos siguen después de publicar una app en iPhone y Android?**                       | Desglosar cuentas de publicación, servicios en línea, soporte y actualizaciones con ejemplos de una app sencilla y otra que sincroniza datos.               |
+| Título propuesto | Ángulo posible |
+| --- | --- |
+| **¿Mi negocio necesita una app o basta con una web que funcione bien en el celular?** | Consultar un catálogo, hacer pedidos recurrentes y documentar visitas pueden justificar soluciones distintas, según el teléfono y las condiciones de trabajo. |
+| **¿Qué pasa con las fotos y los reportes de una app cuando el equipo se queda sin internet?** | Un reporte de campo queda pendiente con sus fotos. La app puede conservar el trabajo, mostrar el estado y confirmar el envío cuando vuelve la conexión. |
+| **¿Se puede tener una app interna solo para empleados?** | Un supervisor cambia de turno o deja la empresa. El acceso por navegador y la instalación privada distribuyen de forma distinta el trabajo de dar accesos, actualizar equipos y retirar permisos. |
+| **¿Qué gastos siguen después de publicar una app en iPhone y Android?** | Una app sencilla y una que sincroniza fotos generan gastos distintos. Las cuentas de publicación, los servicios en línea, el soporte y las actualizaciones explican qué pagar y quién debe hacerse cargo. |
 
 Para Código Móvil, el orden sugerido empieza con **WhatsApp e Instagram, la captura duplicada de pedidos y la comparación entre web y app**. Cada tema responde a una duda ligada a un servicio distinto. El cuarto sería el **catálogo para proveedores industriales**, dirigido a negocios de Reynosa que reciben solicitudes de cotización con especificaciones.
 
-Para priorizar temas en tu blog, considera qué tan relevante es el problema para tus clientes y cómo se relaciona con tus servicios. El volumen de búsqueda de los títulos propuestos para Código Móvil está por verificar. Cierra cada artículo con **un criterio que el lector pueda usar en su negocio**, incluso si decide seguir con las herramientas que ya usa.
+Para priorizar temas en tu blog, considera qué tan relevante es el problema para tus clientes y cómo se relaciona con tus servicios. El volumen de búsqueda de los títulos propuestos para Código Móvil está por verificar. En una pieza ligada a un servicio, explica cuándo se justifica contratarlo y cuándo puede bastar la herramienta que el lector ya tiene.
 
 ## Cómo escribir y revisar artículos para el blog
 
-Abre el artículo con una situación que el lector reconozca y responde su pregunta en los primeros párrafos. Añade los detalles técnicos a medida que le ayuden a entender el problema o elegir qué hacer. Al revisar el borrador, comprueba la ortografía, la gramática y la puntuación. Revisa también lo que promete el título y qué criterio se lleva el lector al terminar.
+Abre el artículo con una situación que el lector reconozca y responde su pregunta en los primeros párrafos. Añade los detalles técnicos a medida que le ayuden a entender el problema o elegir qué hacer. Al revisar el borrador, comprueba la ortografía, la gramática y la puntuación. Revisa también lo que promete el título y qué criterio se lleva el lector al terminar. En los artículos de servicios, comprueba que el beneficio y la aportación de Código Móvil estén desarrollados antes del cierre.
 
 | Sugerencia                                               | Cómo aplicarla                                                                                                                                                            |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -95,12 +95,12 @@ Abre el artículo con una situación que el lector reconozca y responde su pregu
 | **Escribe subtítulos que orienten.**                     | “Cuándo basta una página web” ayuda más que “Consideraciones generales”. Si alguien solo lee los subtítulos, debería entender el recorrido del artículo.                  |
 | **Usa ejemplos que muestren qué cambia.**                | “Capturar un pedido tres veces” es más fácil de visualizar que “duplicar tareas administrativas”. Cuenta quién lo hace y qué pasa cuando hay un error.                    |
 | **Explica los términos técnicos cuando aparecen.**       | Si necesitas mencionar una API, puedes decir que es la conexión que permite que la tienda envíe el pedido al sistema de inventario. En ese artículo, quizá con eso baste. |
-| **Termina con un criterio que el lector pueda aplicar.** | Una pregunta para revisar su operación, una comparación breve o una prueba sencilla suelen ser mejores cierres que volver a resumir el artículo.                          |
+| **Termina con un criterio que el lector pueda aplicar.** | En el último párrafo, responde al título. Si cierras con una pregunta, comparación o prueba, explica qué puede decidir o hacer el lector con el resultado. |
 
 Este ejemplo aplica las pautas a un artículo sobre **web o app para un negocio**.
 
-> Una persona que quiere consultar tu catálogo probablemente agradecerá abrir un enlace desde WhatsApp. En cambio, un técnico que toma fotos y llena reportes todos los días, incluso en lugares sin señal, necesita una herramienta capaz de guardar su trabajo y enviarlo después. Para elegir entre una web y una app, empieza por describir qué hará la persona y en qué condiciones.
+> Un cliente que abre el catálogo desde WhatsApp puede consultar una medida y compartir la ficha desde el navegador. Un técnico que toma fotos en una zona sin señal necesita guardar su trabajo y saber cuándo lo recibió el supervisor. El alcance del desarrollo depende de cuál de esas tareas sostiene la operación.
 
-El artículo puede seguir con una pregunta concreta, **¿qué necesita hacer mi usuario en la práctica?** Para responderla, compara qué necesita quien consulta el catálogo con lo que necesita quien llena reportes sin señal.
+Una pieza sobre esa decisión puede mostrar cómo se resuelve cada tarea y cuándo vale la pena invertir en una app. En ese punto, explica cómo Código Móvil podría desarrollar la web o la aplicación según los equipos y las condiciones de trabajo. El catálogo y el reporte son dos escenas posibles para mostrar la diferencia.
 
 Para revisar un borrador, **lee en voz alta la apertura y luego recorre solo los subtítulos**. Si la apertura tarda en llegar al tema, recórtala. Si los subtítulos podrían servir para cualquier artículo, hazlos más específicos.

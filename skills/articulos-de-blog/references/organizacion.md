@@ -13,8 +13,8 @@ La categoría general describe el territorio del blog. Las secciones ayudan al l
 
 | Sección | Qué publicar ahí |
 | --- | --- |
-| **Software para empresas** | Sistemas a medida y casos de proyectos, como la gestión de un gimnasio, el seguimiento de producción en tornos o los rondines de seguridad. |
-| **Desarrollo web y móvil** | Sitios dinámicos, apps multiplataforma, Titanium SDK, lenguajes, frameworks, APIs y herramientas de desarrollo. |
+| **Software para empresas** | Decisiones sobre software para un negocio. Incluye sistemas a medida y casos como la gestión de un gimnasio, el seguimiento de producción en tornos o los rondines de seguridad. También admite artículos sobre sitios web y apps cuando lo central es el resultado para la empresa. |
+| **Desarrollo web y móvil** | Artículos sobre cómo se diseñan o construyen sitios dinámicos y apps multiplataforma, además de Titanium SDK, lenguajes, frameworks, APIs y herramientas de desarrollo. |
 | **Inteligencia artificial** | Cómo funciona, qué puedes hacer con ella y cómo está cambiando la programación o el trabajo. |
 | **Ideas y reflexiones** | Temas que el autor quiere explorar fuera del software, como Freud y Adler. |
 
