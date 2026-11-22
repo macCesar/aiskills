@@ -18,7 +18,7 @@ Identifica quién leerá el artículo, qué necesita resolver y qué ejemplos o 
 | Proponer títulos, priorizar temas o preparar un calendario | [Ideas por servicio](references/temas.md) |
 | Redactar, revisar o preparar la versión final de una traducción | [Redacción y revisión de artículos](references/redaccion-y-revision.md) |
 
-Para Código Móvil, consulta también [la guía original](references/estilo-de-redaccion.md). Ahí están sus categorías, los ejemplos de rondines y de web frente a app, las doce ideas por servicio y el orden inicial sugerido. Adapta los criterios a los lectores y servicios de cada empresa.
+Para Código Móvil, consulta también [la guía original](references/estilo-de-redaccion.md). Ahí están sus categorías, los ejemplos de rondines y de web frente a app, las doce ideas por servicio y el orden inicial sugerido. Para ejemplos de código, consulta sus [tecnologías habituales](references/estilo-de-redaccion.md#tecnologías-para-los-ejemplos-de-código-móvil). Adapta los criterios a los lectores y servicios de cada empresa.
 
 ## Investigación y verificación
 

@@ -21,6 +21,16 @@ Un artículo de Código Móvil sobre un sistema de rondines podría empezar así
 
 Ese arranque le da al lector una razón para seguir leyendo. Después puedes explicar cómo registraste cada visita o cómo generaste los reportes por sección y turno. **Empieza con lo que la persona necesita entender y añade el detalle técnico cuando le ayude a entenderlo mejor.**
 
+## Tecnologías para los ejemplos de Código Móvil
+
+- **Web.** Usa HTML para el marcado, CSS o Tailwind CSS para los estilos y JavaScript cuando el ejemplo necesite comportamiento en el navegador.
+- **Servidor y APIs.** Usa PHP. Recurre a Laravel cuando el ejemplo necesite mostrar cómo se implementa la solución en ese framework.
+- **Aplicaciones móviles.** Usa Titanium SDK con Alloy. Escribe las vistas en XML y los controladores en JavaScript. Para los estilos, prefiere PurgeTSS. Usa TSS de Alloy cuando se ajuste al proyecto o al propósito del ejemplo.
+
+Usa dos espacios por nivel de indentación en los ejemplos de código. Si el lenguaje exige otra indentación, respeta su sintaxis.
+
+Incluye los lenguajes y herramientas que el ejemplo necesite. Si el encargo pide otra tecnología o documenta una implementación existente, sigue ese contexto.
+
 ## Categoría y secciones del blog
 
 Elige una categoría que abarque lo que publicas y define las secciones según las preguntas que responde cada artículo. Para Código Móvil, **Tecnología y desarrollo de software** abarca los proyectos para empresas, el desarrollo web y móvil, la programación y la inteligencia artificial. Esta es una forma de organizar esos temas en su blog.
