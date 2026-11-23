@@ -242,6 +242,8 @@ The workflow calls for researching factual claims before drafting, citing the so
 
 The skill includes four practical references on choosing an approach, organizing the blog, developing topics by service, and drafting and reviewing an article. Every article includes a labeled, italicized summary below its title, usually 25 to 45 words. It saves each language version as a Markdown file and shares file links in the conversation. One companion Markdown file per article contains the suggested blog section, keywords, tags, and a detailed cover image prompt for each language. The prompts also appear in the conversation. In Codex, it uses `imagegen` to generate and save the cover image alongside those files. The original editorial guide is also included.
 
+For articles about a service, the guide starts with a business problem and shows how the work would change. It asks the writer to explain where the provider can help and give the reader a recommendation they can act on. Code examples for Código Móvil follow the company’s usual stack. When revising an article, keep the cover and publication files if they still fit.
+
 ### humaniza
 
 An editor for Spanish text (es-MX). Based on curated es-MX style rules and adapted techniques from Hardik Pandya's Stop Slop skill (cut filler, break formulaic structures, active voice, specificity, varied rhythm). It removes common AI writing patterns and rewrites the text so it sounds natural without changing the meaning.

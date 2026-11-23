@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.31.0] - 2026-11-22
+
+### Added
+
+- `refactoring-ui` now guides reviews across an entire app or admin panel. It includes a Tailwind CSS v4 documentation index, Alpine.js examples for Laravel Blade, and an orders dashboard that opens offline.
+- `articulos-de-blog` now guides service articles from a recognizable business problem to a recommendation the reader can act on. Code examples for Código Móvil follow the company’s usual stack.
+
+### Changed
+
+- Reviewed the design guidance in `refactoring-ui` against the complete book. Clarified when to emphasize labels, how to size components to fit their content, and how to handle empty states before the first record and after filtering.
+
+### Fixed
+
+- Corrected WCAG text contrast thresholds in `refactoring-ui` and improved the contrast of the demo’s search placeholder.
+- `articulos-de-blog` now creates publication assets when the assignment calls for them and preserves existing covers and metadata when they still fit the revised article.
+
 ## [1.30.2] - 2026-11-20
 
 ### Fixed
