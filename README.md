@@ -67,7 +67,7 @@ All three platforms use the same Agent Skills format: a `SKILL.md` file with YAM
 
 | Skill                      | Domain             | Source                                          | Reference Files      |
 | -------------------------- | ------------------ | ----------------------------------------------- | -------------------- |
-| refactoring-ui             | Design             | "Refactoring UI" by Wathan & Schoger            | 7 files              |
+| refactoring-ui             | Design             | "Refactoring UI" by Wathan & Schoger + AISkills | 10 files             |
 | humaniza                   | Writing (es)       | Curated Spanish/es-MX style rules               | 7 files              |
 | articulos-de-blog          | Writing (es-MX/en) | Editorial guide for technology company blogs    | 5 files              |
 | app-compliance             | App Controls       | Current official legal/provider sources         | 6 files              |
@@ -191,7 +191,7 @@ You do not normally need to name a skill explicitly. `release` is the deliberate
 
 ### refactoring-ui
 
-A design skill based only on *Refactoring UI* by Adam Wathan and Steve Schoger.
+A design skill inspired by *Refactoring UI* by Adam Wathan and Steve Schoger, with complementary guidance and an AISkills workflow for reviewing an app, dashboard, or admin panel end to end.
 
 When it activates:
 - Asking how to improve a UI's appearance
@@ -202,6 +202,8 @@ When it activates:
 - Handling images in interfaces
 - Adding finishing touches (empty states, borders, icons, backgrounds)
 - Design reviews and critiques
+- Refactoring a whole interface across several modules
+- Implementing a Tailwind interface or diagnosing a missing Tailwind class
 
 Example prompts:
 ```
@@ -211,18 +213,24 @@ Example prompts:
 "What's the rule for line-height on large headlines?"
 "How do I handle text over a photo background?"
 "My empty state looks like a broken page. How should I design it?"
+"Refactor the entire admin panel using these example screens for inspiration."
 ```
 
 Reference files:
-| File                     | Topics                                                                                   |
-| ------------------------ | ---------------------------------------------------------------------------------------- |
-| 01-foundations.md        | Project mindset: feature-first work, scope discipline, defining systems, picking a voice |
-| 02-page-mechanics.md     | Visual hierarchy, layout, white space, spacing scales, typography                        |
-| 03-visual-treatment.md   | Color systems (HSL, shades, greys, contrast), depth and shadows, image handling          |
-| 04-polish.md             | Borders, accents, empty states, decorative defaults, sharpening design intuition         |
-| 05-motion.md             | Motion system, hover/press states, loading patterns, `prefers-reduced-motion`            |
-| 06-dark-mode.md          | Dark mode color tokens, text contrast, shadows, images, theme toggle                     |
-| 07-component-patterns.md | Modals (focus, layout), forms (labels, validation), tables (density, alignment)          |
+| File                                                                                | Topics                                                                                                        |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 01-foundations.md                                                                   | Project mindset: feature-first work, scope discipline, defining systems, picking a voice                      |
+| 02-page-mechanics.md                                                                | Visual hierarchy, layout, white space, spacing scales, typography                                             |
+| 03-visual-treatment.md                                                              | Color systems (HSL, shades, greys, contrast), depth and shadows, image handling                               |
+| 04-polish.md                                                                        | Borders, accents, empty states, decorative defaults, sharpening design intuition                              |
+| 05-motion.md                                                                        | Motion system, hover/press states, loading patterns, `prefers-reduced-motion`                                 |
+| 06-dark-mode.md                                                                     | Dark mode color tokens, text contrast, shadows, images, theme toggle                                          |
+| 07-component-patterns.md                                                            | Modals (focus, layout), forms (labels, validation), tables (density, alignment)                               |
+| 08-integral-refactoring.md                                                          | Screen inventory, shared patterns, browser review, and coverage at handoff                                    |
+| [09-tailwind-v4.md](skills/refactoring-ui/references/09-tailwind-v4.md)             | Version and build checks, Blade with Vite, CLI, PostCSS, class detection, and official v4 documentation index |
+| [10-native-components.md](skills/refactoring-ui/references/10-native-components.md) | Native panels, filters, tables, forms, selects, disclosures, confirmation dialogs, and Alpine.js in Blade     |
+
+Open the [orders dashboard demo](skills/refactoring-ui/assets/index.html) from a local checkout or installed skill. It includes compiled CSS and works offline. The native components reference links to the markup and scripts and explains how to rebuild the CSS and adapt a pattern to Blade.
 
 ---
 

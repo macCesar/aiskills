@@ -22,21 +22,21 @@ When **not** to use a modal:
 
 | Element | Rule |
 |---|---|
-| Width | Fixed pixel max (`max-width: 480px` typical) — never percentage |
+| Width | Use a readable maximum (for example, 480px) and leave gutters at narrow widths |
 | Vertical position | Anchored ~10–15% from the top of viewport, not centered — feels more stable |
 | Backdrop | Semi-opaque dark overlay (~50–70% opacity) — darkens the page enough to focus attention |
 | Padding | Generous — modal content is usually short; tight padding feels cramped |
-| Close affordance | "Cancel" button in the footer AND an `×` in the top corner — keyboard users use Esc |
+| Close affordance | Give the dialog a visible Cancel or Close action. An additional corner button can help on longer dialogs. |
 
 ### Focus and Keyboard
 
 Three keyboard requirements, all non-negotiable:
 
-1. **Focus moves into the modal on open** — typically to the first interactive element, or the close button if the modal is informational
-2. **Focus traps inside the modal** — Tab/Shift+Tab cycle through modal elements only, never leaking to the page behind
-3. **Esc closes the modal** AND focus returns to the element that opened it
+1. **Move focus into the modal on open.** Use the control that fits the task, such as Cancel for a hard-to-reverse action or a focusable heading for lengthy content.
+2. **Keep Tab and Shift+Tab within the modal.** The page behind it stays inert.
+3. **Support Escape and restore focus on close.** Return to the opener where it still exists, or choose the next logical target in the workflow.
 
-These are the table-stakes of accessibility for modals. Libraries like `focus-trap` or `@radix-ui/react-dialog` solve them — don't roll your own unless you must.
+On the web, use a named native `<dialog>` opened with `showModal()` when it fits the project. Verify the browser’s focus behavior with the actual markup. [HTML dialog](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element) · [WAI modal pattern and examples](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) · [Runnable confirmation](10-native-components.md#disclosure-and-confirmation)
 
 ### Button Order
 
@@ -46,7 +46,7 @@ The primary action sits on the **right** in left-to-right UIs:
 [ Cancel ]   [ Save changes ]
 ```
 
-Destructive primary actions get an extra confirmation (a typed confirmation, or a secondary modal). Don't bury a destructive button next to a safe one.
+For hard-to-reverse changes, describe the consequence and name the action precisely. A typed confirmation can fit an unusually costly operation. Use one clear confirmation step and give the safer action initial focus when appropriate. [WAI modal guidance](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
 
 ## Forms
 
@@ -64,7 +64,7 @@ Left-aligned labels look formal but force the user's eye to zig-zag and break on
 
 - **On blur** for individual fields — show the error after the user leaves the field, not while they're typing
 - **On submit** for fields they haven't touched yet
-- **On change** ONLY for fields where the answer is binary and visible (e.g., a password strength meter, a username availability check)
+- **On change** for feedback tied to a deliberate selection. During typing, update helpful cues such as a password strength meter or clear a resolved error. Validate on blur or submit when the user needs time to finish.
 
 Inline validation while the user is mid-typing reads as the form fighting them.
 
@@ -74,8 +74,8 @@ A field in error state should have:
 
 - A color change (red border, but not the *only* signal)
 - A short message **below** the field, in the same color as the border
-- An icon at the start of the message — color is not enough (≈8% of males can't distinguish red from green)
-- The field's normal label and placeholder stay legible — don't replace them with the error
+- Text that identifies the error and tells the user how to correct it. An icon can reinforce the message.
+- The field’s normal label and placeholder stay legible. Associate the message with the field using `aria-describedby`, and mark it `aria-invalid="true"` while invalid. On a failed submit, ensure keyboard users can reach the first invalid field or a linked error summary. [WAI form notifications](https://www.w3.org/WAI/tutorials/forms/notifications/)
 
 ### Spacing Within a Form
 
@@ -99,11 +99,17 @@ Label sits closer to its own input than to anything else. Each field group is cl
 
 - **Single primary button** at the bottom left or center — never aligned right unless the form sits inside a modal (modals follow the modal rule)
 - **Secondary "Cancel"** to the left of the primary
-- Disable the submit button only when there are concrete errors — disabling it preemptively because the user "hasn't typed everything yet" leaves them guessing
+- Let users attempt submission so validation can explain concrete errors. For a submission already in progress, use the project’s pending state to prevent duplicates and give visible feedback. [WAI form validation](https://www.w3.org/WAI/tutorials/forms/validation/)
 
 ### Required vs Optional
 
 If most fields are required, mark only the **optional** ones — less noise overall. If most are optional, mark the required ones with `*`. Either system is fine — pick one and stay consistent.
+
+### Select controls
+
+- Compare each select with a neighboring input in the rendered form. Match the control height, text alignment, left padding, border, radius, background, typography, and focus treatment. Use the same field tokens and meet the project's touch-target size. Add an inset chevron when the browser's arrow differs from the design system.
+- For web forms, retain native `<select>` semantics and form behavior when styling is the only issue. A custom-styled closed control and a custom-styled option list are separate. Use the same design tokens for the open list where browser support allows it, and note when the tested browser uses its native picker.
+- Before handoff, compare the closed controls on desktop and at a narrow touch width, then open each menu and select an option by keyboard and touch where available. A shared class or a passing submission test does not verify visual parity.
 
 ## Tables
 
@@ -133,16 +139,11 @@ Don't go below 28px unless the data is genuinely homogeneous — eye fatigue sca
 
 Mirror the column's content alignment. A right-aligned numeric column gets a right-aligned header.
 
-Sortable columns get an indicator (arrow up/down) AND show the active sort with stronger contrast — color alone isn't enough.
+Use a button inside the sortable column header and put `aria-sort` on the currently sorted `<th>`. Give the active sort a direction indicator and sufficient contrast. [WAI sortable table example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/)
 
 ### Sticky Headers
 
-For tables that scroll vertically inside their container, the header should stick. Two ways:
-
-1. `position: sticky; top: 0;` on the `<thead>` — easiest, works inside scrollable containers
-2. A second fixed header rendered above the scroll area — needed when the table itself scrolls in `<body>` (not its own container)
-
-Sticky headers must have a solid (opaque) background, otherwise rows scrolling behind them show through.
+For a table long enough to lose column context, consider a sticky header. Keep a single semantic header and use `position: sticky; top: 0;` on the header row group or its cells. Check the nearest scrolling ancestor and account for any fixed navigation. Use an opaque background and verify that focused controls remain visible when scrolling. [Tailwind position](https://tailwindcss.com/docs/position#sticky-positioning-elements) · [WCAG focus not obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html)
 
 ### Row Hover and Selection
 

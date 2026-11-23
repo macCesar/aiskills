@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Orders · Dispatch desk</title>
+  <link rel="stylesheet" href="./orders.css">
+  <script src="./orders.js" defer></script>
+</head>
+<body class="min-h-dvh bg-canvas text-ink">
+  <a class="sr-only focus:not-sr-only focus:absolute focus:z-10 focus:bg-panel focus:p-3" href="#orders">Skip to orders</a>
+  <header class="border-b border-line bg-panel">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 px-4 sm:px-8">
+      <span class="w-full pt-3 font-semibold tracking-tight sm:w-auto sm:py-3">Dispatch desk</span>
+      <nav aria-label="Workspace" class="flex-1">
+        <ul class="flex gap-5 text-sm">
+          <li><a class="flex min-h-12 items-center border-b-2 border-action font-semibold" href="#orders">Orders</a></li>
+          <li><a class="flex min-h-12 items-center text-muted hover:text-ink" href="#status-guide">Status guide</a></li>
+        </ul>
+      </nav>
+      <label class="flex min-h-12 items-center gap-2 text-sm text-muted">
+        <input id="dark-theme" type="checkbox" class="size-4 accent-action">
+        Dark theme
+      </label>
+    </div>
+  </header>
+
+  <main id="orders" tabindex="-1" class="mx-auto max-w-7xl px-4 py-7 sm:px-8 sm:py-10">
+    <header class="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="text-3xl font-semibold tracking-tight">Orders</h1>
+      <button id="new-order" type="button" class="button-primary">New order</button>
+    </header>
+
+    <div class="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <section aria-labelledby="queue-title" class="@container min-w-0 rounded-xl border border-line bg-panel">
+        <div class="p-4 sm:p-5">
+          <h2 id="queue-title" class="text-lg font-semibold">Order queue</h2>
+          <form id="filters" role="search" aria-label="Filter orders" class="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]">
+            <div>
+              <label for="search" class="field-label">Search orders</label>
+              <input id="search" type="search" class="field" placeholder="Order number or customer">
+            </div>
+            <div>
+              <label for="status-filter" class="field-label">Filter by status</label>
+              <div class="select-field">
+                <select id="status-filter" class="field">
+                  <option value="">All statuses</option>
+                  <option value="Queued">Queued</option>
+                  <option value="Packing">Packing</option>
+                  <option value="Shipped">Shipped</option>
+                </select>
+              </div>
+            </div>
+          </form>
+          <p id="result-count" role="status" class="mt-3 text-sm text-muted"></p>
+        </div>
+
+        <div id="table-block">
+          <p class="hidden px-4 pb-3 text-sm text-muted @max-[34rem]:block">Scroll across the table for totals and edit actions.</p>
+          <div id="table-region" role="region" aria-labelledby="queue-title" tabindex="0" class="overflow-x-auto border-t border-line focus-visible:outline-offset-[-2px]">
+            <table class="w-full min-w-[34rem] border-collapse text-left text-sm">
+              <caption class="sr-only">Orders by customer, status, and total</caption>
+              <thead class="bg-canvas text-muted">
+                <tr>
+                  <th scope="col" class="px-4 py-3 font-medium">Order</th>
+                  <th scope="col" class="px-4 py-3 font-medium">Customer</th>
+                  <th scope="col" class="px-4 py-3 font-medium">Status</th>
+                  <th scope="col" class="px-4 py-3 text-right font-medium">Total</th>
+                  <th scope="col" class="px-4 py-3 text-right font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody id="order-rows"></tbody>
+            </table>
+          </div>
+        </div>
+        <template id="order-row">
+          <tr class="border-t border-line first:border-t-0">
+            <th scope="row" data-order class="px-4 py-2 font-semibold whitespace-nowrap"></th>
+            <td data-customer class="px-4 py-2"></td>
+            <td class="px-4 py-2"><span data-status class="status-label"></span></td>
+            <td data-total class="px-4 py-2 text-right tabular-nums whitespace-nowrap"></td>
+            <td class="px-4 py-2 text-right"><button type="button" class="button-secondary">Edit</button></td>
+          </tr>
+        </template>
+        <div id="empty-results" hidden class="border-t border-line p-5">
+          <p class="font-semibold">No matching orders</p>
+          <p class="mt-1 text-sm text-muted">Try another order number, customer, or status.</p>
+          <button id="clear-filters" type="button" class="button-secondary mt-3">Clear filters</button>
+        </div>
+
+        <details id="status-guide" class="border-t border-line px-4 py-1 sm:px-5">
+          <summary class="min-h-12 cursor-pointer py-3 text-sm font-semibold">Status guide</summary>
+          <dl class="mb-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+            <dt class="font-medium">Queued</dt><dd class="text-muted">Waiting for fulfillment.</dd>
+            <dt class="font-medium">Packing</dt><dd class="text-muted">Items are being prepared.</dd>
+            <dt class="font-medium">Shipped</dt><dd class="text-muted">The order has left the warehouse.</dd>
+          </dl>
+        </details>
+      </section>
+
+      <section id="order-editor" aria-labelledby="editor-title" class="rounded-xl border border-line bg-panel p-4 sm:p-5">
+        <h2 id="editor-title" class="text-lg font-semibold">Edit order #1048</h2>
+        <p class="mt-1 text-sm text-muted">Demo changes reset when you reload.</p>
+        <form id="order-form" class="mt-5 grid gap-4">
+          <div>
+            <label for="customer" class="field-label">Customer</label>
+            <input id="customer" name="customer" class="field" required pattern=".*\S.*" maxlength="80" aria-describedby="customer-error">
+            <p id="customer-error" hidden class="mt-1 text-sm text-error">Enter a customer name.</p>
+          </div>
+          <div>
+            <label for="order-status" class="field-label">Status</label>
+            <div class="select-field">
+              <select id="order-status" name="status" class="field" required>
+                <option value="Queued">Queued</option>
+                <option value="Packing">Packing</option>
+                <option value="Shipped">Shipped</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="order-total" class="field-label">Total (USD)</label>
+            <input id="order-total" name="total" class="field" type="number" inputmode="decimal" min="0" max="99999.99" step="0.01" required aria-describedby="total-error">
+            <p id="total-error" hidden class="mt-1 text-sm text-error">Enter a total from 0 to 99,999.99, with up to two decimal places.</p>
+          </div>
+          <button id="review-order" class="button-primary justify-self-start">Review changes</button>
+        </form>
+        <p id="save-result" role="status" class="mt-3 text-sm text-muted empty:mt-0"></p>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="confirm-order" aria-labelledby="confirm-title" aria-describedby="confirm-description"
+    class="inset-x-0 top-[min(12vh,5rem)] mx-auto max-h-[80dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-xl border border-line bg-panel p-5 text-ink shadow-lg backdrop:bg-black/55 sm:p-6">
+    <h2 id="confirm-title" class="text-lg font-semibold">Save order changes?</h2>
+    <p id="confirm-description" class="mt-2 wrap-anywhere text-sm text-muted"></p>
+    <form method="dialog" class="mt-5 flex flex-wrap justify-end gap-2">
+      <button value="cancel" class="button-secondary" autofocus>Cancel</button>
+      <button value="confirm" class="button-primary">Save order</button>
+    </form>
+  </dialog>
+</body>
+</html>

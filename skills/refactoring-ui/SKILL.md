@@ -1,6 +1,6 @@
 ---
 name: refactoring-ui
-description: 'Design advice grounded in the principles of "Refactoring UI" by Adam Wathan & Steve Schoger. Use this whenever someone is trying to make an interface look better, or asks about visual hierarchy, color palettes and greys, type scales, spacing systems, shadows and depth, images, empty states, borders, dark mode, motion and hover states, or the layout of a modal, form or table — including when they never say "design" and just paste a component asking why it looks off, or say it "feels cramped", "looks generic", "needs polish", "how do I make this look better?". Applies to any stack: Tailwind, plain CSS, React, Blade, mobile. Not for: writing the copy itself, logo or brand identity work, user research, or debugging CSS that renders wrong.'
+description: 'Use when redesigning or visually refactoring an interface, including an entire app, dashboard, or admin panel, or when a UI feels cramped, generic, or needs polish. Applies across web and mobile stacks to layout, hierarchy, typography, spacing, color, shadows, images, empty states, borders, dark mode, motion, hover states, forms, tables, and modals. Also applies when implementing UI with Tailwind CSS or diagnosing a missing Tailwind class. Excludes copywriting, brand identity, user research, and unrelated isolated CSS rendering bugs.'
 ---
 
 # Refactoring UI Skill
@@ -22,6 +22,13 @@ The SKILL.md alone is an **index** of references. The detail you need to give ac
 | Motion, microinteractions, transitions, hover/press states, loading, `prefers-reduced-motion` — *complementary, not from the book* | [references/05-motion.md](references/05-motion.md) |
 | Dark mode, multi-theme color tokens, theme toggle, contrast strategy — *complementary, extrapolates the book's HSL principles* | [references/06-dark-mode.md](references/06-dark-mode.md) |
 | Modals (focus, layout), forms (labels, validation), tables (density, alignment) — *complementary, extends the book's principles* | [references/07-component-patterns.md](references/07-component-patterns.md) |
+| Refactoring a whole app, panel, or interface area with several modules — *AISkills implementation workflow* | [references/08-integral-refactoring.md](references/08-integral-refactoring.md) |
+| Implementing or refactoring UI in a project that uses Tailwind CSS, or diagnosing a missing Tailwind class | [references/09-tailwind-v4.md](references/09-tailwind-v4.md) |
+| Implementing semantic HTML components with Tailwind, including panels, tables, filters, forms, selects, disclosures, dialogs, and Alpine.js in Blade | [references/10-native-components.md](references/10-native-components.md) |
+
+When the request covers a whole interface, use the integral refactoring workflow before editing and at handoff. A set of example screens guides the design. The requested scope determines which screens to review.
+
+When the project uses Tailwind or the request names it, confirm the installed version, build pipeline, and browser targets before applying version-specific advice. Use the implementation reference for v4 and follow its source-detection checklist for missing classes. For a whole Laravel panel on v4, combine the integral workflow, the applicable visual references, and both Tailwind references. Use semantic HTML and follow the project’s approach to interaction. When a Blade project uses Alpine.js or the request calls for it, follow the Alpine integration and examples in the component reference. For a visual review in a project without Tailwind, start with the relevant visual and component references.
 
 ### Step 2 — Output contract
 
@@ -77,7 +84,7 @@ Inspired by 'Refactoring UI' by Adam Wathan & Steve Schoger — refactoringui.co
 - Keeping every light-mode shadow unchanged on a dark canvas, where it's invisible [source: references/06-dark-mode.md]
 - Using a placeholder as the only label [source: references/07-component-patterns.md]
 - Validating a field on every keystroke instead of on blur [source: references/07-component-patterns.md]
-- A modal with no focus trap, or centered vertically instead of anchored near the top [source: references/07-component-patterns.md]
+- A modal that leaks focus to the background or leaves the user without a logical focus target on close [source: references/07-component-patterns.md]
 - Left-aligning numeric columns, which hides magnitude [source: references/07-component-patterns.md]
 - A translucent sticky table header, with rows showing through it [source: references/07-component-patterns.md]
 

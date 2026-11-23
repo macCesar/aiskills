@@ -1,0 +1,153 @@
+@import "tailwindcss" source(none);
+@source "./index.html";
+@source "./orders.js";
+
+@theme inline {
+  --color-canvas: var(--surface-canvas);
+  --color-panel: var(--surface-panel);
+  --color-ink: var(--foreground);
+  --color-muted: var(--foreground-muted);
+  --color-line: var(--divider);
+  --color-control: var(--control-border);
+  --color-action: var(--primary);
+  --color-action-hover: var(--primary-hover);
+  --color-on-action: var(--primary-text);
+  --color-error: var(--invalid);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --surface-canvas: #f2f5f4;
+    --surface-panel: #fff;
+    --foreground: #172522;
+    --foreground-muted: #495d56;
+    --divider: #d8e2de;
+    --control-border: #758880;
+    --primary: #135d4c;
+    --primary-hover: #0b493b;
+    --primary-text: #fff;
+    --invalid: #a02734;
+    --queued-bg: #edf1f0;
+    --queued-text: #40524a;
+    --packing-bg: #fff0ce;
+    --packing-text: #714700;
+    --shipped-bg: #d9f2e6;
+    --shipped-text: #125744;
+
+    /* System preference applies until the user selects a theme. */
+    &:not([data-theme]) {
+      @media (prefers-color-scheme: dark) {
+        @apply dark-palette;
+      }
+    }
+
+    &[data-theme="dark"] {
+      @apply dark-palette;
+    }
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-action;
+  }
+
+  dialog:modal {
+    overscroll-behavior: contain;
+  }
+
+  dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+}
+
+@utility dark-palette {
+  color-scheme: dark;
+  --surface-canvas: #121b19;
+  --surface-panel: #1b2824;
+  --foreground: #e7f0ec;
+  --foreground-muted: #afc3bb;
+  --divider: #33473f;
+  --control-border: #708980;
+  --primary: #83dbbe;
+  --primary-hover: #a5e9d3;
+  --primary-text: #112a21;
+  --invalid: #ffacb4;
+  --queued-bg: #31413b;
+  --queued-text: #d5e2dd;
+  --packing-bg: #48361d;
+  --packing-text: #ffd993;
+  --shipped-bg: #244639;
+  --shipped-text: #aae6cd;
+}
+
+@layer components {
+  .field-label {
+    @apply mb-1 block text-sm font-medium;
+  }
+
+  .field {
+    @apply min-h-12 w-full rounded-md border border-control bg-panel px-3 py-2 text-base text-ink;
+  }
+
+  .field::placeholder {
+    @apply text-muted;
+    opacity: 1;
+  }
+
+  .field[aria-invalid="true"] {
+    @apply border-error;
+  }
+
+  .select-field {
+    @apply relative;
+  }
+
+  .select-field select {
+    @apply appearance-none pe-9;
+  }
+
+  .select-field::after {
+    content: "";
+    @apply pointer-events-none absolute end-4 top-1/2 size-2 -translate-y-3/4 rotate-45 border-e-2 border-b-2 text-muted;
+  }
+
+  @media (forced-colors: active) {
+    .select-field select {
+      appearance: auto;
+    }
+
+    .select-field::after {
+      display: none;
+    }
+  }
+
+  .button-primary,
+  .button-secondary {
+    @apply min-h-12 cursor-pointer rounded-md px-3.5 py-2 text-sm font-semibold;
+  }
+
+  .button-primary {
+    @apply bg-action text-on-action hover:bg-action-hover;
+  }
+
+  .button-secondary {
+    @apply border border-control bg-panel text-ink hover:bg-canvas;
+  }
+
+  .status-label {
+    @apply inline-block rounded px-2 py-1 text-xs font-semibold whitespace-nowrap;
+    background: var(--queued-bg);
+    color: var(--queued-text);
+  }
+
+  .status-label[data-status="Packing"] {
+    background: var(--packing-bg);
+    color: var(--packing-text);
+  }
+
+  .status-label[data-status="Shipped"] {
+    background: var(--shipped-bg);
+    color: var(--shipped-text);
+  }
+}
