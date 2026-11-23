@@ -1,6 +1,6 @@
 # Polish: Finishing Touches and Sharpening Intuition
 
-Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book — refactoringui.com.
+Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book. This reference follows the finishing and design-practice sections (pp. 219–252 in the PDF edition reviewed). [Refactoring UI](https://refactoringui.com/)
 
 ---
 
@@ -28,10 +28,8 @@ Two paths depending on context:
 
 ## Custom Checkbox and Radio Styling
 
-- Browser default inputs look generic and break brand identity
-- Build custom-styled checkboxes/radios using your brand color for the checked state
-- Common pattern: custom checkbox = colored fill + checkmark SVG
-- Worth the extra markup — defaults feel like 1996 every time
+- Apply the brand color to native checkboxes and radios with `accent-color` when it fits the design. [Tailwind accent color](https://tailwindcss.com/docs/accent-color)
+- For a custom indicator such as a colored fill and checkmark, keep the native input and its associated label. Verify the checked, unchecked, disabled, and keyboard focus states, including in forced colors. [HTML form controls](https://html.spec.whatwg.org/multipage/input.html) · [Tailwind forced colors](https://tailwindcss.com/docs/forced-color-adjust)
 
 ## Color Accents on Edges
 
@@ -70,7 +68,7 @@ A good empty state has:
 Companion rule: **hide UI that has nothing to operate on**
 
 - Tabs with no content, filters with no items, pagination with one page — all read as broken
-- Don't render those elements until there's content to make them useful
+- Delay controls that have no purpose before the first record exists. When existing records are hidden by a search or filter, keep the relevant controls available and give the user a way to clear or change them. [Filter example](10-native-components.md#table-filters-and-empty-results)
 
 ## Alternatives to Borders
 
@@ -85,8 +83,8 @@ Borders are overused. Try:
 Don't reach for the standard widget when something more engaging fits:
 
 - **Enriched dropdowns:** add icons, sections, descriptions, two-column layouts inside dropdowns
-- **Hierarchy inside table cells:** instead of equal-weight columns, give each cell its own primary/secondary tier (large dark for the main value, small grey for secondary)
-- **Selectable cards instead of radios:** for option groups, replace radio buttons with styled card options that highlight on selection — easier to scan, more inviting
+- **Hierarchy inside table cells:** combine a primary value with closely related supporting detail when that detail does not need its own sort or comparison column. For example, a customer cell could show the customer name and a quieter account code underneath.
+- **Selectable cards:** when options need more space, use a card treatment with a title and supporting detail. Keep the native radio group, a visible selected state and a clear keyboard focus indicator.
 
 ## Sharpening Design Intuition Over Time
 

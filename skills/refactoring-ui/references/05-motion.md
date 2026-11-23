@@ -37,13 +37,13 @@ Like type/color/spacing scales, define a fixed menu of durations and easings up 
 
 ## Animate Cheap Properties
 
-Only `transform` and `opacity` are GPU-composited and frame-stable. Animating other properties forces layout/paint per frame and stutters on mid-range hardware.
+Prefer `transform` and `opacity` for frequent motion. Browsers can often composite them without repeating layout or paint. Profile the actual animation when performance matters, especially if it uses filters, large surfaces, or layout properties. [Chrome web.dev animation guide](https://web.dev/articles/animations-guide)
 
 | Cheap | Expensive |
 |---|---|
 | `transform: translate(...)`, `scale(...)`, `rotate(...)` | `width`, `height`, `top`, `left`, `margin`, `padding` |
 | `opacity` | `box-shadow` (animatable, but slow at large blur) |
-| `filter: blur()` (sparingly) | `background-color` on large surfaces |
+| | `filter: blur()` and `background-color` on large surfaces |
 
 To slide a panel in: animate `transform: translateX(100%)` → `translateX(0)`, not `right: -400px` → `right: 0`.
 

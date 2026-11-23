@@ -1,6 +1,6 @@
 # Foundations: Mindset and Systems
 
-Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book — refactoringui.com.
+Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book. This reference follows the opening section on starting a design (pp. 7–34 in the PDF edition reviewed). [Refactoring UI](https://refactoringui.com/)
 
 ---
 
@@ -14,7 +14,8 @@ Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Par
 
 - Start with low-fidelity drawings — pencil, marker, or rough boxes in any tool
 - Use a tool that physically prevents fine detail (a thick pen, a low-resolution canvas) to lock yourself out of polish too early
-- Move to high-fidelity only when the rough concept is settled
+- Move to high-fidelity only when the rough concept is settled. Keep the first refined pass in grayscale so spacing, size and contrast establish the hierarchy before color enters.
+- Treat sketches as disposable. Once they settle the decision, build the feature and work from the real interface.
 - Wireframing tools that already look like polished UI tend to stall this process
 
 ## Cycle Between Designing and Building
@@ -23,6 +24,7 @@ Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Par
 - Short cycles — design a feature, build it, ship it, decide what's next
 - When in doubt, cut features; a complete simple version beats a half-built complex one
 - Save scope expansions for the next version
+- Use the first working version to find awkward transitions and edge cases. Improve those as you encounter them.
 
 ## Defining a Project's Voice
 

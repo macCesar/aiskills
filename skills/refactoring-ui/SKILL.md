@@ -18,7 +18,7 @@ The SKILL.md alone is an **index** of references. The detail you need to give ac
 | Project mindset: feature-first work, scope discipline, defining systems, picking a voice | [references/01-foundations.md](references/01-foundations.md) |
 | Visual hierarchy, layout, white space, spacing scales, typography | [references/02-page-mechanics.md](references/02-page-mechanics.md) |
 | Color systems (HSL, shades, greys, contrast), depth and shadows, image handling | [references/03-visual-treatment.md](references/03-visual-treatment.md) |
-| Empty states, borders, accents, decorative defaults, finishing touches | [references/04-polish.md](references/04-polish.md) |
+| Empty states, borders, accents, decorative defaults, finishing touches, and studying design decisions | [references/04-polish.md](references/04-polish.md) |
 | Motion, microinteractions, transitions, hover/press states, loading, `prefers-reduced-motion` — *complementary, not from the book* | [references/05-motion.md](references/05-motion.md) |
 | Dark mode, multi-theme color tokens, theme toggle, contrast strategy — *complementary, extrapolates the book's HSL principles* | [references/06-dark-mode.md](references/06-dark-mode.md) |
 | Modals (focus, layout), forms (labels, validation), tables (density, alignment) — *complementary, extends the book's principles* | [references/07-component-patterns.md](references/07-component-patterns.md) |
@@ -55,7 +55,7 @@ These four are where advice like this usually goes wrong, so they're worth namin
 
 ## Source
 
-Inspired by 'Refactoring UI' by Adam Wathan & Steve Schoger — refactoringui.com
+References 01–04 cover the book’s design principles and identify the relevant pages in the reviewed PDF edition. [Refactoring UI by Adam Wathan and Steve Schoger](https://refactoringui.com/)
 
 ## Anti-Patterns to Watch For
 
@@ -71,7 +71,7 @@ Inspired by 'Refactoring UI' by Adam Wathan & Steve Schoger — refactoringui.co
 - Leaving an empty state as a bare "No data" rectangle — it's often the first thing a new user sees [source: references/04-polish.md]
 - Rendering tabs, filters or pagination that have nothing to operate on (reads as broken) [source: references/04-polish.md]
 - Reaching for a border when a shadow, a second background color, or more space separates better [source: references/04-polish.md]
-- Shipping browser-default bullets, checkboxes and radios [source: references/04-polish.md]
+- Replacing native checkboxes or radios without preserving their behavior and keyboard focus [source: references/04-polish.md]
 - Animating layout properties (`width`, `top`, `margin`) instead of `transform` / `opacity` [source: references/05-motion.md]
 - Inventing a duration per component instead of picking from a fixed motion scale [source: references/05-motion.md]
 - Scaling a whole element up on hover (1.05×), or animating font size [source: references/05-motion.md]

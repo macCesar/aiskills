@@ -50,7 +50,7 @@ Pure white text on a near-black background is *too much* contrast — the text v
 - Secondary text: ~65% lightness — significantly muted compared to light mode's secondary
 - Tertiary / placeholder: ~45–50%
 
-WCAG ratios still apply (4.5:1 small text, 3:1 large), and slightly off-white still passes against a near-black canvas with room to spare.
+Treat these lightness values as palette starting points. Measure actual contrast for primary text, secondary text, placeholders and author-styled controls on their rendered surfaces. [WCAG thresholds](03-visual-treatment.md#accessible-contrast-wcag)
 
 ## Accent Colors Usually Need a Lightness Bump
 

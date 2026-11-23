@@ -1,6 +1,6 @@
 # Visual Treatment: Color, Depth, Images
 
-Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book — refactoringui.com.
+Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book. This reference follows the sections on color, depth and images (pp. 137–218 in the PDF edition reviewed). [Refactoring UI](https://refactoringui.com/)
 
 ---
 
@@ -10,7 +10,7 @@ HSL (Hue, Saturation, Lightness) gives intuitive control:
 
 - **Hue:** 0°=red, 60°=yellow, 120°=green, 180°=cyan, 240°=blue, 300°=magenta
 - **Saturation:** 0%=grey (no color), 100%=fully vivid
-- **Lightness:** 0%=black, 50%=pure color, 100%=white
+- **Lightness:** 0% is black and 100% is white. At 50% lightness the hue can reach its most vivid form when saturation is 100%.
 
 **HSL ≠ HSB (HSV).** HSB's "brightness" at 100% still gives a vivid color; HSL's lightness at 100% is always white. Don't conflate them.
 
@@ -45,6 +45,8 @@ Step by step:
 5. **Fill in 300:** roughly halfway between 100 and 500
 6. **Fill the gaps** (200, 400, 600, 800) by eye — adjusting until the steps feel even
 
+For neutrals, start with the darkest text color and a near-white surface, then fill the steps between them. Try the ramp on actual text, controls and panels. Refine the named shades where they fall short so the palette stays consistent across screens. [Color palette preview](https://refactoringui.com/previews/building-your-color-palette)
+
 ## Bump Saturation as Lightness Moves Away from 50%
 
 - Moving lightness toward 0% or 100% in pure HSL drains apparent vividness
@@ -70,9 +72,9 @@ Step by step:
 
 ## Accessible Contrast (WCAG)
 
-- **Small text (<~18px normal weight, <~14px bold):** at least 4.5:1
-- **Large text (≥~18px normal, ≥~14px bold):** at least 3:1
-- Dark text on white passes more easily than white text on a colored bg
+- **WCAG AA text contrast:** at least 4.5:1 for regular text, including placeholder text. Large-scale text needs at least 3:1. Large-scale means at least 18 pt regular (24 CSS px) or 14 pt bold (about 18.67 CSS px), or equivalent for other writing systems. Measure the rendered text against its actual background, including alpha and overlays. [WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+- **WCAG AA non-text contrast:** at least 3:1 against adjacent colors for visual cues needed to identify an author-styled control or state, and for meaningful graphical information, subject to the criterion’s exceptions. Decorative dividers can stay subtle. [WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+- Dark text on white passes more easily than white text on a colored background.
 
 ## When White-on-Colored Fails Contrast
 
@@ -165,6 +167,7 @@ When shadows aren't appropriate:
 - Overlap one element across the boundary of another to create a clear sense of layers
 - Example: a card straddling a dark hero and a white content area below
 - Example: an avatar that overlaps the edge of a card — depth without shadow
+- Apply the same technique at component scale when overlapping controls clarify which surface they belong to.
 
 ## Halo Borders to Separate Adjacent Images
 
@@ -239,4 +242,4 @@ What works:
 **Background bleed:** white-bg images dissolve into white page bgs.
 - Don't use a hard border — too heavy
 - Instead, an inset box-shadow: `box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1)`
-- Soft inner ring that defines the edge without a visible border color
+- Soft inner ring that defines the edge without a visible border color. A translucent inside stroke is another option when you want the edge without an inset shadow.

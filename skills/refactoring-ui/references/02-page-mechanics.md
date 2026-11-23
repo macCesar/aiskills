@@ -1,6 +1,6 @@
 # Page Mechanics: Hierarchy, Spacing, Typography
 
-Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book — refactoringui.com.
+Inspired by principles from *Refactoring UI* by Adam Wathan & Steve Schoger. Paraphrased into the maintainer's own words; the original prose, illustrations, and examples are in the book. This reference follows the sections on hierarchy, layout and typography (pp. 35–136 in the PDF edition reviewed). [Refactoring UI](https://refactoringui.com/)
 
 ---
 
@@ -19,7 +19,7 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 3. **Color contrast** — use a 3-tier system:
    - Primary: near-black for main content
    - Secondary: mid-grey for supporting text
-   - Tertiary: lighter grey for placeholder/disabled/least important
+   - Tertiary: a quieter color for placeholder or low-priority text. Check its rendered color against the applicable [contrast requirements](03-visual-treatment.md#accessible-contrast-wcag).
 
 **Avoid font weights below 400 in UI** — thin/light weights look bad at small sizes on screens.
 
@@ -41,6 +41,8 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 - An email address, a phone number, a date — format alone makes it obvious
 - A profile bio doesn't need "Bio:"
 
+This applies to displayed data. Give editable form controls a persistent, associated label. [Form labels](07-component-patterns.md#label-placement)
+
 **Fold label and value into a phrase:**
 - "12 left in stock" beats "In stock: 12"
 - "3 bedrooms" beats "Bedrooms: 3"
@@ -48,6 +50,8 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 **Make the label secondary when you do need it:**
 - Smaller and lighter than the value
 - The value is the content; the label is metadata
+
+**Emphasize the label when readers scan for it.** In a dense order record, a dispatcher looking for the warehouse will scan for that label. Give it a little more weight or contrast, and keep its value easy to read.
 
 ## Semantics Are Not the Same as Visual Size
 
@@ -78,7 +82,7 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 | Destructive | Secondary style + confirm step | Delete, remove, revoke |
 
 - One primary action per page is the rule of thumb
-- Don't make destructive the primary — render as secondary, then confirm the action
+- Choose the visual tier by importance in the current task. A destructive option can be secondary or tertiary in the main view and become the primary action in its confirmation.
 
 ---
 
@@ -113,12 +117,11 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 - When content gets too wide and elements feel diluted, introduce columns
 - A two-column settings page reads better than a settings page where every form field stretches edge-to-edge
 
-## Sidebars Use Fixed Widths
+## Size to Content Before Applying the Grid
 
-- Sidebars in pixels (e.g., 240px) — not percentages
-- 20% sidebars become tiny on small screens and huge on large ones
-- Use `max-width` on content columns, not percentage grid columns
-- Percentages are for responsive *images* and grid cells, not UI chrome
+- Give a sidebar a width that fits its contents when space allows. A token such as `15rem` can hold steady while the main column grows. Change the layout when they no longer fit side by side.
+- Use a fluid width with a readable maximum for a card or form. For example, let an order lookup fit the available space up to `28rem` so it only shrinks once the available width drops below that limit.
+- Use proportional tracks where proportional growth is useful. A fixed sidebar and a fluid main column can share a grid, and the main column can have a grid of its own.
 
 ## Big Things Shrink More Than Small Things
 
@@ -158,8 +161,8 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 
 ## Shopping for a Body Font
 
-- On Google Fonts, filter by "10+ styles" — drops the bottom ~85% in one move
-- Multiple weights/styles signal a font designed seriously
+- Multiple weights and italic styles can help narrow a font catalogue. The book suggests filtering for roughly five weights or ten styles counting italics.
+- Use popular families to build a shortlist. Look at sites with strong typography to find less obvious options, then test your choices with actual interface text.
 - For UI, prefer neutral sans-serif (Helvetica-style) over geometric or humanist extremes
 - A system stack (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto`) is a safe fallback
 - Avoid condensed fonts and fonts with very short x-heights for body text
@@ -192,7 +195,7 @@ Three tools for hierarchy, in order from heaviest hammer to most subtle:
 
 ## Text Alignment by Use
 
-- **Left:** the default for most text in LTR languages
+- **Start:** align ordinary text with the writing direction. This is left in LTR layouts and right in RTL layouts.
 - **Center:** only short blocks (≤2–3 lines) — never a paragraph
 - **Right:** numbers in tables (so digits and decimals line up)
 - **Justified:** only with hyphenation enabled — without it, big awkward gaps
