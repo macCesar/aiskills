@@ -1,20 +1,20 @@
 # Status — 2026-11-22
 
-**Phase:** Refactoring UI expansion committed and verified. **Session by:** Codex. **Branch:** main.
+**Phase:** GitHub release and npm publication recorded. **Session by:** Codex. **Branch:** main.
 
 ## Result
 
-- `b32583d` adds the integral refactoring workflow, a Tailwind CSS v4 guide with a 224-page official documentation index, and Blade examples using Alpine.js. The orders demo runs offline from disk with compiled Tailwind CSS 4.3.0.
-- `193d35d` records the comparison with all 50 entries in the complete book’s table of contents and the relevant text and illustrations. The four book-derived references cite page ranges for the edition reviewed and recover guidance on grayscale, label hierarchy, sizing to content, neutral palettes and empty states. The accessibility references correct the WCAG text-size thresholds and document keyboard and form patterns.
-- The existing local blog commits `87d5cd2`, `a6faf7e` and `adc4051` precede this work. They were outside this session’s commit scope.
+- Published `v1.31.0` from `ea1c617671407593a7dd4a58c1a7b48f6695824f`. It contains the Tailwind v4 and Alpine expansion for `refactoring-ui`, the design and accessibility review against the complete book, and the editorial updates for `articulos-de-blog`.
+- The GitHub release title and notes match the approved text. The annotated tag resolves to the release commit. https://github.com/macCesar/aiskills/releases/tag/v1.31.0
+- The Claude Code marketplace manifest reports `1.31.0` on `main` and at the tag, matching the package and lockfile versions.
 
 ## Verification
 
-- Four focused manifest tests passed. The link audit covered 45 local links and anchors and 266 external URLs. `npm pack --dry-run --json` confirmed all ten references and four demo files.
-- The offline demo passed the interaction checks in Chromium and WebKit at 375 and 1280 px in light and dark mode. Rebuilding with Tailwind CSS 4.3.0 produced identical CSS. The updated search placeholder measured 7.04:1 in light mode and 8.25:1 in dark mode.
-- The Alpine disclosure and status filter passed in Chromium and WebKit using a Vite production fixture that scanned the Blade sources. The skill’s routing was checked for a full Laravel panel, a missing production utility, and a visual review without Tailwind.
-- Shared engine parity: **product-specific exception**. The changes affect the AISkills `refactoring-ui` payload and its catalog entry. They introduce no shared CLI, packaging, test or release-machinery changes.
+- `npm test` passed locally with 222 tests. The tag-triggered GitHub Actions run completed the version checks, `npm ci`, `npm test` (221 passed, one skipped, zero failures) and `npm publish` through trusted publishing. https://github.com/macCesar/aiskills/actions/runs/45089613169
+- npm reports `@maccesar/aiskills@1.31.0` as `latest` with registry timestamp `2026-11-23T00:36:56.683Z`. Its `gitHead` is the tagged commit and its SHA-1 `4583472e6edce7b30bc93fbbec86c4521899f6c2` matches the workflow log and the local package. The local archive also matches the registry’s SHA-512 integrity value. Its 21 files for `refactoring-ui` and `articulos-de-blog` match the tag byte for byte.
+- The public npm tarball downloaded successfully and passed integrity and file-content checks against the tag. The tarball excludes `docs/project/`.
+- The release changes two AISkills product-specific skill payloads. Shared engine parity is a **product-specific exception**. The paired version bump follows the existing release workflow.
 
-## Publication and next step
+## Next step
 
-- The last verified publication was `v1.30.2`, recorded in `ee02d2d`. This session created local commits. Publication can be handled through the release workflow when requested.
+Release verification is complete.
