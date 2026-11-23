@@ -1,24 +1,20 @@
-# Status — 2026-11-20
+# Status — 2026-11-22
 
-**Phase:** v1.30.2 published and verified. **Session by:** Codex · GPT-6. **Branch:** main.
+**Phase:** Refactoring UI expansion committed and verified. **Session by:** Codex. **Branch:** main.
 
 ## Result
 
-- `984925c` updates `articulos-de-blog` to deliver a single comma-separated list for `meta keywords`, with at most two words per entry. Visible blog tags have no spaces, and hashtag channels use `#`.
-- The skill and its examples use curly double quotes in Spanish prose. The final check runs after Humaniza and preserves literal characters in code and the exact text of quotations.
+- `b32583d` adds the integral refactoring workflow, a Tailwind CSS v4 guide with a 224-page official documentation index, and Blade examples using Alpine.js. The orders demo runs offline from disk with compiled Tailwind CSS 4.3.0.
+- `193d35d` records the comparison with all 50 entries in the complete book’s table of contents and the relevant text and illustrations. The four book-derived references cite page ranges for the edition reviewed and recover guidance on grayscale, label hierarchy, sizing to content, neutral palettes and empty states. The accessibility references correct the WCAG text-size thresholds and document keyboard and form patterns.
+- The existing local blog commits `87d5cd2`, `a6faf7e` and `adc4051` precede this work. They were outside this session’s commit scope.
 
-## Publication
+## Verification
 
-- The annotated `v1.30.2` tag points to `ef8a545cd2016dc5c1c781e4258c6eb3f853ac8a`. The public GitHub release title and notes match the approved text. https://github.com/macCesar/aiskills/releases/tag/v1.30.2
-- GitHub Actions verified the versions and passed `npm ci`, `npm test`, and `npm publish` through trusted publishing. https://github.com/macCesar/aiskills/actions/runs/44864877910
-- npm serves `@maccesar/aiskills@1.30.2` as `latest` with registry timestamp `2026-11-21T04:13:37.476Z`. The registry metadata matches the tagged commit and the package SHA-1 logged by the workflow. The downloaded archive passed the registry SHA-512 integrity check, and its six `articulos-de-blog` Markdown files match the tag byte for byte. The archive excludes `docs/project/`.
-- The marketplace manifest on GitHub reports `1.30.2` on `main` and at the release tag, matching the npm package version.
+- Four focused manifest tests passed. The link audit covered 45 local links and anchors and 266 external URLs. `npm pack --dry-run --json` confirmed all ten references and four demo files.
+- The offline demo passed the interaction checks in Chromium and WebKit at 375 and 1280 px in light and dark mode. Rebuilding with Tailwind CSS 4.3.0 produced identical CSS. The updated search placeholder measured 7.04:1 in light mode and 8.25:1 in dark mode.
+- The Alpine disclosure and status filter passed in Chromium and WebKit using a Vite production fixture that scanned the Blade sources. The skill’s routing was checked for a full Laravel panel, a missing production utility, and a visual review without Tailwind.
+- Shared engine parity: **product-specific exception**. The changes affect the AISkills `refactoring-ui` payload and its catalog entry. They introduce no shared CLI, packaging, test or release-machinery changes.
 
-## Verification and scope
+## Publication and next step
 
-- `npm test`: 222 tests passed locally and in GitHub Actions. `git diff --check` passed. Focused examples covered bilingual publication metadata and Spanish quote formatting, including a code literal.
-- Shared engine parity: **product-specific exception**. The release changes editorial guidance in `skills/articulos-de-blog/`, an AISkills skill with no TiTools counterpart.
-
-## Next step
-
-Release verification is complete.
+- The last verified publication was `v1.30.2`, recorded in `ee02d2d`. This session created local commits. Publication can be handled through the release workflow when requested.
